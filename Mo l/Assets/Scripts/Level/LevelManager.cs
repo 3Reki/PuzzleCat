@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
 	public class LevelManager : MonoBehaviour
 	{
-		[SerializeField] private Room[] rooms;
 		[SerializeField] private GameObject movable;
 
 		private IMovable _selectedMovableObject;
@@ -29,7 +27,6 @@ namespace PuzzleCat.Level
 			}
 			if (Input.GetKeyDown(KeyCode.UpArrow))
 			{
-				print(_selectedMovableObject);
 				_selectedMovableObject.GetRoom().MoveObjectForward(_selectedMovableObject);
 			}
 			if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -40,6 +37,7 @@ namespace PuzzleCat.Level
 
 		private void Awake()
 		{
+			// TODO : replace with touched go
 			SetSelectedMovableObject(movable);
 		}
 

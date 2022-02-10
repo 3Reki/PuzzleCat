@@ -11,5 +11,6 @@ namespace PuzzleCat.Level
 		public void MoveRight();
 		public void MoveForward();
 		public void MoveBackward();
+		public void TeleportTo(Vector3Int coordinates);
 	}
 }
