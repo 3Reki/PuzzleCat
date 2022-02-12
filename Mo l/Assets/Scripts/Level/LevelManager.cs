@@ -46,8 +46,9 @@ namespace PuzzleCat.Level
 
 		private void HandleTouch()
 		{
-#if UNITY_EDITOR
 			Vector3 position;
+			
+#if UNITY_EDITOR
 			if (Input.touchCount > 0) //&& !UtilsClass.IsPointerOverUI())
 			{
 				position = Input.GetTouch(0).position;
@@ -60,25 +61,16 @@ namespace PuzzleCat.Level
 			{
 				return;
 			}
-			
-			Ray ray = camera.ScreenPointToRay(position);
 #else
 			if (Input.touchCount == 0)
 				return;
 			
-			Ray ray = camera.ScreenPointToRay(Input.GetTouch(0).position);
+			position = Input.GetTouch(0).position;
 #endif
 
-			if (Physics.Raycast(ray, out RaycastHit hit, 100, movableLayerMask))
-			{
-				Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 1.5f);
-				SetSelectedMovableObject(hit.transform.gameObject);
-			}
-			else
-			{
-				Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 1.5f);
-				SetSelectedMovableObject(null);
-			}
+			SetSelectedMovableObject(UtilsClass.ScreenPointRaycast(position, out RaycastHit hit, camera, movableLayerMask)
+				? hit.transform.gameObject
+				: null);
 		}
 
 		private void Update()

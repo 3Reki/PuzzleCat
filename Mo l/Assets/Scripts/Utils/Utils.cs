@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Debug = System.Diagnostics.Debug;
 
 namespace PuzzleCat.Utils
 {
     public static class UtilsClass
     {
+        #region ScreenToWorldFunctions
+
         public static Vector3 GetMouseWorldPosition() {
             Debug.Assert(Camera.main != null, "Camera.main != null");
             return GetMouseWorldPosition(Camera.main);
@@ -17,6 +18,46 @@ namespace PuzzleCat.Utils
             Vector3 vec = camera.ScreenToWorldPoint(Input.mousePosition);
             return vec;
         }
+
+        public static bool ScreenPointRaycast(Vector3 screenPoint, out RaycastHit hit)
+        {
+            Debug.Assert(Camera.main != null, "Camera.main != null");
+            return ScreenPointRaycast(screenPoint, out hit, Camera.main, LayerMask.GetMask("Default"));
+        }
+        
+        public static bool ScreenPointRaycast(Vector3 screenPoint, out RaycastHit hit, LayerMask layerMask)
+        {
+            Debug.Assert(Camera.main != null, "Camera.main != null");
+            return ScreenPointRaycast(screenPoint, out hit, Camera.main, layerMask);
+        }
+
+        public static bool ScreenPointRaycast(Vector3 screenPoint, out RaycastHit hit, Camera camera)
+            => ScreenPointRaycast(screenPoint, out hit, camera, -5);
+
+        public static bool ScreenPointRaycast(Vector3 screenPoint, out RaycastHit hit, Camera camera,
+            LayerMask layerMask, float maxDistance = 100, bool drawRay = false, float drawRayDuration = 0f)
+        {
+            Ray ray = camera.ScreenPointToRay(screenPoint);
+			
+            if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
+            {
+                if (drawRay)
+                {
+                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, drawRayDuration);
+                }
+                
+                return true;
+            }
+
+            if (drawRay)
+            {
+                Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, drawRayDuration);
+            }
+            
+            return false;
+        }
+
+        #endregion
 
         public static bool IsPointerOverUI() => IsPointerOverUI(EventSystem.current);
         
