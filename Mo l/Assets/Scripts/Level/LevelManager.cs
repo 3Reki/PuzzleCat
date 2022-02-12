@@ -1,10 +1,12 @@
+using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
 	public class LevelManager : MonoBehaviour
 	{
-		[SerializeField] private GameObject movable;
+		[SerializeField] private new Camera camera;
+		[SerializeField] private LayerMask movableLayerMask;
 
 		private IMovable _selectedMovableObject;
 
@@ -17,6 +19,10 @@ namespace PuzzleCat.Level
 
 		private void MoveObject()
 		{
+			
+#if UNITY_EDITOR
+			
+			// Debug only
 			if (Input.GetKeyDown(KeyCode.LeftArrow))
 			{
 				_selectedMovableObject.GetRoom().MoveObjectLeft(_selectedMovableObject);
@@ -33,12 +39,46 @@ namespace PuzzleCat.Level
 			{
 				_selectedMovableObject.GetRoom().MoveObjectBackward(_selectedMovableObject);
 			}
+			
+#endif
+			
 		}
 
-		private void Awake()
+		private void HandleTouch()
 		{
-			// TODO : replace with touched go
-			SetSelectedMovableObject(movable);
+#if UNITY_EDITOR
+			Vector3 position;
+			if (Input.touchCount > 0) //&& !UtilsClass.IsPointerOverUI())
+			{
+				position = Input.GetTouch(0).position;
+			}
+			else if (Input.GetMouseButtonDown(0))
+			{
+				position = Input.mousePosition;
+			}
+			else
+			{
+				return;
+			}
+			
+			Ray ray = camera.ScreenPointToRay(position);
+#else
+			if (Input.touchCount == 0)
+				return;
+			
+			Ray ray = camera.ScreenPointToRay(Input.GetTouch(0).position);
+#endif
+
+			if (Physics.Raycast(ray, out RaycastHit hit, 100, movableLayerMask))
+			{
+				Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 1.5f);
+				SetSelectedMovableObject(hit.transform.gameObject);
+			}
+			else
+			{
+				Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 1.5f);
+				SetSelectedMovableObject(null);
+			}
 		}
 
 		private void Update()
@@ -47,7 +87,8 @@ namespace PuzzleCat.Level
 			{
 				MoveObject();
 			}
-			
+
+			HandleTouch();
 		}
 	}
 }
