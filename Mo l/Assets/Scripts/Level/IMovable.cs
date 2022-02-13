@@ -2,15 +2,14 @@ using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-	public interface IMovable
-	{
-		public Vector3Int GetCoordinates();
-		public Room GetRoom();
-		public void SetRoom(Room room);
-		public void MoveLeft();
-		public void MoveRight();
-		public void MoveForward();
-		public void MoveBackward();
-		public void TeleportTo(Vector3Int coordinates);
-	}
+    public interface IMovable
+    {
+        public Vector3Int GetCoordinates();
+        public void SetRoom(Room room);
+        public void MoveLeft();
+        public void MoveRight();
+        public void MoveForward();
+        public void MoveBackward();
+        public void TeleportTo(Vector3Int coordinates);
+    }
 }

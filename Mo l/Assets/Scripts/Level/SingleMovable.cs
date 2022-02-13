@@ -1,41 +1,50 @@
-using System;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-    public class SingleMovable : GridElement, IMovable
+    public class SingleMovable : RoomElement
     {
         [SerializeField] private Transform objectTransform;
-        
-        private Room _currentRoom;
-
-        public Vector3Int GetCoordinates() => GetGridCoordinates(transform.position);
-
-        public Room GetRoom() => _currentRoom;
-
-        public void SetRoom(Room room)
-        {
-            _currentRoom = room;
-        }
 
         public void MoveLeft()
         {
-            objectTransform.position -= Vector3.right;
+            Vector3Int newPosition = RoomGridPosition - Vector3Int.right;
+            if (CurrentRoom.CanMoveOnCell(newPosition))
+            {
+                CurrentRoom.MoveOnCell(this, newPosition);
+            }
         }
 
         public void MoveRight()
         {
-            objectTransform.position += Vector3.right;
+            Vector3Int newPosition = RoomGridPosition + Vector3Int.right;
+            if (CurrentRoom.CanMoveOnCell(newPosition))
+            {
+                CurrentRoom.MoveOnCell(this, newPosition);
+            }
         }
 
         public void MoveForward()
         {
-            objectTransform.position += Vector3.forward;
+            Vector3Int newPosition = RoomGridPosition + Vector3Int.forward;
+            if (CurrentRoom.CanMoveOnCell(newPosition))
+            {
+                CurrentRoom.MoveOnCell(this, newPosition);
+            }
         }
 
         public void MoveBackward()
         {
-            objectTransform.position -= Vector3.forward;
+            Vector3Int newPosition = RoomGridPosition - Vector3Int.forward;
+            if (CurrentRoom.CanMoveOnCell(newPosition))
+            {
+                CurrentRoom.MoveOnCell(this, newPosition);
+            }
+        }
+
+        public void MoveTo(Vector3Int coordinates)
+        {
+            objectTransform.position = GetWorldPosition(coordinates);
         }
 
         public void TeleportTo(Vector3Int coordinates)
