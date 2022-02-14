@@ -1,132 +1,97 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-	public class Room : MonoBehaviour
-	{
-		[SerializeField] private int maxLeft;
-		[SerializeField] private int maxRight;
-		[SerializeField] private int maxForward;
-		[SerializeField] private int maxBackward;
-		[SerializeField] private GameObject[] movableGameObjects;
-		[SerializeField] private List<Portal> portals;
-		
-		private List<IMovable> _movables;
+    public class Room : MonoBehaviour
+    {
+        [SerializeField] private Vector3Int gridWorldPosition;
+        [SerializeField] private Vector3Int gridSize;
+        [SerializeField] private RoomElement[] roomElements;
 
-		#region ObjectMovements
+        private RoomElement[,,] _grid;
 
-		public void MoveObjectLeft(IMovable movable)
-		{
-			Vector3Int movableCoordinates = movable.GetCoordinates();
-			Portal portal = PortalAtCoordinates(movableCoordinates + Vector3Int.left);
-			
-			if (portal != null)
-			{
-				TeleportObject(portal, movable);
-				return;
-			}
-			
-			if (movableCoordinates.x != maxLeft)
-			{
-				movable.MoveLeft();
-			}
-		}
-		
-		public void MoveObjectRight(IMovable movable)
-		{
-			Vector3Int movableCoordinates = movable.GetCoordinates();
-			Portal portal = PortalAtCoordinates(movableCoordinates + Vector3Int.right);
-			
-			if (portal != null)
-			{
-				TeleportObject(portal, movable);
-				return;
-			}
-			
-			if (movableCoordinates.x != maxRight)
-			{
-				movable.MoveRight();
-			}
-		}
-		
-		public void MoveObjectForward(IMovable movable)
-		{
-			Vector3Int movableCoordinates = movable.GetCoordinates();
-			Portal portal = PortalAtCoordinates(movableCoordinates + Vector3Int.forward);
-			
-			if (portal != null)
-			{
-				TeleportObject(portal, movable);
-				return;
-			}
-			
-			if (movableCoordinates.z != maxForward)
-			{
-				movable.MoveForward();
-			}
-		}
-		
-		public void MoveObjectBackward(IMovable movable)
-		{
-			Vector3Int movableCoordinates = movable.GetCoordinates();
-			Portal portal = PortalAtCoordinates(movableCoordinates + Vector3Int.back);
-			
-			if (portal != null)
-			{
-				TeleportObject(portal, movable);
-				return;
-			}
-			
-			if (movableCoordinates.z != maxBackward)
-			{
-				movable.MoveBackward();
-			}
-		}
+        public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
+        {
+            return worldGridCoordinates - gridWorldPosition;
+        }
 
-		private Portal PortalAtCoordinates(Vector3Int coordinates)
-		{
-			foreach (Portal portal in portals)
-			{
-				if (portal.GridCoordinates == coordinates)
-				{
-					return portal;
-				}
-			}
+        public Vector3Int RoomToWorldCoordinates(Vector3Int roomGridCoordinates)
+        {
+            return roomGridCoordinates + gridWorldPosition;
+        }
 
-			return null;
-		}
+        public bool CanMoveOnCell(Vector3Int coordinates)
+        {
+            if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
+                coordinates.y < 0 || coordinates.y >= gridSize.y ||
+                coordinates.z < 0 || coordinates.z >= gridSize.z)
+            {
+                return false;
+            }
 
-		private void TeleportObject(Portal portal, IMovable movable)
-		{
-			Portal linkedPortal = portal.GetLinkedPortal();
-			movable.TeleportTo(linkedPortal.ArrivalPosition());
-			linkedPortal.ParentRoom._movables.Add(movable);
-			movable.SetRoom(linkedPortal.ParentRoom);
-			_movables.Remove(movable);
-		}
-		
-		#endregion
+            RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
+            return element == null || element.Walkable;
+        }
 
-		private void SetRoomElements()
-		{
-			_movables = new List<IMovable>();
+        public void MoveOnCell(SingleMovable movableElement, Vector3Int coordinates)
+        {
+            RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
+            if (element == null)
+            {
+                RemoveRoomElement(movableElement);
+                movableElement.MoveTo(RoomToWorldCoordinates(coordinates));
+                AddRoomElement(movableElement, coordinates);
+                return;
+            }
 
-			for (var i = 0; i < movableGameObjects.Length; i++)
-			{
-				_movables.Add(movableGameObjects[i].GetComponent<IMovable>());
-				_movables[i].SetRoom(this);
-			}
+            element.Interact(movableElement);
+        }
 
-			foreach (Portal portal in portals)
-			{
-				portal.ParentRoom = this;
-			}
-		}
+        public void AddRoomElement(RoomElement element, Vector3Int position)
+        {
+            // TODO : check if not possible
 
-		private void Awake()
-		{
-			SetRoomElements();
-		}
-	}
+            if (_grid[position.x, position.y, position.z] != null)
+            {
+                Debug.LogWarning("A Room Element got replaced", this);
+            }
+
+            _grid[position.x, position.y, position.z] = element;
+        }
+
+        public void RemoveRoomElement(RoomElement element)
+        {
+            RemoveRoomElementAt(element.RoomGridPosition);
+        }
+
+        private void RemoveRoomElementAt(Vector3Int position)
+        {
+            _grid[position.x, position.y, position.z] = null;
+        }
+
+        private void SetRoomElements()
+        {
+            foreach (RoomElement roomElement in roomElements)
+            {
+                roomElement.SetRoom(this);
+            }
+        }
+
+        private void CreateRoomGrid()
+        {
+            _grid = new RoomElement[gridSize.x, gridSize.y, gridSize.z];
+
+            for (int i = 1; i <= roomElements.Length; i++)
+            {
+                Vector3Int elementCoordinates = roomElements[^i].RoomGridPosition;
+                _grid[elementCoordinates.x, elementCoordinates.y, elementCoordinates.z] = roomElements[^i];
+            }
+        }
+
+        private void Awake()
+        {
+            SetRoomElements();
+            CreateRoomGrid();
+        }
+    }
 }
