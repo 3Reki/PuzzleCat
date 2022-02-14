@@ -1,5 +1,6 @@
 using PuzzleCat.Utils;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace PuzzleCat.Level
 {
@@ -7,6 +8,7 @@ namespace PuzzleCat.Level
     {
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask movableLayerMask;
+        [SerializeField] private NavMeshAgent playerAgent;
 
         private SingleMovable _selectedMovableObject;
 
@@ -73,6 +75,11 @@ namespace PuzzleCat.Level
                 UtilsClass.ScreenPointRaycast(position, out RaycastHit hit, camera, movableLayerMask)
                     ? hit.transform.gameObject
                     : null);
+
+            if (UtilsClass.ScreenPointRaycast(position, out hit, camera))
+            {
+                playerAgent.SetDestination(hit.point);
+            }
         }
 
         private void Update()
