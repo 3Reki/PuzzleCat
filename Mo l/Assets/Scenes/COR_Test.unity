@@ -331,7 +331,8 @@ GameObject:
   - component: {fileID: 376055524}
   - component: {fileID: 376055523}
   - component: {fileID: 376055522}
-  m_Layer: 0
+  - component: {fileID: 376055527}
+  m_Layer: 3
   m_Name: Cat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,13 +432,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 376055521}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.433, y: 1.52, z: 4.69}
+  m_LocalPosition: {x: 1.5, y: 0.4, z: 0.5}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 226652795}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &376055527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376055521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67116fd7a2e716a47b863bfd84352329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &516172906
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,7 +1101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 0
+  Walkable: 1
   ParentRoom: {fileID: 0}
   linkedPortal: {fileID: 1369937890}
 --- !u!64 &742984298
@@ -1538,9 +1551,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8145c657d4b241f4ba4ecf1a3849a9d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWorldPosition: {x: 0, y: 0, z: 0}
-  gridSize: {x: 0, y: 0, z: 0}
-  roomElements: []
+  gridWorldPosition: {x: -6, y: 3, z: -2}
+  gridSize: {x: 5, y: 3, z: 7}
+  roomElements:
+  - {fileID: 742984297}
 --- !u!4 &1327308076
 Transform:
   m_ObjectHideFlags: 0
@@ -1608,7 +1622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 0
+  Walkable: 1
   ParentRoom: {fileID: 0}
   linkedPortal: {fileID: 742984297}
 --- !u!64 &1369937891
@@ -1685,7 +1699,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1498482072}
   - component: {fileID: 1498482073}
-  - component: {fileID: 1498482074}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1737,26 +1750,6 @@ MonoBehaviour:
   m_VoxelSize: 0.11666667
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: 06dfc3c3982d18e47b577d25e90ed393, type: 2}
---- !u!114 &1498482074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1498482071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eeb5dc026fdf4b488bc7ae0138ab719, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_StartPoint: {x: 1.5287745, y: 0.8219807, z: 4.974272}
-  m_EndPoint: {x: 1.3960918, y: 0, z: 3.402913}
-  m_Width: 5
-  m_CostModifier: -1
-  m_Bidirectional: 1
-  m_AutoUpdatePosition: 0
-  m_Area: 0
 --- !u!1 &1663948052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1787,9 +1780,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 1170211595}
-  movableLayerMask:
+  selectableLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  cat: {fileID: 376055527}
   playerAgent: {fileID: 376055522}
 --- !u!4 &1663948054
 Transform:
@@ -1922,9 +1916,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8145c657d4b241f4ba4ecf1a3849a9d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWorldPosition: {x: 0, y: 0, z: 0}
-  gridSize: {x: 0, y: 0, z: 0}
-  roomElements: []
+  gridWorldPosition: {x: -1, y: 0, z: -2}
+  gridSize: {x: 5, y: 3, z: 7}
+  roomElements:
+  - {fileID: 800364706}
+  - {fileID: 1369937890}
 --- !u!1 &1891198782
 GameObject:
   m_ObjectHideFlags: 0

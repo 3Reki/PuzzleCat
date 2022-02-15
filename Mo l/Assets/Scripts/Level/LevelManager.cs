@@ -7,16 +7,34 @@ namespace PuzzleCat.Level
     public class LevelManager : MonoBehaviour
     {
         [SerializeField] private new Camera camera;
-        [SerializeField] private LayerMask movableLayerMask;
+        [SerializeField] private LayerMask selectableLayerMask;
+        [SerializeField] private Cat cat;
         [SerializeField] private NavMeshAgent playerAgent;
 
         private SingleMovable _selectedMovableObject;
+        private bool _playerSelected;
 
         private void SetSelectedMovableObject(GameObject selectedGameObject)
         {
-            _selectedMovableObject = selectedGameObject != null
-                ? selectedGameObject.GetComponent<SingleMovable>()
-                : null;
+            if (selectedGameObject == null)
+            {
+                _selectedMovableObject = null;
+                _playerSelected = false;
+                return;
+            }
+
+            if (_playerSelected || _selectedMovableObject != null)
+            {
+                return;
+            }
+
+            if (cat.IsCat(selectedGameObject))
+            {
+                _playerSelected = true;
+                return;
+            }
+
+            _selectedMovableObject = selectedGameObject.GetComponent<SingleMovable>();
         }
 
         private void MoveObject()
@@ -70,15 +88,24 @@ namespace PuzzleCat.Level
 			
 			position = Input.GetTouch(0).position;
 #endif
+            bool raycastResult = UtilsClass.ScreenPointRaycast(position, out RaycastHit hit, camera);
 
-            SetSelectedMovableObject(
-                UtilsClass.ScreenPointRaycast(position, out RaycastHit hit, camera, movableLayerMask)
-                    ? hit.transform.gameObject
-                    : null);
-
-            if (UtilsClass.ScreenPointRaycast(position, out hit, camera))
+            if (_playerSelected && raycastResult)
             {
                 playerAgent.SetDestination(hit.point);
+            }
+            
+            if (raycastResult)
+            {
+                GameObject hitGameObject = hit.transform.gameObject;
+                if (!UtilsClass.IsInLayerMask(hitGameObject, selectableLayerMask)) return;
+                
+                SetSelectedMovableObject(hitGameObject);
+                print("it works");
+            }
+            else
+            {
+                SetSelectedMovableObject(null);
             }
         }
 
