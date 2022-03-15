@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-    public class SingleMovable : RoomElement
+    public class SingleMovable : RoomElement, IMovable
     {
         [SerializeField] private Transform objectTransform;
 
@@ -50,6 +50,11 @@ namespace PuzzleCat.Level
         public void TeleportTo(Vector3Int coordinates)
         {
             objectTransform.position = GetWorldPosition(coordinates);
+        }
+
+        public RoomElement GetRoomElement()
+        {
+            return this;
         }
     }
 }

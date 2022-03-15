@@ -33,14 +33,14 @@ namespace PuzzleCat.Level
             return element == null || element.Walkable;
         }
 
-        public void MoveOnCell(SingleMovable movableElement, Vector3Int coordinates)
+        public void MoveOnCell(IMovable movableElement, Vector3Int coordinates)
         {
             RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
             if (element == null)
             {
-                RemoveRoomElement(movableElement);
+                RemoveRoomElement(movableElement.RoomElement);
                 movableElement.MoveTo(RoomToWorldCoordinates(coordinates));
-                AddRoomElement(movableElement, coordinates);
+                AddRoomElement(movableElement.RoomElement, coordinates);
                 return;
             }
 

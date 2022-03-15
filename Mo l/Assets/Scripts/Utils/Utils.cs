@@ -75,6 +75,11 @@ namespace PuzzleCat.Utils
             return hits.Count > 0;
         }
         
+        public static bool IsInLayerMask(GameObject obj, LayerMask layerMask)
+        {
+            return ((layerMask.value & (1 << obj.layer)) > 0);
+        }
+        
         /*
         public static TextMeshPro CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3),
             Vector2 sizeDelta = default(Vector2), int fontSize = 40, Color? color = null, TextAnchor anchor = TextAnchor.UpperLeft, 

@@ -24,8 +24,9 @@ namespace PuzzleCat.Level
             CurrentRoom = room;
         }
 
-        public virtual void Interact(SingleMovable movable)
+        public virtual void Interact(IMovable movable)
         {
+            Debug.LogWarning("No interaction implemented");
         }
 
         protected virtual Vector3 GetWorldPosition(Vector3Int gridCoordinates)
