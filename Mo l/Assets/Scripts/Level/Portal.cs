@@ -4,7 +4,6 @@ namespace PuzzleCat.Level
 {
     public class Portal : RoomElement
     {
-        [HideInInspector] public Room ParentRoom;
         [SerializeField] private Portal linkedPortal;
 
         protected override Vector3Int WorldGridPosition
@@ -17,13 +16,12 @@ namespace PuzzleCat.Level
             }
         }
 
-        public override void Interact(SingleMovable movable)
+        public override void Interact(IMovable movable)
         {
-            base.Interact(movable);
-            CurrentRoom.RemoveRoomElement(movable);
+            CurrentRoom.RemoveRoomElement(movable.RoomElement);
             movable.TeleportTo(linkedPortal.ArrivalWorldPosition());
-            linkedPortal.CurrentRoom.AddRoomElement(movable, linkedPortal.ArrivalRoomPosition());
-            movable.SetRoom(linkedPortal.CurrentRoom);
+            linkedPortal.CurrentRoom.AddRoomElement(movable.RoomElement, linkedPortal.ArrivalRoomPosition());
+            movable.RoomElement.SetRoom(linkedPortal.CurrentRoom);
         }
 
         private Vector3Int ArrivalWorldPosition() => WorldGridPosition + Vector3Int.left;

@@ -9,7 +9,6 @@ namespace PuzzleCat.Level
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
-        [SerializeField] private NavMeshAgent playerAgent;
 
         private SingleMovable _selectedMovableObject;
         private bool _playerSelected;
@@ -90,18 +89,18 @@ namespace PuzzleCat.Level
 #endif
             bool raycastResult = UtilsClass.ScreenPointRaycast(position, out RaycastHit hit, camera);
 
-            if (_playerSelected && raycastResult)
-            {
-                playerAgent.SetDestination(hit.point);
-            }
-            
             if (raycastResult)
             {
+                if (_playerSelected && hit.normal == cat.transform.up)
+                {
+                    cat.TryMovingTo(hit.point);
+                    return;
+                }
+                
                 GameObject hitGameObject = hit.transform.gameObject;
                 if (!UtilsClass.IsInLayerMask(hitGameObject, selectableLayerMask)) return;
                 
                 SetSelectedMovableObject(hitGameObject);
-                print("it works");
             }
             else
             {
