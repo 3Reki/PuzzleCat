@@ -36,6 +36,18 @@
     "m_CategoryData": [
         {
             "m_Id": "afbd27fd18944b5ea9a3404c0e44bf79"
+        },
+        {
+            "m_Id": "e21d5c67554d44408807784055f759a4"
+        },
+        {
+            "m_Id": "ae1eb9512a404f688251eda71c134d71"
+        },
+        {
+            "m_Id": "1d9df6d787b54511bb8ec99dee7b066f"
+        },
+        {
+            "m_Id": "fbbdc32e2f374a9183f06ea9cb23d897"
         }
     ],
     "m_Nodes": [
@@ -1160,6 +1172,21 @@
     "m_filter": 1,
     "m_wrap": 1,
     "m_aniso": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "1d9df6d787b54511bb8ec99dee7b066f",
+    "m_Name": "GridColor",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "08376f01ba97431fb26eabb5cf0fec1d"
+        },
+        {
+            "m_Id": "07f1ed19743042889f613a1fbb0783e7"
+        }
+    ]
 }
 
 {
@@ -3078,6 +3105,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "ae1eb9512a404f688251eda71c134d71",
+    "m_Name": "UV parameters",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "a7be1a4853784f26978bb1fbaf688eda"
+        },
+        {
+            "m_Id": "4d82f7d20b224eeaa5f3f787506d0d71"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "af6a296290244616ba769f15feef2328",
     "m_Id": 0,
@@ -3165,35 +3207,7 @@
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "afbd27fd18944b5ea9a3404c0e44bf79",
     "m_Name": "",
-    "m_ChildObjectList": [
-        {
-            "m_Id": "08376f01ba97431fb26eabb5cf0fec1d"
-        },
-        {
-            "m_Id": "07f1ed19743042889f613a1fbb0783e7"
-        },
-        {
-            "m_Id": "a4adfb98c78147a88d4fa7819ccb12ae"
-        },
-        {
-            "m_Id": "49a020fb8ca1401fbc703e172bda395c"
-        },
-        {
-            "m_Id": "a7be1a4853784f26978bb1fbaf688eda"
-        },
-        {
-            "m_Id": "824566d09a274ec59f764e7c6b13d5f0"
-        },
-        {
-            "m_Id": "4d82f7d20b224eeaa5f3f787506d0d71"
-        },
-        {
-            "m_Id": "d89d8ad54ba24a4fbd02fc33e8cdbda9"
-        },
-        {
-            "m_Id": "04009c862a9d465aa9f67d93900b60bc"
-        }
-    ]
+    "m_ChildObjectList": []
 }
 
 {
@@ -3567,7 +3581,7 @@
         "m_Id": "99613bce3e084fab843a12e9917bd506"
     },
     "m_AllowMaterialOverride": true,
-    "m_SurfaceType": 0,
+    "m_SurfaceType": 1,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 2,
     "m_AlphaMode": 0,
@@ -4135,6 +4149,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "e21d5c67554d44408807784055f759a4",
+    "m_Name": "Textures",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "a4adfb98c78147a88d4fa7819ccb12ae"
+        },
+        {
+            "m_Id": "49a020fb8ca1401fbc703e172bda395c"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
     "m_ObjectId": "e5de1ab82c5e420d84d23ac3039c2c47",
     "m_Id": 1,
@@ -4490,6 +4519,24 @@
         "e32": 0.0,
         "e33": 1.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "fbbdc32e2f374a9183f06ea9cb23d897",
+    "m_Name": "Grid Tweak",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "04009c862a9d465aa9f67d93900b60bc"
+        },
+        {
+            "m_Id": "824566d09a274ec59f764e7c6b13d5f0"
+        },
+        {
+            "m_Id": "d89d8ad54ba24a4fbd02fc33e8cdbda9"
+        }
+    ]
 }
 
 {
