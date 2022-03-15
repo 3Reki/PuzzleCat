@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/COR_Test.unity
+    guid: 3ff5b1b70902e9149bf6f242b067819f
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: aa55ef0ef03f6a344a6d675085aca8af,
       type: 2}
