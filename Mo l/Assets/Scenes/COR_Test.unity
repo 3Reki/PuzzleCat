@@ -217,7 +217,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.11666667
+  m_VoxelSize: 0.06333333
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: 21f0547e6b244234581bf26b5da11a61, type: 2}
 --- !u!1 &340214140
@@ -1575,7 +1575,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.11666667
+  m_VoxelSize: 0.06333333
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: 926b8ddf9ad67a64e87dd026f6f61162, type: 2}
 --- !u!1 &1327308074
@@ -1802,7 +1802,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.11666667
+  m_VoxelSize: 0.06333333
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: 06dfc3c3982d18e47b577d25e90ed393, type: 2}
 --- !u!1 &1663948052
@@ -1839,6 +1839,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   cat: {fileID: 376055527}
+  dragDistance: 15
 --- !u!4 &1663948054
 Transform:
   m_ObjectHideFlags: 0
