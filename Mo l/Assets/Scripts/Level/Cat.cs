@@ -1,4 +1,4 @@
-using System;
+using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,8 +12,7 @@ namespace PuzzleCat.Level
 
         public void TryMovingTo(Vector3 worldDestination)
         {
-            Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(new Vector3Int(
-                Mathf.FloorToInt(worldDestination.x), Mathf.RoundToInt(worldDestination.y), Mathf.FloorToInt(worldDestination.z)));
+            Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(UtilsClass.WorldPointAsGridPoint(worldDestination));
 
             if (CurrentRoom.CanMoveOnCell(destination))
             {
@@ -28,9 +27,7 @@ namespace PuzzleCat.Level
 
         public void TeleportTo(Vector3Int coordinates)
         {
-            //transform.position = GetWorldPosition(coordinates);
             playerAgent.Warp(GetWorldPosition(coordinates));
-            //playerAgent.SetDestination(GetWorldPosition(coordinates));
         }
     }
 }

@@ -79,6 +79,11 @@ namespace PuzzleCat.Utils
         {
             return ((layerMask.value & (1 << obj.layer)) > 0);
         }
+
+        public static Vector3Int WorldPointAsGridPoint(Vector3 point)
+        {
+            return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y), Mathf.FloorToInt(point.z));
+        }
         
         /*
         public static TextMeshPro CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3),

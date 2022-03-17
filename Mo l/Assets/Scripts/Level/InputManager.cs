@@ -1,23 +1,28 @@
-using System;
 using PuzzleCat.Utils;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace PuzzleCat.Level
 {
-    public class LevelManager : MonoBehaviour
+    public class InputManager : MonoBehaviour
     {
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
         [SerializeField] private float dragDistance = 15;
+        [SerializeField] private Transform portals;
 
         private SingleMovable _selectedMovableObject;
-        private bool _playerSelected;
         private Vector3 _initialTouchPosition;
         private Vector3 _lastTouchPosition;
-        private bool _doRaycast;
         private Vector3 _position;
+        private bool _playerSelected;
+        private bool _doRaycast;
+        private bool _portalMode;
+
+        public void SwitchPortalMode()
+        {
+            _portalMode = !_portalMode;
+        }
 
         private void SetSelectedMovableObject(GameObject selectedGameObject)
         {
@@ -70,7 +75,6 @@ namespace PuzzleCat.Level
                     {
                         _position = _lastTouchPosition;
                         _doRaycast = true;
-                        Debug.Log("Tap");
                     }
 
                     break;
@@ -84,9 +88,25 @@ namespace PuzzleCat.Level
 
             if (raycastResult)
             {
+                if (_portalMode)
+                {
+                    Portal currentPortal = portals.GetChild(0).GetComponent<Portal>();
+                    currentPortal.SetPortal(hit.transform.parent.GetComponent<Room>(), hit.point);
+                    _portalMode = false;
+                    return;
+                }
+
                 if (_playerSelected && hit.normal == cat.transform.up)
                 {
                     cat.TryMovingTo(hit.point);
+                    return;
+                }
+                
+                Portal portal = hit.collider.GetComponent<Portal>();
+
+                if (portal != null)
+                {
+                    portal.UnsetPortal();
                     return;
                 }
                 
@@ -106,27 +126,27 @@ namespace PuzzleCat.Level
             if (Mathf.Abs(_lastTouchPosition.x - _initialTouchPosition.x) > Mathf.Abs(_lastTouchPosition.y - _initialTouchPosition.y))
             {
                 if (_lastTouchPosition.x > _initialTouchPosition.x)
-                {   //Right swipe
+                {
+                    //Right swipe
                     _selectedMovableObject.MoveRight();
-                    Debug.Log("Right Swipe");
                 }
                 else
-                {   //Left swipe
+                {
+                    //Left swipe
                     _selectedMovableObject.MoveLeft();
-                    Debug.Log("Left Swipe");
                 }
             }
             else
             {
                 if (_lastTouchPosition.y > _initialTouchPosition.y)
-                {   //Up swipe
+                {
+                    //Up swipe
                     _selectedMovableObject.MoveForward();
-                    Debug.Log("Up Swipe");
                 }
                 else
-                {   //Down swipe
+                {
+                    //Down swipe
                     _selectedMovableObject.MoveBackward();
-                    Debug.Log("Down Swipe");
                 }
             }
         }
