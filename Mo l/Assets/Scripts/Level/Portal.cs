@@ -1,4 +1,3 @@
-using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -6,13 +5,15 @@ namespace PuzzleCat.Level
 {
 	public class Portal : RoomElement
 	{
+		public int Id;
+		[HideInInspector] public bool Placed;
+		
 		[SerializeField] private Portal linkedPortal;
 		[SerializeField] private bool catPortal;
 
 		private readonly Vector3 _offset = new(0.5f, 0.001f, 0.5f);
 
 		private bool _active;
-		private bool _placed;
 
 		protected override Vector3Int WorldGridPosition
 		{
@@ -41,9 +42,9 @@ namespace PuzzleCat.Level
 			transform.position = UtilsClass.WorldPointAsGridPoint(worldPosition) + _offset;
 			SetRoom(parentRoom);
 			CurrentRoom.AddRoomElement(this, RoomGridPosition);
-			_placed = true;
+			Placed = true;
 
-			if (linkedPortal._placed)
+			if (linkedPortal.Placed)
 			{
 				_active = true;
 				linkedPortal._active = true;
@@ -57,7 +58,7 @@ namespace PuzzleCat.Level
 
 			gameObject.SetActive(false);
 			CurrentRoom.RemoveRoomElement(this);
-			_placed = false;
+			Placed = false;
 			_active = false;
 			linkedPortal._active = false;
 		}
@@ -70,7 +71,7 @@ namespace PuzzleCat.Level
 			if (!catPortal) return;
 
 			_active = true;
-			_placed = true;
+			Placed = true;
 		}
 	}
 }

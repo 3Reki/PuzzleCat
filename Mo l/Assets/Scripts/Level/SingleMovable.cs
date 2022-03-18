@@ -51,10 +51,5 @@ namespace PuzzleCat.Level
         {
             objectTransform.position = GetWorldPosition(coordinates);
         }
-
-        public RoomElement GetRoomElement()
-        {
-            return this;
-        }
     }
 }

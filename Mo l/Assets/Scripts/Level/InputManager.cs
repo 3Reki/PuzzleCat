@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -9,9 +12,12 @@ namespace PuzzleCat.Level
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
         [SerializeField] private float dragDistance = 15;
-        [SerializeField] private Transform portals;
+        [SerializeField] private Transform[] portalsParentTransform;
+
+        private Dictionary<int, List<Portal>> _portals;
 
         private SingleMovable _selectedMovableObject;
+        [CanBeNull] private Tuple<int, int> _portalIndex;
         private Vector3 _initialTouchPosition;
         private Vector3 _lastTouchPosition;
         private Vector3 _position;
@@ -19,9 +25,36 @@ namespace PuzzleCat.Level
         private bool _doRaycast;
         private bool _portalMode;
 
-        public void SwitchPortalMode()
+        public void SwitchPortalMode(int id)
         {
-            _portalMode = !_portalMode;
+            if (!_portalMode)
+            {
+                _portalMode = true;
+                _portalIndex = FindCurrentPortalIndex(id);
+
+                if (_portalIndex == null)
+                {
+                    _portalMode = false;
+                }
+            }
+            else
+            {
+                _portalMode = false;
+            }
+           
+        }
+        
+        private Tuple<int, int> FindCurrentPortalIndex(int portalId)
+        {
+            for (var i = 0; i < _portals[portalId].Count; i++)
+            {
+                if (!_portals[portalId][i].Placed)
+                {
+                    return new Tuple<int, int>(portalId, i);
+                }
+            }
+
+            return null;
         }
 
         private void SetSelectedMovableObject(GameObject selectedGameObject)
@@ -90,8 +123,8 @@ namespace PuzzleCat.Level
             {
                 if (_portalMode)
                 {
-                    Portal currentPortal = portals.GetChild(0).GetComponent<Portal>();
-                    currentPortal.SetPortal(hit.transform.parent.GetComponent<Room>(), hit.point);
+                    // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
+                    _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), hit.point);
                     _portalMode = false;
                     return;
                 }
@@ -191,6 +224,31 @@ namespace PuzzleCat.Level
             }
         }
 #endif
+
+        private void ConstructPortalsDictionary()
+        {
+            _portals = new Dictionary<int, List<Portal>>();
+            
+            foreach (Transform parentTransform in portalsParentTransform)
+            {
+                for (int i = 0; i < parentTransform.childCount; i++)
+                {
+                    Portal portal = parentTransform.GetChild(i).GetComponent<Portal>();
+                    
+                    if (!_portals.ContainsKey(portal.Id))
+                    {
+                        _portals.Add(portal.Id, new List<Portal>());
+                    }
+                    
+                    _portals[portal.Id].Add(portal);
+                }
+            }
+        }
+
+        private void Awake()
+        {
+            ConstructPortalsDictionary();
+        }
 
         private void Start()
         {
