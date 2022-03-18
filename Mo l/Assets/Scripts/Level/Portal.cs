@@ -1,63 +1,76 @@
+using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-    public class Portal : RoomElement
-    {
-        [SerializeField] private Portal linkedPortal;
+	public class Portal : RoomElement
+	{
+		[SerializeField] private Portal linkedPortal;
+		[SerializeField] private bool catPortal;
 
-        private readonly Vector3 _offset = new(0.5f, 0.001f, 0.5f);
-        
-        private bool _active;
-        private bool _placed;
+		private readonly Vector3 _offset = new(0.5f, 0.001f, 0.5f);
 
-        protected override Vector3Int WorldGridPosition
-        {
-            get
-            {
-                Vector3 worldPosition = transform.position;
-                return new Vector3Int((int) (worldPosition.x - 0.5f), Mathf.FloorToInt(worldPosition.y),
-                    (int) (worldPosition.z - 0.5f));
-            }
-        }
+		private bool _active;
+		private bool _placed;
 
-        public override void Interact(IMovable movable)
-        {
-            if (!_active)
-                return;
-            
-            CurrentRoom.RemoveRoomElement(movable.RoomElement);
-            movable.TeleportTo(linkedPortal.ArrivalWorldPosition());
-            linkedPortal.CurrentRoom.AddRoomElement(movable.RoomElement, linkedPortal.ArrivalRoomPosition());
-            movable.RoomElement.SetRoom(linkedPortal.CurrentRoom);
-        }
+		protected override Vector3Int WorldGridPosition
+		{
+			get
+			{
+				Vector3 worldPosition = transform.position;
+				return new Vector3Int((int) (worldPosition.x - 0.5f), Mathf.FloorToInt(worldPosition.y),
+					(int) (worldPosition.z - 0.5f));
+			}
+		}
 
-        public void SetPortal(Room parentRoom, Vector3 worldPosition)
-        {
-            gameObject.SetActive(true);
-            transform.position = UtilsClass.WorldPointAsGridPoint(worldPosition) + _offset;
-            SetRoom(parentRoom);
-            CurrentRoom.AddRoomElement(this, RoomGridPosition);
-            _placed = true;
-            
-            if (linkedPortal._placed)
-            {
-                _active = true;
-                linkedPortal._active = true;
-            }
-        }
+		public override void Interact(IMovable movable)
+		{
+			if (!_active || Cat.IsCat(movable) != catPortal)
+				return;
 
-        public void UnsetPortal()
-        {
-            gameObject.SetActive(false);
-            CurrentRoom.RemoveRoomElement(this);
-            _placed = false;
-            _active = false;
-            linkedPortal._active = false;
-        }
+			CurrentRoom.RemoveRoomElement(movable.RoomElement);
+			movable.TeleportTo(linkedPortal.ArrivalWorldPosition());
+			linkedPortal.CurrentRoom.AddRoomElement(movable.RoomElement, linkedPortal.ArrivalRoomPosition());
+			movable.RoomElement.SetRoom(linkedPortal.CurrentRoom);
+		}
 
-        private Vector3Int ArrivalWorldPosition() => WorldGridPosition + Vector3Int.left;
-        private Vector3Int ArrivalRoomPosition() => RoomGridPosition + Vector3Int.left;
-    }
+		public void SetPortal(Room parentRoom, Vector3 worldPosition)
+		{
+			gameObject.SetActive(true);
+			transform.position = UtilsClass.WorldPointAsGridPoint(worldPosition) + _offset;
+			SetRoom(parentRoom);
+			CurrentRoom.AddRoomElement(this, RoomGridPosition);
+			_placed = true;
+
+			if (linkedPortal._placed)
+			{
+				_active = true;
+				linkedPortal._active = true;
+			}
+		}
+
+		public void UnsetPortal()
+		{
+			if (catPortal)
+				return;
+
+			gameObject.SetActive(false);
+			CurrentRoom.RemoveRoomElement(this);
+			_placed = false;
+			_active = false;
+			linkedPortal._active = false;
+		}
+
+		private Vector3Int ArrivalWorldPosition() => WorldGridPosition + Vector3Int.left;
+		private Vector3Int ArrivalRoomPosition() => RoomGridPosition + Vector3Int.left;
+
+		private void Start()
+		{
+			if (!catPortal) return;
+
+			_active = true;
+			_placed = true;
+		}
+	}
 }

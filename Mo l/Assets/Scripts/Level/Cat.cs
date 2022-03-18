@@ -8,7 +8,8 @@ namespace PuzzleCat.Level
     {
         [SerializeField] private NavMeshAgent playerAgent;
 
-        public bool IsCat(GameObject otherGameObject) => gameObject == otherGameObject;
+        public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
+        public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
 
         public void TryMovingTo(Vector3 worldDestination)
         {

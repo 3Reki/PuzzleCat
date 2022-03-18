@@ -38,7 +38,7 @@ namespace PuzzleCat.Level
                 return;
             }
 
-            if (cat.IsCat(selectedGameObject))
+            if (Cat.IsCat(selectedGameObject))
             {
                 _playerSelected = true;
                 return;
