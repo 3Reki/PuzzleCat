@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,9 +10,14 @@ namespace PuzzleCat.Level
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
+        [SerializeField] private float dragDistance = 15;
 
         private SingleMovable _selectedMovableObject;
         private bool _playerSelected;
+        private Vector3 _initialTouchPosition;
+        private Vector3 _lastTouchPosition;
+        private bool _doRaycast;
+        private Vector3 _position;
 
         private void SetSelectedMovableObject(GameObject selectedGameObject)
         {
@@ -36,58 +42,45 @@ namespace PuzzleCat.Level
             _selectedMovableObject = selectedGameObject.GetComponent<SingleMovable>();
         }
 
-        private void MoveObject()
+        private void SingleTouch()
         {
-#if UNITY_EDITOR
-
-            // Debug only
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            Touch touch = Input.GetTouch(0);
+            switch (touch.phase)
             {
-                _selectedMovableObject.MoveLeft();
-            }
+                
+                case TouchPhase.Began:
+                    _initialTouchPosition = touch.position;
+                    _lastTouchPosition = touch.position;
+                    break;
+                
+                
+                case TouchPhase.Ended:
+                    _lastTouchPosition = touch.position;
 
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                _selectedMovableObject.MoveRight();
-            }
+                    if (Mathf.Abs(_lastTouchPosition.x - _initialTouchPosition.x) > dragDistance ||
+                        Mathf.Abs(_lastTouchPosition.y - _initialTouchPosition.y) > dragDistance)
+                    {
+                        if (_selectedMovableObject != null)
+                        {
+                            HandleSwipe();
+                        }
+                        
+                    }
+                    else
+                    {
+                        _position = _lastTouchPosition;
+                        _doRaycast = true;
+                        Debug.Log("Tap");
+                    }
 
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                _selectedMovableObject.MoveForward();
+                    break;
+                
             }
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                _selectedMovableObject.MoveBackward();
-            }
-
-#endif
         }
 
-        private void HandleTouch()
+        private void SingleTouchRaycast()
         {
-            Vector3 position;
-
-#if UNITY_EDITOR
-            if (Input.touchCount > 0) //&& !UtilsClass.IsPointerOverUI())
-            {
-                position = Input.GetTouch(0).position;
-            }
-            else if (Input.GetMouseButtonDown(0))
-            {
-                position = Input.mousePosition;
-            }
-            else
-            {
-                return;
-            }
-#else
-			if (Input.touchCount == 0)
-				return;
-			
-			position = Input.GetTouch(0).position;
-#endif
-            bool raycastResult = UtilsClass.ScreenPointRaycast(position, out RaycastHit hit, camera);
+            bool raycastResult = UtilsClass.ScreenPointRaycast(_position, out RaycastHit hit, camera);
 
             if (raycastResult)
             {
@@ -108,14 +101,98 @@ namespace PuzzleCat.Level
             }
         }
 
-        private void Update()
+        private void HandleSwipe()
+        {
+            if (Mathf.Abs(_lastTouchPosition.x - _initialTouchPosition.x) > Mathf.Abs(_lastTouchPosition.y - _initialTouchPosition.y))
+            {
+                if (_lastTouchPosition.x > _initialTouchPosition.x)
+                {   //Right swipe
+                    _selectedMovableObject.MoveRight();
+                    Debug.Log("Right Swipe");
+                }
+                else
+                {   //Left swipe
+                    _selectedMovableObject.MoveLeft();
+                    Debug.Log("Left Swipe");
+                }
+            }
+            else
+            {
+                if (_lastTouchPosition.y > _initialTouchPosition.y)
+                {   //Up swipe
+                    _selectedMovableObject.MoveForward();
+                    Debug.Log("Up Swipe");
+                }
+                else
+                {   //Down swipe
+                    _selectedMovableObject.MoveBackward();
+                    Debug.Log("Down Swipe");
+                }
+            }
+        }
+
+#if UNITY_EDITOR
+        private void DebugInputs()
         {
             if (_selectedMovableObject != null)
             {
-                MoveObject();
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    _selectedMovableObject.MoveLeft();
+                }
+
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    _selectedMovableObject.MoveRight();
+                }
+
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    _selectedMovableObject.MoveForward();
+                }
+
+                if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    _selectedMovableObject.MoveBackward();
+                }
             }
 
-            HandleTouch();
+            if (UnityEngine.Device.SystemInfo.deviceType != DeviceType.Desktop)
+            {
+                // game view is in simulator mode (touch is already handled)
+                return;
+            }
+                
+            
+            if (Input.GetMouseButtonUp(0))
+            {
+                _position = Input.mousePosition;
+                _doRaycast = true;
+            }
+        }
+#endif
+
+        private void Start()
+        {
+            dragDistance = Screen.height * dragDistance * 0.01f;
+        }
+
+        private void Update()
+        {
+            if (Input.touchCount == 1)
+            {
+                SingleTouch();
+            }
+            
+#if UNITY_EDITOR
+            DebugInputs();
+#endif
+
+            if (_doRaycast)
+            {
+                SingleTouchRaycast();
+                _doRaycast = false;
+            }
         }
     }
 }
