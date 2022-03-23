@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace PuzzleCat.Utils
 {
-    public static class UtilsClass
+    public static class Utils
     {
         #region ScreenToWorldFunctions
 
@@ -80,9 +79,34 @@ namespace PuzzleCat.Utils
             return ((layerMask.value & (1 << obj.layer)) > 0);
         }
 
-        public static Vector3Int WorldPointAsGridPoint(Vector3 point)
+        public static Vector3 Round(this Vector3 vector3)
         {
-            return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y), Mathf.FloorToInt(point.z));
+            return new Vector3(
+                Mathf.Round(vector3.x),
+                Mathf.Round(vector3.y),
+                Mathf.Round(vector3.z));
+        }
+
+        public static Vector3Int WorldPointAsGridPoint(RaycastHit hit)
+        {
+            Vector3 roundedNormal = hit.normal.Round();
+            Vector3 point = hit.point;
+            
+            if (roundedNormal == Vector3.up)
+            {
+                return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y), Mathf.FloorToInt(point.z));
+            }
+            if (roundedNormal == Vector3.right)
+            {
+                return new Vector3Int(Mathf.RoundToInt(point.x), Mathf.FloorToInt(point.y), Mathf.FloorToInt(point.z));
+            }
+            if (roundedNormal == Vector3.back)
+            {
+                return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y), Mathf.FloorToInt(point.z) - 1);
+            }
+            
+            Debug.LogWarning("Not Floor");
+            return Vector3Int.back * 100;
         }
         
         /*

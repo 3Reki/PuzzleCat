@@ -1,3 +1,4 @@
+using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.Level
@@ -14,8 +15,10 @@ namespace PuzzleCat.Level
             get
             {
                 Vector3 worldPosition = transform.position;
-                return new Vector3Int((int) (worldPosition.x - 0.5f), (int) (worldPosition.y - 0.5f),
-                    (int) (worldPosition.z - 0.5f));
+                return new Vector3Int(
+                    Mathf.RoundToInt(worldPosition.x - 0.5f), 
+                    Mathf.RoundToInt(worldPosition.y - 0.5f),
+                    Mathf.RoundToInt(worldPosition.z - 0.5f));
             }
         }
 

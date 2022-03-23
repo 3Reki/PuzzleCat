@@ -66,6 +66,7 @@ namespace PuzzleCat.Level
 
         private void RemoveRoomElementAt(Vector3Int position)
         {
+            Debug.Log(position);
             _grid[position.x, position.y, position.z] = null;
         }
 

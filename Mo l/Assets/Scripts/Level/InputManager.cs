@@ -117,21 +117,22 @@ namespace PuzzleCat.Level
 
         private void SingleTouchRaycast()
         {
-            bool raycastResult = UtilsClass.ScreenPointRaycast(_position, out RaycastHit hit, camera);
+            bool raycastResult = Utils.Utils.ScreenPointRaycast(_position, out RaycastHit hit, camera, -5, 100f, true, 2);
 
             if (raycastResult)
             {
+                Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
                 if (_portalMode)
                 {
                     // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
-                    _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), hit.point);
+                    _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), gridPoint);
                     _portalMode = false;
                     return;
                 }
 
                 if (_playerSelected && hit.normal == cat.transform.up)
                 {
-                    cat.TryMovingTo(hit.point);
+                    cat.TryMovingTo(gridPoint);
                     return;
                 }
                 
@@ -144,7 +145,7 @@ namespace PuzzleCat.Level
                 }
                 
                 GameObject hitGameObject = hit.transform.gameObject;
-                if (!UtilsClass.IsInLayerMask(hitGameObject, selectableLayerMask)) return;
+                if (!Utils.Utils.IsInLayerMask(hitGameObject, selectableLayerMask)) return;
                 
                 SetSelectedMovableObject(hitGameObject);
             }
