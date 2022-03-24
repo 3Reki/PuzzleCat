@@ -621,7 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67116fd7a2e716a47b863bfd84352329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 0
+  IsObstacle: 1
   playerAgent: {fileID: 376055522}
 --- !u!1 &516172906
 GameObject:
@@ -1160,7 +1160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 1
+  IsObstacle: 0
   Id: 1
   Placed: 0
   linkedPortal: {fileID: 1938941025}
@@ -1487,7 +1487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 1
+  IsObstacle: 0
   Id: 0
   Placed: 0
   linkedPortal: {fileID: 1369937890}
@@ -1589,7 +1589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0efbf966be9b549ab6e49fcc08490e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 0
+  IsObstacle: 1
   objectTransform: {fileID: 800364710}
 --- !u!65 &800364707
 BoxCollider:
@@ -1670,6 +1670,117 @@ Transform:
   m_Father: {fileID: 226652795}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1083720271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1083720272}
+  - component: {fileID: 1083720275}
+  - component: {fileID: 1083720274}
+  - component: {fileID: 1083720273}
+  - component: {fileID: 1083720276}
+  m_Layer: 0
+  m_Name: Cube_001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &1083720272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083720271}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8, y: -1.5, z: -3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1327308076}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1083720273
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083720271}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1083720274
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083720271}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 7618f960110b9494f92efa7da3a36bc3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1083720275
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083720271}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1083720276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083720271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ae9fddaa9a04e4fb2d6a5b9d61728f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsObstacle: 1
 --- !u!1 &1150478566
 GameObject:
   m_ObjectHideFlags: 0
@@ -2162,6 +2273,7 @@ Transform:
   - {fileID: 1891198783}
   - {fileID: 725695076}
   - {fileID: 1155937466}
+  - {fileID: 1083720272}
   m_Father: {fileID: 226652795}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2212,7 +2324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 1
+  IsObstacle: 0
   Id: 0
   Placed: 0
   linkedPortal: {fileID: 742984297}
@@ -2684,6 +2796,7 @@ MonoBehaviour:
   - {fileID: 800364706}
   - {fileID: 1369937890}
   - {fileID: 376055527}
+  - {fileID: 1083720276}
 --- !u!1 &1891198782
 GameObject:
   m_ObjectHideFlags: 0
@@ -2829,7 +2942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Walkable: 1
+  IsObstacle: 0
   Id: 1
   Placed: 0
   linkedPortal: {fileID: 723028754}

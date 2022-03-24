@@ -39,10 +39,8 @@ namespace PuzzleCat.Level
 
 			RoomElement roomElement = movable.RoomElement;
 
-			CurrentRoom.RemoveRoomElement(roomElement);
 			roomElement.transform.rotation = linkedPortal.ArrivalElementRotation();
 			movable.TeleportTo(linkedPortal.ArrivalWorldPosition());
-			linkedRoom.AddRoomElement(roomElement, linkedPortal.ArrivalRoomPosition());
 			roomElement.SetRoom(linkedRoom);
 		}
 
@@ -54,7 +52,6 @@ namespace PuzzleCat.Level
 			                      _transform.rotation *
 			                      Quaternion.Euler(90, 0, 0);
 			SetRoom(parentRoom);
-			CurrentRoom.AddRoomElement(this, RoomGridPosition);
 			Placed = true;
 
 			if (linkedPortal.Placed)
@@ -70,7 +67,6 @@ namespace PuzzleCat.Level
 				return;
 
 			gameObject.SetActive(false);
-			CurrentRoom.RemoveRoomElement(this);
 			Placed = false;
 			_active = false;
 			linkedPortal._active = false;

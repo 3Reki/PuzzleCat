@@ -1,11 +1,13 @@
-using PuzzleCat.Utils;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
     public class RoomElement : MonoBehaviour
     {
-        public bool Walkable;
+        public static readonly List<RoomElement> AllElements = new();
+
+        public bool IsObstacle;
         public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
 
         protected Room CurrentRoom;
@@ -35,6 +37,16 @@ namespace PuzzleCat.Level
         protected virtual Vector3 GetWorldPosition(Vector3Int gridCoordinates)
         {
             return new Vector3(gridCoordinates.x + 0.5f, gridCoordinates.y + 0.5f, gridCoordinates.z + 0.5f);
+        }
+        
+        private void OnEnable()
+        {
+            AllElements.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            AllElements.Remove(this);
         }
     }
 }

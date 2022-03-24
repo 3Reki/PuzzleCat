@@ -8,8 +8,6 @@ namespace PuzzleCat.Level
         [SerializeField] private Vector3Int gridSize;
         [SerializeField] private RoomElement[] roomElements;
 
-        private RoomElement[,,] _grid;
-
         public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
         {
             return worldGridCoordinates - gridWorldPosition;
@@ -29,45 +27,45 @@ namespace PuzzleCat.Level
                 return false;
             }
 
-            RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
-            return element == null || element.Walkable;
+            foreach (RoomElement element in RoomElement.AllElements)
+            {
+                if (element.IsObstacle
+                    && element.RoomGridPosition.x == coordinates.x 
+                    && element.RoomGridPosition.y == coordinates.y 
+                    && element.RoomGridPosition.z == coordinates.z)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void MoveOnCell(IMovable movableElement, Vector3Int coordinates)
         {
-            RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
+            RoomElement element = GetElementAt(coordinates);
             if (element == null)
             {
-                RemoveRoomElement(movableElement.RoomElement);
                 movableElement.MoveTo(RoomToWorldCoordinates(coordinates));
-                AddRoomElement(movableElement.RoomElement, coordinates);
                 return;
             }
 
             element.Interact(movableElement);
         }
 
-        public void AddRoomElement(RoomElement element, Vector3Int position)
+        private RoomElement GetElementAt(Vector3Int coordinates)
         {
-            // TODO : check if not possible
-
-            if (_grid[position.x, position.y, position.z] != null)
+            foreach (RoomElement element in RoomElement.AllElements)
             {
-                Debug.LogWarning("A Room Element got replaced", this);
+                if (element.RoomGridPosition.x == coordinates.x 
+                    && element.RoomGridPosition.y == coordinates.y 
+                    && element.RoomGridPosition.z == coordinates.z)
+                {
+                    return element;
+                }
             }
 
-            _grid[position.x, position.y, position.z] = element;
-        }
-
-        public void RemoveRoomElement(RoomElement element)
-        {
-            RemoveRoomElementAt(element.RoomGridPosition);
-        }
-
-        private void RemoveRoomElementAt(Vector3Int position)
-        {
-            Debug.Log(position);
-            _grid[position.x, position.y, position.z] = null;
+            return null;
         }
 
         private void SetRoomElements()
@@ -78,21 +76,9 @@ namespace PuzzleCat.Level
             }
         }
 
-        private void CreateRoomGrid()
-        {
-            _grid = new RoomElement[gridSize.x, gridSize.y, gridSize.z];
-
-            for (int i = 1; i <= roomElements.Length; i++)
-            {
-                Vector3Int elementCoordinates = roomElements[^i].RoomGridPosition;
-                _grid[elementCoordinates.x, elementCoordinates.y, elementCoordinates.z] = roomElements[^i];
-            }
-        }
-
         private void Awake()
         {
             SetRoomElements();
-            CreateRoomGrid();
         }
     }
 }
