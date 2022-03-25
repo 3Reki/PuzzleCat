@@ -9,9 +9,8 @@ namespace PuzzleCat.Level
 
         public bool IsObstacle;
         public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
-
+        
         protected Room CurrentRoom;
-
         protected virtual Vector3Int WorldGridPosition
         {
             get

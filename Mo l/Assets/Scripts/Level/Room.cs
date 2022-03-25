@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PuzzleCat.Level
@@ -6,7 +7,7 @@ namespace PuzzleCat.Level
     {
         [SerializeField] private Vector3Int gridWorldPosition;
         [SerializeField] private Vector3Int gridSize;
-        [SerializeField] private RoomElement[] roomElements;
+        [SerializeField] private List<RoomElement> roomElements;
 
         public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
         {
@@ -27,7 +28,7 @@ namespace PuzzleCat.Level
                 return false;
             }
 
-            foreach (RoomElement element in RoomElement.AllElements)
+            foreach (RoomElement element in roomElements)
             {
                 if (element.IsObstacle
                     && element.RoomGridPosition.x == coordinates.x 
@@ -53,9 +54,19 @@ namespace PuzzleCat.Level
             element.Interact(movableElement);
         }
 
+        public void AddRoomElement(RoomElement roomElement)
+        {
+            roomElements.Add(roomElement);
+        }
+        
+        public void RemoveRoomElement(RoomElement roomElement)
+        {
+            roomElements.Remove(roomElement);
+        }
+
         private RoomElement GetElementAt(Vector3Int coordinates)
         {
-            foreach (RoomElement element in RoomElement.AllElements)
+            foreach (RoomElement element in roomElements)
             {
                 if (element.RoomGridPosition.x == coordinates.x 
                     && element.RoomGridPosition.y == coordinates.y 

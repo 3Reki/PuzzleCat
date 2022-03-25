@@ -48,7 +48,8 @@ namespace PuzzleCat.Utils
                 return Surface.BackWall;
             }
 
-            throw new ArgumentException("Surface normal isn't close to a room surface");
+            Debug.LogWarning("Not a plane surface");
+            return Surface.None;
         }
     }
 }

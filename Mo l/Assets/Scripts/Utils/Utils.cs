@@ -86,32 +86,29 @@ namespace PuzzleCat.Utils
 
 		public static Vector3Int WorldPointAsGridPoint(RaycastHit hit)
 		{
-			Vector3 roundedNormal = hit.normal.Round();
+			Surface surface = hit.normal.ToSurface();
 			Vector3 point = hit.point;
 
-			if (roundedNormal == Vector3.up)
+			switch (surface)
 			{
-				return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y), Mathf.FloorToInt(point.z));
+				case Surface.Floor:
+					return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y),
+						Mathf.FloorToInt(point.z));
+				case Surface.SideWall:
+					return new Vector3Int(Mathf.RoundToInt(point.x), Mathf.FloorToInt(point.y),
+						Mathf.FloorToInt(point.z));
+				case Surface.BackWall:
+					return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y),
+						Mathf.RoundToInt(point.z) - 1);
+				default:
+					return Vector3Int.back * 100;
 			}
-
-			if (roundedNormal == Vector3.right)
-			{
-				return new Vector3Int(Mathf.RoundToInt(point.x), Mathf.FloorToInt(point.y), Mathf.FloorToInt(point.z));
-			}
-
-			if (roundedNormal == Vector3.back)
-			{
-				return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y),
-					Mathf.FloorToInt(point.z) - 1);
-			}
-
-			Debug.LogWarning("Not Floor");
-			return Vector3Int.back * 100;
 		}
 	}
 
 	public enum Surface
 	{
+		None,
 		Floor,
 		SideWall,
 		BackWall

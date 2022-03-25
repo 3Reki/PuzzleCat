@@ -29,11 +29,15 @@ namespace PuzzleCat.Level
 		public override void Interact(IMovable movable)
 		{
 			if (!_active || Cat.IsCat(movable) != catPortal)
+			{
+				print("Can't use");
 				return;
+			}
 
 			Room linkedRoom = linkedPortal.CurrentRoom;
 			if (!linkedRoom.CanMoveOnCell(linkedPortal.ArrivalRoomPosition()))
 			{
+				print("Can't move");
 				return;
 			}
 
@@ -41,6 +45,8 @@ namespace PuzzleCat.Level
 
 			roomElement.transform.rotation = linkedPortal.ArrivalElementRotation();
 			movable.TeleportTo(linkedPortal.ArrivalWorldPosition());
+			CurrentRoom.RemoveRoomElement(roomElement);
+			linkedRoom.AddRoomElement(roomElement);
 			roomElement.SetRoom(linkedRoom);
 		}
 
@@ -51,6 +57,7 @@ namespace PuzzleCat.Level
 			_transform.rotation = Quaternion.FromToRotation(_transform.up, surfaceType.GetNormal()) *
 			                      _transform.rotation *
 			                      Quaternion.Euler(90, 0, 0);
+			parentRoom.AddRoomElement(this);
 			SetRoom(parentRoom);
 			Placed = true;
 
@@ -66,6 +73,7 @@ namespace PuzzleCat.Level
 			if (catPortal)
 				return;
 
+			CurrentRoom.RemoveRoomElement(this);
 			gameObject.SetActive(false);
 			Placed = false;
 			_active = false;
