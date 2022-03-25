@@ -9,38 +9,26 @@ namespace PuzzleCat.Level
 
 		public void MoveLeft()
 		{
-			Vector3Int newPosition = RoomGridPosition - transform.right.ToVector3Int();
-			if (CurrentRoom.CanMoveOnCell(newPosition))
-			{
-				CurrentRoom.MoveOnCell(this, newPosition);
-			}
+			Vector3Int newPosition = RoomGridPosition - objectTransform.right.ToVector3Int();
+			TryMovingTo(newPosition);
 		}
 
 		public void MoveRight()
 		{
-			Vector3Int newPosition = RoomGridPosition + transform.right.ToVector3Int();
-			if (CurrentRoom.CanMoveOnCell(newPosition))
-			{
-				CurrentRoom.MoveOnCell(this, newPosition);
-			}
+			Vector3Int newPosition = RoomGridPosition + objectTransform.right.ToVector3Int();
+			TryMovingTo(newPosition);
 		}
 
 		public void MoveForward()
 		{
-			Vector3Int newPosition = RoomGridPosition + transform.forward.ToVector3Int();
-			if (CurrentRoom.CanMoveOnCell(newPosition))
-			{
-				CurrentRoom.MoveOnCell(this, newPosition);
-			}
+			Vector3Int newPosition = RoomGridPosition + objectTransform.forward.ToVector3Int();
+			TryMovingTo(newPosition);
 		}
 
 		public void MoveBackward()
 		{
-			Vector3Int newPosition = RoomGridPosition - transform.forward.ToVector3Int();
-			if (CurrentRoom.CanMoveOnCell(newPosition))
-			{
-				CurrentRoom.MoveOnCell(this, newPosition);
-			}
+			Vector3Int newPosition = RoomGridPosition - objectTransform.forward.ToVector3Int();
+			TryMovingTo(newPosition);
 		}
 
 		public void MoveTo(Vector3Int coordinates)
@@ -51,6 +39,21 @@ namespace PuzzleCat.Level
 		public void TeleportTo(Vector3Int coordinates)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
+		}
+
+		private void TryMovingTo(Vector3Int position)
+		{
+			Surface currentSurface = objectTransform.up.ToSurface();
+			
+			if (CurrentRoom.TryUsingPortal(this, RoomGridPosition, (RoomGridPosition - position).ToSurface()))
+			{
+				return;
+			}
+			
+			if (CurrentRoom.CanMoveOnCell(position, currentSurface))
+			{
+				CurrentRoom.MoveOnCell(this, position, currentSurface);
+			}
 		}
 	}
 }

@@ -8,12 +8,11 @@ namespace PuzzleCat.Level
 	{
 		public int Id;
 		[HideInInspector] public bool Placed;
+		public bool Active { get; private set; }
 
 		[SerializeField] private Portal linkedPortal;
 		[SerializeField] private bool catPortal;
 		[SerializeField] private Vector3Int arrivalPositionOffset;
-
-		private bool _active;
 		private Transform _transform;
 
 		protected override Vector3Int WorldGridPosition
@@ -28,14 +27,19 @@ namespace PuzzleCat.Level
 
 		public override void Interact(IMovable movable)
 		{
-			if (!_active || Cat.IsCat(movable) != catPortal)
+			if (!Active || !Cat.IsCat(movable) || !catPortal)
 			{
 				print("Can't use");
 				return;
 			}
 
+			Use(movable);
+		}
+
+		public void Use(IMovable movable)
+		{
 			Room linkedRoom = linkedPortal.CurrentRoom;
-			if (!linkedRoom.CanMoveOnCell(linkedPortal.ArrivalRoomPosition()))
+			if (!linkedRoom.CanMoveOnCell(linkedPortal.ArrivalRoomPosition(), ImpactedSurface))
 			{
 				print("Can't move");
 				return;
@@ -57,14 +61,15 @@ namespace PuzzleCat.Level
 			_transform.rotation = Quaternion.FromToRotation(_transform.up, surfaceType.GetNormal()) *
 			                      _transform.rotation *
 			                      Quaternion.Euler(90, 0, 0);
+			ImpactedSurface = surfaceType;
 			parentRoom.AddRoomElement(this);
 			SetRoom(parentRoom);
 			Placed = true;
 
 			if (linkedPortal.Placed)
 			{
-				_active = true;
-				linkedPortal._active = true;
+				Active = true;
+				linkedPortal.Active = true;
 			}
 		}
 
@@ -76,11 +81,11 @@ namespace PuzzleCat.Level
 			CurrentRoom.RemoveRoomElement(this);
 			gameObject.SetActive(false);
 			Placed = false;
-			_active = false;
-			linkedPortal._active = false;
+			Active = false;
+			linkedPortal.Active = false;
 		}
 
-		private Vector3 GetOffset(Surface surfaceType)
+		private static Vector3 GetOffset(Surface surfaceType)
 		{
 			return surfaceType switch
 			{
@@ -93,14 +98,12 @@ namespace PuzzleCat.Level
 
 		private Quaternion ArrivalElementRotation()
 		{
-			Surface currentSurface = (-_transform.forward).ToSurface();
-
-			return currentSurface switch
+			return ImpactedSurface switch
 			{
 				Surface.Floor => Quaternion.identity,
 				Surface.SideWall => Quaternion.Euler(-90, -90, 0),
 				Surface.BackWall => Quaternion.Euler(-90, 0, 0),
-				_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+				_ => throw new ArgumentOutOfRangeException(nameof(ImpactedSurface), ImpactedSurface, null)
 			};
 		}
 
@@ -116,8 +119,9 @@ namespace PuzzleCat.Level
 		{
 			if (!catPortal) return;
 
-			_active = true;
+			Active = true;
 			Placed = true;
+			ImpactedSurface = (-_transform.forward).ToSurface();
 		}
 	}
 }

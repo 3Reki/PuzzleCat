@@ -111,6 +111,7 @@ namespace PuzzleCat.Utils
 		None,
 		Floor,
 		SideWall,
-		BackWall
+		BackWall,
+		All
 	}
 }

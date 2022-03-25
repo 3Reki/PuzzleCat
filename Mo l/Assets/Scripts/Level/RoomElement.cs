@@ -1,51 +1,41 @@
-using System.Collections.Generic;
+using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-    public class RoomElement : MonoBehaviour
-    {
-        public static readonly List<RoomElement> AllElements = new();
+	public class RoomElement : MonoBehaviour
+	{
+		public Surface ImpactedSurface = Surface.All;
+		public bool IsObstacle;
+		public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
 
-        public bool IsObstacle;
-        public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
-        
-        protected Room CurrentRoom;
-        protected virtual Vector3Int WorldGridPosition
-        {
-            get
-            {
-                Vector3 worldPosition = transform.position;
-                return new Vector3Int(
-                    Mathf.RoundToInt(worldPosition.x - 0.5f), 
-                    Mathf.RoundToInt(worldPosition.y - 0.5f),
-                    Mathf.RoundToInt(worldPosition.z - 0.5f));
-            }
-        }
+		protected Room CurrentRoom;
 
-        public void SetRoom(Room room)
-        {
-            CurrentRoom = room;
-        }
+		protected virtual Vector3Int WorldGridPosition
+		{
+			get
+			{
+				Vector3 worldPosition = transform.position;
+				return new Vector3Int(
+					Mathf.RoundToInt(worldPosition.x - 0.5f),
+					Mathf.RoundToInt(worldPosition.y - 0.5f),
+					Mathf.RoundToInt(worldPosition.z - 0.5f));
+			}
+		}
 
-        public virtual void Interact(IMovable movable)
-        {
-            Debug.LogWarning("No interaction implemented");
-        }
+		public void SetRoom(Room room)
+		{
+			CurrentRoom = room;
+		}
 
-        protected virtual Vector3 GetWorldPosition(Vector3Int gridCoordinates)
-        {
-            return new Vector3(gridCoordinates.x + 0.5f, gridCoordinates.y + 0.5f, gridCoordinates.z + 0.5f);
-        }
-        
-        private void OnEnable()
-        {
-            AllElements.Add(this);
-        }
+		public virtual void Interact(IMovable movable)
+		{
+			Debug.LogWarning("No interaction implemented");
+		}
 
-        private void OnDisable()
-        {
-            AllElements.Remove(this);
-        }
-    }
+		protected virtual Vector3 GetWorldPosition(Vector3Int gridCoordinates)
+		{
+			return new Vector3(gridCoordinates.x + 0.5f, gridCoordinates.y + 0.5f, gridCoordinates.z + 0.5f);
+		}
+	}
 }

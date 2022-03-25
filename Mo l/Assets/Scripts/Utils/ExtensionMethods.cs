@@ -34,16 +34,20 @@ namespace PuzzleCat.Utils
         
         public static Surface ToSurface(this Vector3 surfaceNormal)
         {
-            Vector3 roundedNormal = surfaceNormal.Round();
-            if (roundedNormal == Vector3.up)
+            return surfaceNormal.ToVector3Int().ToSurface();
+        }
+        
+        public static Surface ToSurface(this Vector3Int surfaceNormal)
+        {
+            if (surfaceNormal == Vector3Int.up)
             {
                 return Surface.Floor;
             }
-            if (roundedNormal == Vector3.right)
+            if (surfaceNormal == Vector3Int.right)
             {
                 return Surface.SideWall;
             }
-            if (roundedNormal == Vector3.back)
+            if (surfaceNormal == Vector3Int.back)
             {
                 return Surface.BackWall;
             }
