@@ -11,7 +11,6 @@ TagManager:
   - Selectable
   - Water
   - UI
-  - CullingCameraGrid
   - 
   - 
   - 
@@ -20,7 +19,8 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - furniture
+  - catPortal
   - 
   - 
   - 
