@@ -20,7 +20,7 @@ namespace PuzzleCat.Level
 			return roomGridCoordinates + gridWorldPosition;
 		}
 
-		public bool TryUsingPortal(IMovable movable, Vector3Int portalPosition, Surface portalSurface)
+		public Portal FindPortal(Vector3Int portalPosition, Surface portalSurface)
 		{
 			foreach (RoomElement roomElement in roomElements)
 			{
@@ -32,12 +32,11 @@ namespace PuzzleCat.Level
 				    && portal.ImpactedSurface == portalSurface
 				    && portal.Active)
 				{
-					portal.Use(movable);
-					return true;
+					return portal;
 				}
 			}
 
-			return false;
+			return null;
 		}
 
 		public bool CanMoveOnCell(Vector3Int coordinates, Surface surface)
