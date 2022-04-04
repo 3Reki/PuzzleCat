@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using PuzzleCat.Utils;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 
 namespace PuzzleCat.Level
 {
@@ -15,30 +13,22 @@ namespace PuzzleCat.Level
 
 		public void MoveLeft()
 		{
-			Array.Sort(linkedMovables,
-				(movable1, movable2) => movable1.RoomGridPosition.x - movable2.RoomGridPosition.x);
-			TryMovingTo(-objectTransform.right.ToVector3Int());
+			TryMovingTowards(-objectTransform.right.ToVector3Int());
 		}
 
 		public void MoveRight()
 		{
-			Array.Sort(linkedMovables,
-				(movable1, movable2) => movable2.RoomGridPosition.x - movable1.RoomGridPosition.x);
-			TryMovingTo(objectTransform.right.ToVector3Int());
+			TryMovingTowards(objectTransform.right.ToVector3Int());
 		}
 
 		public void MoveForward()
 		{
-			Array.Sort(linkedMovables,
-				(movable1, movable2) => movable2.RoomGridPosition.z - movable1.RoomGridPosition.z);
-			TryMovingTo(objectTransform.forward.ToVector3Int());
+			TryMovingTowards(objectTransform.forward.ToVector3Int());
 		}
 
 		public void MoveBackward()
 		{
-			Array.Sort(linkedMovables,
-				(movable1, movable2) => movable1.RoomGridPosition.z - movable2.RoomGridPosition.z);
-			TryMovingTo(-objectTransform.forward.ToVector3Int());
+			TryMovingTowards(-objectTransform.forward.ToVector3Int());
 		}
 
 		public void MoveTo(Vector3Int coordinates)
@@ -51,8 +41,12 @@ namespace PuzzleCat.Level
 			objectTransform.position = GetWorldPosition(coordinates);
 		}
 
-		private void TryMovingTo(Vector3Int position)
+		private void TryMovingTowards(Vector3Int direction)
 		{
+			Array.Sort(linkedMovables,
+				(movable1, movable2) =>
+					((movable2.RoomGridPosition - movable1.RoomGridPosition) * direction).Sum());
+			
 			/*if (CurrentRoom.FindPortal(RoomGridPosition, position.ToSurface()))
 			{
 				return;
@@ -60,12 +54,12 @@ namespace PuzzleCat.Level
 
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				if (AnyLinkedElementAt(movable.RoomGridPosition + position))
+				if (AnyLinkedElementAt(movable.RoomGridPosition + direction))
 				{
 					continue;
 				}
 				
-				if (!CurrentRoom.CanMoveOnCell(movable.RoomGridPosition + position, movable.currentSurface))
+				if (!CurrentRoom.CanMoveOnCell(movable.RoomGridPosition + direction, movable.currentSurface))
 				{
 					return;
 				}
@@ -73,7 +67,7 @@ namespace PuzzleCat.Level
 
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + position, movable.currentSurface);
+				CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + direction, movable.currentSurface);
 			}
 			
 		}
