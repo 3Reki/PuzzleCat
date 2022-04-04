@@ -1,97 +1,118 @@
+using System.Collections.Generic;
+using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.Level
 {
-    public class Room : MonoBehaviour
-    {
-        [SerializeField] private Vector3Int gridWorldPosition;
-        [SerializeField] private Vector3Int gridSize;
-        [SerializeField] private RoomElement[] roomElements;
+	public class Room : MonoBehaviour
+	{
+		[SerializeField] private Vector3Int gridWorldPosition;
+		[SerializeField] private Vector3Int gridSize;
+		[SerializeField] private List<RoomElement> roomElements;
 
-        private RoomElement[,,] _grid;
+		public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
+		{
+			return worldGridCoordinates - gridWorldPosition;
+		}
 
-        public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
-        {
-            return worldGridCoordinates - gridWorldPosition;
-        }
+		public Vector3Int RoomToWorldCoordinates(Vector3Int roomGridCoordinates)
+		{
+			return roomGridCoordinates + gridWorldPosition;
+		}
 
-        public Vector3Int RoomToWorldCoordinates(Vector3Int roomGridCoordinates)
-        {
-            return roomGridCoordinates + gridWorldPosition;
-        }
+		public bool TryUsingPortal(IMovable movable, Vector3Int portalPosition, Surface portalSurface)
+		{
+			foreach (RoomElement roomElement in roomElements)
+			{
+				if (roomElement is not Portal portal) continue;
 
-        public bool CanMoveOnCell(Vector3Int coordinates)
-        {
-            if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
-                coordinates.y < 0 || coordinates.y >= gridSize.y ||
-                coordinates.z < 0 || coordinates.z >= gridSize.z)
-            {
-                return false;
-            }
+				if (portal.RoomGridPosition.x == portalPosition.x
+				    && portal.RoomGridPosition.y == portalPosition.y
+				    && portal.RoomGridPosition.z == portalPosition.z
+				    && portal.ImpactedSurface == portalSurface
+				    && portal.Active)
+				{
+					portal.Use(movable);
+					return true;
+				}
+			}
 
-            RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
-            return element == null || element.Walkable;
-        }
+			return false;
+		}
 
-        public void MoveOnCell(IMovable movableElement, Vector3Int coordinates)
-        {
-            RoomElement element = _grid[coordinates.x, coordinates.y, coordinates.z];
-            if (element == null)
-            {
-                RemoveRoomElement(movableElement.RoomElement);
-                movableElement.MoveTo(RoomToWorldCoordinates(coordinates));
-                AddRoomElement(movableElement.RoomElement, coordinates);
-                return;
-            }
+		public bool CanMoveOnCell(Vector3Int coordinates, Surface surface)
+		{
+			if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
+			    coordinates.y < 0 || coordinates.y >= gridSize.y ||
+			    coordinates.z < 0 || coordinates.z >= gridSize.z)
+			{
+				return false;
+			}
 
-            element.Interact(movableElement);
-        }
+			foreach (RoomElement element in roomElements)
+			{
+				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
+				    && element.IsObstacle
+				    && element.RoomGridPosition.x == coordinates.x
+				    && element.RoomGridPosition.y == coordinates.y
+				    && element.RoomGridPosition.z == coordinates.z)
+				{
+					return false;
+				}
+			}
 
-        public void AddRoomElement(RoomElement element, Vector3Int position)
-        {
-            // TODO : check if not possible
+			return true;
+		}
 
-            if (_grid[position.x, position.y, position.z] != null)
-            {
-                Debug.LogWarning("A Room Element got replaced", this);
-            }
+		public void MoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
+		{
+			RoomElement element = GetElementAt(coordinates, surface);
+			if (element == null)
+			{
+				movableElement.MoveTo(RoomToWorldCoordinates(coordinates));
+				return;
+			}
 
-            _grid[position.x, position.y, position.z] = element;
-        }
+			element.Interact(movableElement);
+		}
 
-        public void RemoveRoomElement(RoomElement element)
-        {
-            RemoveRoomElementAt(element.RoomGridPosition);
-        }
+		public void AddRoomElement(RoomElement roomElement)
+		{
+			roomElements.Add(roomElement);
+		}
 
-        private void RemoveRoomElementAt(Vector3Int position)
-        {
-            _grid[position.x, position.y, position.z] = null;
-        }
+		public void RemoveRoomElement(RoomElement roomElement)
+		{
+			roomElements.Remove(roomElement);
+		}
 
-        private void SetRoomElements()
-        {
-            foreach (RoomElement roomElement in roomElements)
-            {
-                roomElement.SetRoom(this);
-            }
-        }
+		private RoomElement GetElementAt(Vector3Int coordinates, Surface surface)
+		{
+			foreach (RoomElement element in roomElements)
+			{
+				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
+				    && element.RoomGridPosition.x == coordinates.x
+				    && element.RoomGridPosition.y == coordinates.y
+				    && element.RoomGridPosition.z == coordinates.z)
+				{
+					return element;
+				}
+			}
 
-        private void CreateRoomGrid()
-        {
-            _grid = new RoomElement[gridSize.x, gridSize.y, gridSize.z];
+			return null;
+		}
 
-            for (int i = 1; i <= roomElements.Length; i++)
-            {
-                Vector3Int elementCoordinates = roomElements[^i].RoomGridPosition;
-                _grid[elementCoordinates.x, elementCoordinates.y, elementCoordinates.z] = roomElements[^i];
-            }
-        }
+		private void SetRoomElements()
+		{
+			foreach (RoomElement roomElement in roomElements)
+			{
+				roomElement.SetRoom(this);
+			}
+		}
 
-        private void Awake()
-        {
-            SetRoomElements();
-            CreateRoomGrid();
-        }
-    }
+		private void Awake()
+		{
+			SetRoomElements();
+		}
+	}
 }
