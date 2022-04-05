@@ -1456,7 +1456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImpactedSurface: 4
+  ImpactedSurface: 1
   IsObstacle: 0
   Id: 0
   Placed: 0
@@ -1564,8 +1564,9 @@ MonoBehaviour:
   IsObstacle: 1
   objectTransform: {fileID: 800364710}
   linkedMovables:
-  - {fileID: 1422874159}
   - {fileID: 800364706}
+  - {fileID: 1422874159}
+  currentSurface: 1
 --- !u!65 &800364707
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2427,7 +2428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bae879f6d4bcdf46930db1466b6d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImpactedSurface: 4
+  ImpactedSurface: 1
   IsObstacle: 0
   Id: 0
   Placed: 0
@@ -2670,6 +2671,7 @@ MonoBehaviour:
   linkedMovables:
   - {fileID: 800364706}
   - {fileID: 1422874159}
+  currentSurface: 1
 --- !u!65 &1422874160
 BoxCollider:
   m_ObjectHideFlags: 0

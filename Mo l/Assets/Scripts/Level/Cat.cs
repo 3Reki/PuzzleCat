@@ -52,7 +52,7 @@ namespace PuzzleCat.Level
 			playerAgent.SetDestination(coordinates + _offset);
 		}
 
-		public void TeleportTo(Vector3Int coordinates)
+		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
 		{
 			playerAgent.Warp(GetWorldPosition(coordinates));
 		}

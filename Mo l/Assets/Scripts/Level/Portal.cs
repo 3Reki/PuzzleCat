@@ -33,7 +33,7 @@ namespace PuzzleCat.Level
 				return false;
 			}
 			
-			if (!linkedPortal.CurrentRoom.CanMoveOnCell(movable, linkedPortal.ArrivalRoomPosition(), ImpactedSurface))
+			if (!linkedPortal.CurrentRoom.CanMoveOnCell(movable, ArrivalRoomPosition(), ImpactedSurface))
 			{
 				print("Can't move");
 				return false;
@@ -55,8 +55,8 @@ namespace PuzzleCat.Level
 			Room linkedRoom = linkedPortal.CurrentRoom;
 			RoomElement roomElement = movable.RoomElement;
 
-			roomElement.transform.rotation = linkedPortal.ArrivalElementRotation();
-			movable.TeleportTo(linkedPortal.ArrivalWorldPosition());
+			roomElement.transform.rotation = ArrivalElementRotation(roomElement);
+			movable.TeleportTo(ArrivalWorldPosition(), linkedPortal.ImpactedSurface);
 			CurrentRoom.RemoveRoomElement(roomElement);
 			linkedRoom.AddRoomElement(roomElement);
 			roomElement.SetRoom(linkedRoom);
@@ -104,19 +104,14 @@ namespace PuzzleCat.Level
 			};
 		}
 
-		private Quaternion ArrivalElementRotation()
+		private Quaternion ArrivalElementRotation(RoomElement roomElement)
 		{
-			return ImpactedSurface switch
-			{
-				Surface.Floor => Quaternion.identity,
-				Surface.SideWall => Quaternion.Euler(-90, -90, 0),
-				Surface.BackWall => Quaternion.Euler(-90, 0, 0),
-				_ => throw new ArgumentOutOfRangeException(nameof(ImpactedSurface), ImpactedSurface, null)
-			};
+			return Quaternion.FromToRotation(_transform.position - roomElement.transform.position, linkedPortal.ImpactedSurface.GetNormal()) *
+			       roomElement.transform.rotation;
 		}
 
-		private Vector3Int ArrivalWorldPosition() => WorldGridPosition + arrivalPositionOffset;
-		private Vector3Int ArrivalRoomPosition() => RoomGridPosition + arrivalPositionOffset;
+		private Vector3Int ArrivalWorldPosition() => linkedPortal.WorldGridPosition + linkedPortal.arrivalPositionOffset;
+		private Vector3Int ArrivalRoomPosition() => linkedPortal.RoomGridPosition + linkedPortal.arrivalPositionOffset;
 
 		private void Awake()
 		{

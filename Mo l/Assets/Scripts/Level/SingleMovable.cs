@@ -8,8 +8,8 @@ namespace PuzzleCat.Level
 	{
 		[SerializeField] private Transform objectTransform;
 		[SerializeField] private SingleMovable[] linkedMovables;
-
-		private Surface _currentSurface => objectTransform.up.ToSurface();
+		[SerializeField] private Surface currentSurface;
+		
 		private bool _inPortal;
 		private Vector3Int _portalDirection;
 		private Vector3Int _direction;
@@ -18,7 +18,13 @@ namespace PuzzleCat.Level
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = -movable.objectTransform.right.ToVector3Int();
+				movable._direction = currentSurface switch
+				{
+					Surface.Floor => Vector3Int.left,
+					Surface.SideWall => Vector3Int.back,
+					Surface.BackWall => Vector3Int.left,
+					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+				};
 			}
 			TryMoving();
 		}
@@ -27,7 +33,13 @@ namespace PuzzleCat.Level
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = movable.objectTransform.right.ToVector3Int();
+				movable._direction = currentSurface switch
+				{
+					Surface.Floor => Vector3Int.right,
+					Surface.SideWall => Vector3Int.forward,
+					Surface.BackWall => Vector3Int.right,
+					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+				};
 			}
 			TryMoving();
 		}
@@ -36,7 +48,13 @@ namespace PuzzleCat.Level
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = movable.objectTransform.forward.ToVector3Int();
+				movable._direction = currentSurface switch
+				{
+					Surface.Floor => Vector3Int.forward,
+					Surface.SideWall => Vector3Int.up,
+					Surface.BackWall => Vector3Int.up,
+					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+				};
 			}
 			TryMoving();
 		}
@@ -45,7 +63,13 @@ namespace PuzzleCat.Level
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = -movable.objectTransform.forward.ToVector3Int();
+				movable._direction = currentSurface switch
+				{
+					Surface.Floor => Vector3Int.back,
+					Surface.SideWall => Vector3Int.down,
+					Surface.BackWall => Vector3Int.down,
+					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+				};
 			}
 			TryMoving();
 		}
@@ -55,17 +79,14 @@ namespace PuzzleCat.Level
 			objectTransform.position = GetWorldPosition(coordinates);
 		}
 
-		public void TeleportTo(Vector3Int coordinates)
+		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
+			currentSurface = newSurface;
 		}
 
 		private void TryMoving()
 		{
-			Array.Sort(linkedMovables,
-				(movable1, movable2) =>
-					((movable2.RoomGridPosition - movable1.RoomGridPosition) * _direction).Sum());
-
 			bool linkedThroughPortal = IsInPortal();
 
 			if (!linkedThroughPortal)
@@ -77,6 +98,18 @@ namespace PuzzleCat.Level
 			{
 				return;
 			}
+			
+			foreach (SingleMovable movable in linkedMovables)
+			{
+				if (movable._inPortal)
+				{
+					movable._direction = movable.currentSurface.GetNormal();
+				}
+			}
+			
+			Array.Sort(linkedMovables,
+				(movable1, movable2) =>
+					((movable2.RoomGridPosition - movable1.RoomGridPosition) * _direction).Sum());
 
 			foreach (SingleMovable movable in linkedMovables)
 			{
@@ -86,7 +119,7 @@ namespace PuzzleCat.Level
 				}
 
 				if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) == null && 
-				    !movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable._currentSurface))
+				    !movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.currentSurface))
 				{
 					return;
 				}
@@ -107,7 +140,7 @@ namespace PuzzleCat.Level
 					continue;
 				}
 
-				movable.CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable._currentSurface);
+				movable.CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.currentSurface);
 			}
 		}
 

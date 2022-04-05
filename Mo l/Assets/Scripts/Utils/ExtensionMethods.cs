@@ -25,14 +25,14 @@ namespace PuzzleCat.Utils
         {
             return vector3.x + vector3.y + vector3.z;
         }
-        
-        public static Vector3 GetNormal(this Surface surface)
+
+        public static Vector3Int GetNormal(this Surface surface)
         {
             return surface switch
             {
-                Surface.Floor => Vector3.up,
-                Surface.SideWall => Vector3.right,
-                Surface.BackWall => Vector3.back,
+                Surface.Floor => Vector3Int.up,
+                Surface.SideWall => Vector3Int.right,
+                Surface.BackWall => Vector3Int.back,
                 _ => throw new ArgumentOutOfRangeException(nameof(surface), surface, null)
             };
         }

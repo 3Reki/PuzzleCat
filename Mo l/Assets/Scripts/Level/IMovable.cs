@@ -1,3 +1,4 @@
+using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.Level
@@ -7,6 +8,6 @@ namespace PuzzleCat.Level
         RoomElement RoomElement => (RoomElement) this;
 
         void MoveTo(Vector3Int coordinates);
-        void TeleportTo(Vector3Int coordinates);
+        void TeleportTo(Vector3Int coordinates, Surface newSurface);
     }
 }
