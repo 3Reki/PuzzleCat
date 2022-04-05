@@ -25,26 +25,34 @@ namespace PuzzleCat.Level
 			}
 		}
 
-		public override void Interact(IMovable movable)
+		public override bool CanInteract(IMovable movable)
 		{
 			if (!Active || !Cat.IsCat(movable) || !catPortal)
 			{
 				print("Can't use");
-				return;
+				return false;
 			}
+			
+			if (!linkedPortal.CurrentRoom.CanMoveOnCell(movable, linkedPortal.ArrivalRoomPosition(), ImpactedSurface))
+			{
+				print("Can't move");
+				return false;
+			}
+			
+			return true;
+		}
 
-			Use(movable);
+		public override void Interact(IMovable movable)
+		{
+			if (CanInteract(movable))
+			{
+				Use(movable);
+			}
 		}
 
 		public void Use(IMovable movable)
 		{
 			Room linkedRoom = linkedPortal.CurrentRoom;
-			if (!linkedRoom.CanMoveOnCell(linkedPortal.ArrivalRoomPosition(), ImpactedSurface))
-			{
-				print("Can't move");
-				return;
-			}
-
 			RoomElement roomElement = movable.RoomElement;
 
 			roomElement.transform.rotation = linkedPortal.ArrivalElementRotation();

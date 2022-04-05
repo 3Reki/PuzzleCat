@@ -28,6 +28,11 @@ namespace PuzzleCat.Level
 			CurrentRoom = room;
 		}
 
+		public virtual bool CanInteract(IMovable movable)
+		{
+			return !IsObstacle;
+		}
+
 		public virtual void Interact(IMovable movable)
 		{
 			Debug.LogWarning("No interaction implemented");

@@ -39,7 +39,7 @@ namespace PuzzleCat.Level
 			return null;
 		}
 
-		public bool CanMoveOnCell(Vector3Int coordinates, Surface surface)
+		public bool CanMoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
 		{
 			if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
 			    coordinates.y < 0 || coordinates.y >= gridSize.y ||
@@ -51,10 +51,10 @@ namespace PuzzleCat.Level
 			foreach (RoomElement element in roomElements)
 			{
 				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
-				    && element.IsObstacle
 				    && element.RoomGridPosition.x == coordinates.x
 				    && element.RoomGridPosition.y == coordinates.y
-				    && element.RoomGridPosition.z == coordinates.z)
+				    && element.RoomGridPosition.z == coordinates.z
+				    && !element.CanInteract(movableElement))
 				{
 					return false;
 				}
