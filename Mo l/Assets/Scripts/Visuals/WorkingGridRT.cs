@@ -23,15 +23,15 @@ namespace PuzzleCat
         public float alphaValue = 1.0f;
 
 
-        private int heightReceived;
-        private int widthReceived;
+        private int _heightReceived;
+        private int _widthReceived;
 
-        private List<Material> cellMatList;
-        private List<GameObject> cellList;
-        private GameObject cellInst;
+        private List<Material> _cellMatList;
+        private List<GameObject> _cellList;
+        private GameObject _cellInst;
 
-        private Vector3 direction = new Vector3(0f, 1.5f, 0f);
-        private float maxDist = 1.5f;
+        private Vector3 _direction = new Vector3(0f, 1.5f, 0f);
+        private float _maxDist = 1.5f;
 
 
         
@@ -39,8 +39,8 @@ namespace PuzzleCat
         {
             float x = Mathf.Floor(transform.localScale.x);
             float z = Mathf.Floor(transform.localScale.z);
-            heightReceived = (int)z;
-            widthReceived = (int)x;
+            _heightReceived = (int)z;
+            _widthReceived = (int)x;
         }
         
         private void Start()
@@ -57,7 +57,7 @@ namespace PuzzleCat
         {
             if (action == false)
             {
-                for (int i = 0; i < cellList.Count; i++)
+                for (int i = 0; i < _cellList.Count; i++)
                 {
                     //cellInst.gameObject.
                 }             
@@ -67,37 +67,37 @@ namespace PuzzleCat
         }
         private void NonWalkableCell()
         {
-            for (int i = 0; i < cellList.Count; i++)
+            for (int i = 0; i < _cellList.Count; i++)
             {
                 cellMat.EnableKeyword("_CHANNELSELECTION");
 
-                Vector3 cellPos = cellList[i].transform.position;
+                Vector3 cellPos = _cellList[i].transform.position;
                 Vector3 downRay = cellPos - new Vector3(0f, 0.2f, 0f);
 
                 LayerMask furnitureMask = LayerMask.GetMask("furniture");
                 LayerMask catPortalMask = LayerMask.GetMask("catPortal");
 
-                if (Physics.Raycast(downRay, direction, maxDist, furnitureMask))
+                if (Physics.Raycast(downRay, _direction, _maxDist, furnitureMask))
                 {
                     //cellMat = cellList[i].GetComponent<MeshRenderer>().material;
-                    foreach (GameObject item in cellList)
+                    foreach (GameObject item in _cellList)
                     {
-                        cellList[i].GetComponent<MeshRenderer>().material.color = nonWalkableCells;
+                        _cellList[i].GetComponent<MeshRenderer>().material.color = nonWalkableCells;
                     }
 
                 }
-                else if (Physics.Raycast(downRay, direction, maxDist, catPortalMask))
+                else if (Physics.Raycast(downRay, _direction, _maxDist, catPortalMask))
                 {
-                    foreach (GameObject item in cellList)
+                    foreach (GameObject item in _cellList)
                     {
-                        cellList[i].GetComponent<MeshRenderer>().material.color = portalCells;
+                        _cellList[i].GetComponent<MeshRenderer>().material.color = portalCells;
                     }
                 }
                 else
                 {
-                    foreach (GameObject item in cellList)
+                    foreach (GameObject item in _cellList)
                     {
-                        cellList[i].GetComponent<MeshRenderer>().material.color = walkableCells;
+                        _cellList[i].GetComponent<MeshRenderer>().material.color = walkableCells;
                     }
                 }
             }
@@ -105,25 +105,25 @@ namespace PuzzleCat
 
         private void spawnCell()
         {
-            cellList = new List<GameObject>();
+            _cellList = new List<GameObject>();
 
-            for (int x = 0; x < widthReceived; x++)
+            for (int x = 0; x < _widthReceived; x++)
             {
-                for (int y = 0; y < heightReceived; y++)
+                for (int y = 0; y < _heightReceived; y++)
                 {
-                    cellInst = Instantiate(cellPrefab, new Vector3(x, 0.05f, y), Quaternion.Euler(90, 0, 0), parent.transform);
-                    cellList.Add(cellInst);
+                    _cellInst = Instantiate(cellPrefab, new Vector3(x, 0.05f, y), Quaternion.Euler(90, 0, 0), parent.transform);
+                    _cellList.Add(_cellInst);
                 }
             }
-            foreach (GameObject item in cellList)
+            foreach (GameObject item in _cellList)
             {
-                if (heightReceived % 2 == 0 && widthReceived % 2 == 0)
+                if (_heightReceived % 2 == 0 && _widthReceived % 2 == 0)
                 {
-                    item.transform.Translate((-widthReceived / 2) + .5f, (-heightReceived / 2) + .5f, 0);
+                    item.transform.Translate((-_widthReceived / 2) + .5f, (-_heightReceived / 2) + .5f, 0);
                 }
                 else
                 {
-                    item.transform.Translate((-widthReceived / 2), (-heightReceived / 2), 0);
+                    item.transform.Translate((-_widthReceived / 2), (-_heightReceived / 2), 0);
                 }
             }
         }
