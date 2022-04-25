@@ -9,6 +9,8 @@ namespace PuzzleCat.Level
 {
     public class InputManager : MonoBehaviour
     {
+        public static NavMeshSurface[] Surfaces;
+        [SerializeField] private NavMeshSurface[] surfaces;
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
@@ -163,12 +165,12 @@ namespace PuzzleCat.Level
                 if (_lastTouchPosition.x > _initialTouchPosition.x)
                 {
                     //Right swipe
-                    _selectedMovableObject.MoveRight();
+                    _selectedMovableObject.MoveRight(cat);
                 }
                 else
                 {
                     //Left swipe
-                    _selectedMovableObject.MoveLeft();
+                    _selectedMovableObject.MoveLeft(cat);
                 }
             }
             else
@@ -176,12 +178,12 @@ namespace PuzzleCat.Level
                 if (_lastTouchPosition.y > _initialTouchPosition.y)
                 {
                     //Up swipe
-                    _selectedMovableObject.MoveForward();
+                    _selectedMovableObject.MoveForward(cat);
                 }
                 else
                 {
                     //Down swipe
-                    _selectedMovableObject.MoveBackward();
+                    _selectedMovableObject.MoveBackward(cat);
                 }
             }
         }
@@ -193,22 +195,22 @@ namespace PuzzleCat.Level
             {
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
-                    _selectedMovableObject.MoveLeft();
+                    _selectedMovableObject.MoveLeft(cat);
                 }
 
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    _selectedMovableObject.MoveRight();
+                    _selectedMovableObject.MoveRight(cat);
                 }
 
                 if (Input.GetKeyDown(KeyCode.UpArrow))
                 {
-                    _selectedMovableObject.MoveForward();
+                    _selectedMovableObject.MoveForward(cat);
                 }
 
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
-                    _selectedMovableObject.MoveBackward();
+                    _selectedMovableObject.MoveBackward(cat);
                 }
             }
 
@@ -249,6 +251,7 @@ namespace PuzzleCat.Level
 
         private void Awake()
         {
+            Surfaces = surfaces;
             ConstructPortalsDictionary();
         }
 

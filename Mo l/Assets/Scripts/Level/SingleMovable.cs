@@ -1,6 +1,7 @@
 using System;
 using PuzzleCat.Utils;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace PuzzleCat.Level
 {
@@ -14,7 +15,7 @@ namespace PuzzleCat.Level
 		private Vector3Int _portalDirection;
 		private Vector3Int _direction;
 
-		public void MoveLeft()
+		public void MoveLeft(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
@@ -26,10 +27,10 @@ namespace PuzzleCat.Level
 					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
 				};
 			}
-			TryMoving();
+			TryMoving(cat);
 		}
 
-		public void MoveRight()
+		public void MoveRight(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
@@ -41,10 +42,10 @@ namespace PuzzleCat.Level
 					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
 				};
 			}
-			TryMoving();
+			TryMoving(cat);
 		}
 
-		public void MoveForward()
+		public void MoveForward(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
@@ -56,10 +57,10 @@ namespace PuzzleCat.Level
 					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
 				};
 			}
-			TryMoving();
+			TryMoving(cat);
 		}
 
-		public void MoveBackward()
+		public void MoveBackward(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
@@ -71,12 +72,16 @@ namespace PuzzleCat.Level
 					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
 				};
 			}
-			TryMoving();
+			TryMoving(cat);
 		}
 
 		public void MoveTo(Vector3Int coordinates)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
+			foreach (NavMeshSurface surface in InputManager.Surfaces)
+			{
+				surface.BuildNavMesh();
+			}
 		}
 
 		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
@@ -85,7 +90,7 @@ namespace PuzzleCat.Level
 			currentSurface = newSurface;
 		}
 
-		private void TryMoving()
+		private void TryMoving(Cat cat)
 		{
 			bool linkedThroughPortal = IsInPortal();
 
@@ -111,6 +116,8 @@ namespace PuzzleCat.Level
 				(movable1, movable2) =>
 					((movable2.RoomGridPosition - movable1.RoomGridPosition) * _direction).Sum());
 
+			Vector3Int underCatPosition = cat.RoomGridPosition - cat.transform.up.ToVector3Int();
+			
 			foreach (SingleMovable movable in linkedMovables)
 			{
 				if (AnyLinkedElementAt(movable.RoomGridPosition + movable._direction))
@@ -118,8 +125,9 @@ namespace PuzzleCat.Level
 					continue;
 				}
 
-				if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) == null && 
-				    !movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.currentSurface))
+				if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) == null &&
+					!movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction,
+						movable.currentSurface) || underCatPosition == movable.RoomGridPosition)
 				{
 					return;
 				}

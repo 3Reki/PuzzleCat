@@ -84,15 +84,30 @@ namespace PuzzleCat.Level
 		{
 			roomElements.Remove(roomElement);
 		}
+		
+		public RoomElement GetElementAt(Vector3Int roomCoordinates)
+		{
+			foreach (RoomElement element in roomElements)
+			{
+				if (element.RoomGridPosition.x == roomCoordinates.x
+				    && element.RoomGridPosition.y == roomCoordinates.y
+				    && element.RoomGridPosition.z == roomCoordinates.z)
+				{
+					return element;
+				}
+			}
 
-		private RoomElement GetElementAt(Vector3Int coordinates, Surface surface)
+			return null;
+		}
+
+		private RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
 		{
 			foreach (RoomElement element in roomElements)
 			{
 				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
-				    && element.RoomGridPosition.x == coordinates.x
-				    && element.RoomGridPosition.y == coordinates.y
-				    && element.RoomGridPosition.z == coordinates.z)
+				    && element.RoomGridPosition.x == roomCoordinates.x
+				    && element.RoomGridPosition.y == roomCoordinates.y
+				    && element.RoomGridPosition.z == roomCoordinates.z)
 				{
 					return element;
 				}
