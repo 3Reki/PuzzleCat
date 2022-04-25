@@ -13,6 +13,7 @@ namespace PuzzleCat.Level
 		
 		private bool _inPortal;
 		private Vector3Int _portalDirection;
+		private Surface _surfaceBeforePortal;
 		private Vector3Int _direction;
 
 		public void MoveLeft(Cat cat)
@@ -98,17 +99,24 @@ namespace PuzzleCat.Level
 			{
 				ExitPortal();
 			}
-
-			if (linkedThroughPortal && _direction != _portalDirection)
+			else
 			{
-				return;
+				if (_direction != _portalDirection && _direction != -_portalDirection)
+				{
+					return;
+				}
 			}
-			
+
 			foreach (SingleMovable movable in linkedMovables)
 			{
 				if (movable._inPortal)
 				{
 					movable._direction = movable.currentSurface.GetNormal();
+
+					if (_direction == -_portalDirection)
+					{
+						movable._direction *= -1;
+					}
 				}
 			}
 			
@@ -133,6 +141,7 @@ namespace PuzzleCat.Level
 				}
 			}
 
+			Surface currentSurfaceCopy = currentSurface;
 			foreach (SingleMovable movable in linkedMovables)
 			{
 				Portal portal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
@@ -140,10 +149,19 @@ namespace PuzzleCat.Level
 				if (portal != null)
 				{
 					portal.Use(movable);
+					
+					if (movable._inPortal)
+					{
+						movable._inPortal = false;
+						movable.currentSurface = _surfaceBeforePortal;
+						continue;
+					}
+					
 					movable._inPortal = true;
 					foreach (SingleMovable linkedMovable in linkedMovables)
 					{
 						linkedMovable._portalDirection = _direction;
+						_surfaceBeforePortal = currentSurfaceCopy;
 					}
 					continue;
 				}
