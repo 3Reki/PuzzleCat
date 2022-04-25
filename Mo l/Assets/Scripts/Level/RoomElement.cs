@@ -11,7 +11,7 @@ namespace PuzzleCat.Level
 
 		protected Room CurrentRoom;
 
-		protected virtual Vector3Int WorldGridPosition
+		public virtual Vector3Int WorldGridPosition
 		{
 			get
 			{
