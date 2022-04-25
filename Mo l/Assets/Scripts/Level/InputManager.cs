@@ -10,15 +10,15 @@ namespace PuzzleCat.Level
     public class InputManager : MonoBehaviour
     {
         public static NavMeshSurface[] Surfaces;
-        [SerializeField] private NavMeshSurface[] surfaces;
+        
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
         [SerializeField] private float dragDistance = 15;
         [SerializeField] private Transform[] portalsParentTransform;
 
+        
         private Dictionary<int, List<Portal>> _portals;
-
         private SingleMovable _selectedMovableObject;
         [CanBeNull] private Tuple<int, int> _portalIndex;
         private Vector3 _initialTouchPosition;
@@ -27,6 +27,17 @@ namespace PuzzleCat.Level
         private bool _playerSelected;
         private bool _doRaycast;
         private bool _portalMode;
+
+#if UNITY_EDITOR
+        public void Init(Camera cam, LayerMask layerMask, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals)
+        {
+            camera = cam;
+            selectableLayerMask = layerMask;
+            cat = sceneCat;
+            dragDistance = defaultDragDistance;
+            portalsParentTransform = furniturePortals;
+        }
+#endif
 
         public void SwitchPortalMode(int id)
         {
@@ -251,7 +262,8 @@ namespace PuzzleCat.Level
 
         private void Awake()
         {
-            Surfaces = surfaces;
+            Surfaces = FindObjectsOfType<NavMeshSurface>();
+
             ConstructPortalsDictionary();
         }
 

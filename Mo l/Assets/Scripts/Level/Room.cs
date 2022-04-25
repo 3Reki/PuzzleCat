@@ -10,6 +10,23 @@ namespace PuzzleCat.Level
 		[SerializeField] private Vector3Int gridSize;
 		[SerializeField] private List<RoomElement> roomElements;
 
+#if UNITY_EDITOR
+		public void Init(Vector3Int worldPosition, Vector3Int size)
+		{
+			gridWorldPosition = worldPosition;
+			gridSize = size;
+			roomElements = new List<RoomElement>();
+		}
+#endif
+
+		public bool AreCoordinatesValid(Vector3Int coordinates)
+		{
+			coordinates = WorldToRoomCoordinates(coordinates);
+			return coordinates.x >= 0 && coordinates.x < gridSize.x && 
+			       coordinates.y >= 0 && coordinates.y < gridSize.y && 
+			       coordinates.z >= 0 && coordinates.z < gridSize.z;
+		}
+
 		public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
 		{
 			return worldGridCoordinates - gridWorldPosition;
