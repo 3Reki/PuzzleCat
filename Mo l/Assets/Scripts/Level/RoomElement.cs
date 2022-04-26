@@ -6,7 +6,7 @@ namespace PuzzleCat.Level
 	public class RoomElement : MonoBehaviour
 	{
 		public Surface ImpactedSurface = Surface.All;
-		public bool IsObstacle;
+		public bool IsObstacle = true;
 		public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
 
 		protected Room CurrentRoom;
