@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
+using PuzzleCat.Level;
+using UnityEditor;
 using UnityEngine;
 
 namespace PuzzleCat.Utils
 {
     public static class ExtensionMethods
     {
+        #region Vector3Int
+
         public static Vector3 Round(this Vector3 vector3)
         {
             return new Vector3(
@@ -60,5 +65,65 @@ namespace PuzzleCat.Utils
             Debug.LogWarning("Not a plane surface");
             return Surface.None;
         }
+
+        #endregion
+
+        #region SerializedProperty
+
+        public static IEnumerable<SerializedProperty> GetChildren(this SerializedProperty property)
+        {
+            property = property.Copy();
+            var nextElement = property.Copy();
+            bool hasNextElement = nextElement.NextVisible(false);
+            if (!hasNextElement)
+            {
+                nextElement = null;
+            }
+
+            property.NextVisible(true);
+            while (true)
+            {
+                if ((SerializedProperty.EqualContents(property, nextElement)))
+                {
+                    yield break;
+                }
+
+                yield return property;
+
+                bool hasNext = property.NextVisible(false);
+                if (!hasNext)
+                {
+                    break;
+                }
+            }
+        }
+        
+        public static SingleMovable[] GetAsSingleMovableArray(this SerializedProperty prop)
+        {
+            if (prop == null) throw new System.ArgumentNullException("prop");
+            if (!prop.isArray) throw new System.ArgumentException("SerializedProperty does not represent an Array.", "prop");
+
+            var arr = new SingleMovable[prop.arraySize];
+            for(int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = (SingleMovable) prop.GetArrayElementAtIndex(i).objectReferenceValue;
+            }
+            return arr;
+        }
+
+        public static void SetAsSingleMovableArray(this SerializedProperty prop, SingleMovable[] arr)
+        {
+            if (prop == null) throw new System.ArgumentNullException("prop");
+            if (!prop.isArray) throw new System.ArgumentException("SerializedProperty does not represent an Array.", "prop");
+
+            int sz = arr?.Length ?? 0;
+            prop.arraySize = sz;
+            for(int i = 0; i < sz; i++)
+            {
+                prop.GetArrayElementAtIndex(i).objectReferenceValue = arr[i];
+            }
+        }
+
+        #endregion
     }
 }

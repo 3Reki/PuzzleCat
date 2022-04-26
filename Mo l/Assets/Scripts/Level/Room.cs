@@ -6,15 +6,13 @@ namespace PuzzleCat.Level
 {
 	public class Room : MonoBehaviour
 	{
-		[SerializeField] private Vector3Int gridWorldPosition;
-		[SerializeField] private Vector3Int gridSize;
+		public Vector3Int gridWorldPosition;
+		public Vector3Int gridSize;
 		[SerializeField] private List<RoomElement> roomElements;
 
 #if UNITY_EDITOR
-		public void Init(Vector3Int worldPosition, Vector3Int size)
+		public void Init()
 		{
-			gridWorldPosition = worldPosition;
-			gridSize = size;
 			roomElements = new List<RoomElement>();
 		}
 #endif
