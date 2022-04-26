@@ -31,12 +31,18 @@ namespace PuzzleCat
         //private float minAlpha = 0.2f;
         //private float maxAlpha = 0.7f;
 
+        private LayerMask furnitureMask;
+        private LayerMask catPortalMask;
+
+
         private void Awake()
         {
             float x = Mathf.Floor(transform.localScale.x);
             float z = Mathf.Floor(transform.localScale.z);
             _heightReceived = (int)z;
             _widthReceived = (int)x;
+            furnitureMask = LayerMask.GetMask("furniture");
+            catPortalMask = LayerMask.GetMask("catPortal");
         }
 
         private void Start()
@@ -55,42 +61,21 @@ namespace PuzzleCat
                 Vector3 cellPos = _cellList[i].transform.position;
                 Vector3 downRay = cellPos - new Vector3(0f, 0.2f, 0f);
 
-                LayerMask furnitureMask = LayerMask.GetMask("furniture");
-                LayerMask catPortalMask = LayerMask.GetMask("catPortal");
+                
 
                 Material matList = _cellList[i].GetComponent<MeshRenderer>().material;
 
                 if (Physics.Raycast(downRay, direction, maxDist, furnitureMask))
                 {
-                    //cellMat = cellList[i].GetComponent<MeshRenderer>().material;
-                    foreach (GameObject item in _cellList)
-                    {
-                        
-
-                        matList.color = nonWalkableCells;
-                        matList.DisableKeyword("_CHANNELSELECTION_B");
-                        matList.EnableKeyword("_CHANNELSELECTION_A");
-                    }
-
+                    SetMatColor("_CHANNELSELECTION_B", "_CHANNELSELECTION_A", "null", matList, walkableCells, _cellList);
                 }
                 else if (Physics.Raycast(downRay, direction, maxDist, catPortalMask))
                 {
-                    foreach (GameObject item in _cellList)
-                    {
-                        matList.color = portalCells;
-                        matList.DisableKeyword("_CHANNELSELECTION_A");
-                        matList.EnableKeyword("_CHANNELSELECTION_C");
-                    }
+                    SetMatColor("_CHANNELSELECTION_A", "_CHANNELSELECTION_C", "null", matList, walkableCells, _cellList);
                 }
                 else
                 {
-                    foreach (GameObject item in _cellList)
-                    {
-                        matList.color = walkableCells;
-                        matList.DisableKeyword("_CHANNELSELECTION_A");
-                        matList.DisableKeyword("_CHANNELSELECTION_C");
-                        matList.EnableKeyword("_CHANNELSELECTION_B");
-                    }
+                    SetMatColor("_CHANNELSELECTION_A", "_CHANNELSELECTION_C", "_CHANNELSELECTION_B", matList, walkableCells, _cellList, true);
                 }
             }
         }
@@ -123,6 +108,25 @@ namespace PuzzleCat
         private void SetMatAlpha()
         {
             cellMat.SetFloat("_AlphaValue", alphaValue);
+        }
+
+
+
+        private void SetMatColor(string channelA, string channelB, string channelC, Material mat, Color color, List<GameObject> listGo, bool thirdParam = false)
+        {
+
+            // channelA = delete, channelB enable
+            foreach (GameObject item in _cellList)
+            {
+                mat.color = walkableCells;
+                mat.DisableKeyword(channelA);
+                mat.EnableKeyword(channelB);
+
+                if (thirdParam)
+                {
+                    mat.DisableKeyword(channelC);
+                }
+            }
         }
     }
 
