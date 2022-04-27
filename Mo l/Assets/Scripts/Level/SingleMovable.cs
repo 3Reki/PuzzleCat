@@ -135,7 +135,12 @@ namespace PuzzleCat.Level
 
 				if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) == null &&
 					!movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction,
-						movable.currentSurface) || underCatPosition == movable.RoomGridPosition)
+						movable.currentSurface))
+				{
+					return;
+				}
+
+				if (cat.CurrentRoom == CurrentRoom && underCatPosition == movable.RoomGridPosition)
 				{
 					return;
 				}
