@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,6 +9,8 @@ namespace PuzzleCat.Level
 	{
 		[SerializeField] private NavMeshAgent playerAgent;
 		[SerializeField] private Transform myTransform;
+		[SerializeField] private Animator animator;
+		private static readonly int _speed = Animator.StringToHash("Speed");
 
 		private Vector3 _offset
 		{
@@ -55,6 +58,11 @@ namespace PuzzleCat.Level
 		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
 		{
 			playerAgent.Warp(GetWorldPosition(coordinates));
+		}
+
+		private void Update()
+		{
+			animator.SetFloat(_speed, playerAgent.velocity.magnitude);
 		}
 	}
 }
