@@ -1,19 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using PuzzleCat.Level;
 using PuzzleCat.Utils;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEditor.Rendering;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace PuzzleCat.Editor
 {
@@ -96,10 +95,14 @@ namespace PuzzleCat.Editor
                 new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
             }
 
-            Transform canvas = FindObjectOfType<Canvas>().transform;
-            var portalButton = canvas.GetChild(0).GetComponent<Button>();
-            portalButton.onClick.RemoveAllListeners();
-            portalButton.onClick.AddListener(() => inputManager.SwitchPortalMode(1));
+            var portalButton = FindObjectOfType<Canvas>().transform.GetChild(0).GetComponent<Button>();
+
+            while (portalButton.onClick.GetPersistentEventCount() > 0)
+            {
+                UnityEventTools.RemovePersistentListener(portalButton.onClick, 0);
+            }
+            
+            UnityEventTools.AddIntPersistentListener(portalButton.onClick, inputManager.SwitchPortalMode, 1);
             PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
             
             foreach (SerializedObject catPortal in FindObjectsOfType<Portal>()
