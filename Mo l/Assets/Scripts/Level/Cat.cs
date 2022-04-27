@@ -41,7 +41,7 @@ namespace PuzzleCat.Level
 		{
 			Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
 
-			if (CurrentRoom.CanMoveOnCell(destination, myTransform.up.ToSurface()))
+			if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
 			{
 				CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
 			}
@@ -52,7 +52,7 @@ namespace PuzzleCat.Level
 			playerAgent.SetDestination(coordinates + _offset);
 		}
 
-		public void TeleportTo(Vector3Int coordinates)
+		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
 		{
 			playerAgent.Warp(GetWorldPosition(coordinates));
 		}

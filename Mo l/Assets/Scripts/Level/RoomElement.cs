@@ -6,12 +6,11 @@ namespace PuzzleCat.Level
 	public class RoomElement : MonoBehaviour
 	{
 		public Surface ImpactedSurface = Surface.All;
-		public bool IsObstacle;
+		public bool IsObstacle = true;
 		public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
+		public Room CurrentRoom { get; private set; }
 
-		protected Room CurrentRoom;
-
-		protected virtual Vector3Int WorldGridPosition
+		public virtual Vector3Int WorldGridPosition
 		{
 			get
 			{
@@ -26,6 +25,11 @@ namespace PuzzleCat.Level
 		public void SetRoom(Room room)
 		{
 			CurrentRoom = room;
+		}
+
+		public virtual bool CanInteract(IMovable movable)
+		{
+			return !IsObstacle;
 		}
 
 		public virtual void Interact(IMovable movable)
