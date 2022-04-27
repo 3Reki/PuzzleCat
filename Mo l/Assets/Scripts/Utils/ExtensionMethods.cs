@@ -28,6 +28,11 @@ namespace PuzzleCat.Utils
                 Mathf.RoundToInt(vector3.y),
                 Mathf.RoundToInt(vector3.z));
         }
+        
+        public static float Sum(this Vector3 vector3)
+        {
+            return vector3.x + vector3.y + vector3.z;
+        }
 
         public static int Sum(this Vector3Int vector3)
         {
