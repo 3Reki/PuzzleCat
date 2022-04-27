@@ -7,10 +7,17 @@ namespace PuzzleCat.Level
 {
 	public class Cat : RoomElement, IMovable
 	{
+		public delegate void OnArrival();
+
+		public OnArrival onArrival;
+		
 		[SerializeField] private NavMeshAgent playerAgent;
 		[SerializeField] private Transform myTransform;
-		[SerializeField] private Animator animator;
-		private static readonly int _speed = Animator.StringToHash("Speed");
+		[SerializeField] private CatAnimation catAnimation;
+		
+		private bool _isMoving;
+		private Vector3 _warpDestination;
+		private Vector3 _lookAtDirection;
 
 		private Vector3 _offset
 		{
@@ -52,17 +59,42 @@ namespace PuzzleCat.Level
 
 		public void MoveTo(Vector3Int coordinates)
 		{
-			playerAgent.SetDestination(coordinates + _offset);
+			MoveTo(coordinates + _offset);
 		}
 
-		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
+		public void MoveTo(Vector3 position)
 		{
-			playerAgent.Warp(GetWorldPosition(coordinates));
+			playerAgent.SetDestination(position);
+			_lookAtDirection = position - myTransform.position;
+			_isMoving = true;
+		}
+
+		public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
+		{
+			transform.rotation = Quaternion.LookRotation(_lookAtDirection);
+			catAnimation.StartTeleportAnimation();
+			_warpDestination = GetWorldPosition(coordinates);
+			_lookAtDirection = exitDirection;
+			_isMoving = false;
+		}
+
+		public void CastTeleport()
+		{
+			playerAgent.Warp(_warpDestination);
+			transform.rotation = Quaternion.LookRotation(_lookAtDirection);
 		}
 
 		private void Update()
 		{
-			animator.SetFloat(_speed, playerAgent.velocity.magnitude);
+			if (!_isMoving || !((playerAgent.destination - myTransform.position).magnitude <= 0.52f)) return;
+			
+			_isMoving = false;
+			
+			if (onArrival != null)
+			{
+				onArrival();
+				onArrival = null;
+			}
 		}
 	}
 }

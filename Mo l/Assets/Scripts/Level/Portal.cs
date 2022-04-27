@@ -56,7 +56,15 @@ namespace PuzzleCat.Level
 			RoomElement roomElement = movable.RoomElement;
 
 			roomElement.transform.rotation = ArrivalElementRotation(roomElement);
-			movable.TeleportTo(ArrivalWorldPosition(), linkedPortal.ImpactedSurface);
+			if (catPortal)
+			{
+				((Cat) movable).MoveTo(myTransform.position + (movable.RoomElement.transform.position - myTransform.position).normalized);
+				((Cat) movable).onArrival = () => movable.TeleportTo(ArrivalWorldPosition(), linkedPortal.ImpactedSurface, linkedPortal.arrivalPositionOffset);
+			}
+			else
+			{
+				movable.TeleportTo(ArrivalWorldPosition(), linkedPortal.ImpactedSurface, ImpactedSurface.GetNormal());
+			}
 			CurrentRoom.RemoveRoomElement(roomElement);
 			linkedRoom.AddRoomElement(roomElement);
 			roomElement.SetRoom(linkedRoom);

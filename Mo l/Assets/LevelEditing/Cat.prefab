@@ -557,7 +557,7 @@ MonoBehaviour:
   IsObstacle: 1
   playerAgent: {fileID: 1436702566138972029}
   myTransform: {fileID: 1436702566138972025}
-  animator: {fileID: 5203169396772453177}
+  catAnimation: {fileID: 631187125}
 --- !u!1 &1622765320345241543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,6 +1183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5203169396772453176}
   - component: {fileID: 5203169396772453177}
+  - component: {fileID: 631187125}
   m_Layer: 0
   m_Name: MSH_Cat
   m_TagString: Untagged
@@ -1231,6 +1232,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &631187125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4863481135453069698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f40bcf2eb390d2545baa7cd34c409988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  catController: {fileID: 1436702566138972024}
+  playerAgent: {fileID: 1436702566138972029}
+  animator: {fileID: 5203169396772453177}
 --- !u!1 &4864181990570716447
 GameObject:
   m_ObjectHideFlags: 0

@@ -85,7 +85,7 @@ namespace PuzzleCat.Level
 			}
 		}
 
-		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
+		public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
 			currentSurface = newSurface;
