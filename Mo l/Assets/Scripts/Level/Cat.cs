@@ -47,6 +47,11 @@ namespace PuzzleCat.Level
 		public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
 		public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
 
+		public void SetIdle(bool idleState)
+		{
+			catAnimation.SetIdleDown(idleState);
+		}
+
 		public void TryMovingTo(Vector3Int worldGridDestination)
 		{
 			Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);

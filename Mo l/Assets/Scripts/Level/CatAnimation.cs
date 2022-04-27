@@ -13,6 +13,12 @@ namespace PuzzleCat.Level
         
         private static readonly int _speed = Animator.StringToHash("Speed");
         private static readonly int _teleport = Animator.StringToHash("Teleport");
+        private static readonly int _idleDown = Animator.StringToHash("IdleDown");
+
+        public void SetIdleDown(bool idleState)
+        {
+			animator.SetBool(_idleDown, idleState);
+        }
 
         public void StartTeleportAnimation()
         {
