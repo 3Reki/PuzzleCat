@@ -6,8 +6,8 @@ namespace PuzzleCat.Level
 {
 	public class Room : MonoBehaviour
 	{
-		public Vector3Int gridWorldPosition;
-		public Vector3Int gridSize;
+		[SerializeField] private Vector3Int gridWorldPosition;
+		[SerializeField] private Vector3Int gridSize;
 		[SerializeField] private List<RoomElement> roomElements;
 
 #if UNITY_EDITOR

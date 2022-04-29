@@ -9,7 +9,6 @@ using UnityEditor.Rendering;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -47,12 +46,6 @@ namespace PuzzleCat.Editor
 
             foreach (Room room in rooms)
             {
-                room.transform.position = room.gridWorldPosition + new Vector3(room.gridSize.x * 0.5f, 0, room.gridSize.z * 0.5f);
-                room.transform.GetChild(1).localPosition = new Vector3(0, room.gridSize.y * 0.5f, room.gridSize.z * 0.5f);
-                room.transform.GetChild(2).localPosition = new Vector3(-room.gridSize.x * 0.5f, room.gridSize.y * 0.5f, 0);
-                room.transform.GetChild(0).localScale = new Vector3(room.gridSize.x, room.gridSize.z, 1);
-                room.transform.GetChild(1).localScale = new Vector3(room.gridSize.x, room.gridSize.y, 1);
-                room.transform.GetChild(2).localScale = new Vector3(room.gridSize.z, room.gridSize.y, 1);
                 room.Init();
             }
 
