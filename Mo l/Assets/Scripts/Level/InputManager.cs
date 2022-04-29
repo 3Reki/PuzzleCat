@@ -56,6 +56,7 @@ namespace PuzzleCat.Level
                 _portalMode = false;
             }
            
+            cat.SetIdle(_portalMode);
         }
         
         private Tuple<int, int> FindCurrentPortalIndex(int portalId)

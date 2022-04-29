@@ -85,7 +85,7 @@ namespace PuzzleCat.Level
 			}
 		}
 
-		public void TeleportTo(Vector3Int coordinates, Surface newSurface)
+		public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
 			currentSurface = newSurface;
@@ -135,7 +135,12 @@ namespace PuzzleCat.Level
 
 				if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) == null &&
 					!movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction,
-						movable.currentSurface) || underCatPosition == movable.RoomGridPosition)
+						movable.currentSurface))
+				{
+					return;
+				}
+
+				if (cat.CurrentRoom == CurrentRoom && underCatPosition == movable.RoomGridPosition)
 				{
 					return;
 				}

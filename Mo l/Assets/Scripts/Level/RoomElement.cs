@@ -8,8 +8,7 @@ namespace PuzzleCat.Level
 		public Surface ImpactedSurface = Surface.All;
 		public bool IsObstacle = true;
 		public Vector3Int RoomGridPosition => CurrentRoom.WorldToRoomCoordinates(WorldGridPosition);
-
-		protected Room CurrentRoom;
+		public Room CurrentRoom { get; private set; }
 
 		public virtual Vector3Int WorldGridPosition
 		{

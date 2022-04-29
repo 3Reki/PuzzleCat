@@ -8,6 +8,6 @@ namespace PuzzleCat.Level
         RoomElement RoomElement => (RoomElement) this;
 
         void MoveTo(Vector3Int coordinates);
-        void TeleportTo(Vector3Int coordinates, Surface newSurface);
+        void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection);
     }
 }
