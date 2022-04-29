@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class GB_AudioManager : MonoBehaviour
 {
+    //GB_AudioManager.instance.Play("stringName");
+
     public GB_Sound[] sounds;
 
     public static float volumeSlider;
 
     public static GB_AudioManager instance;
-
 
     void Awake()
     {
@@ -33,8 +34,9 @@ public class GB_AudioManager : MonoBehaviour
 
     private void Update()
     {
-        foreach (GB_Sound s in sounds)
-            s.source.volume = s.volume * volumeSlider;
+        //à réactiver quand on aura un volumeSlider
+        /*foreach (GB_Sound s in sounds)
+            s.source.volume = s.volume * volumeSlider;*/
 
     }
     public void Play(string name)

@@ -44,4 +44,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523daca44ec0c1640bbea4ebea6bd755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - name: Footstep
+    clip: {fileID: 8300000, guid: 3a51f6678b193b74384b9eee41a5880d, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Jump
+    clip: {fileID: 8300000, guid: a9105343247fca346ba177ae1cdbeeb6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MoveFurniture
+    clip: {fileID: 8300000, guid: 02f3afc9d3aa1be4994ef242ec28b66c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
