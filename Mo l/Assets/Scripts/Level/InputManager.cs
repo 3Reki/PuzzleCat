@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using PuzzleCat.Utils;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace PuzzleCat.Level
 {
     public class InputManager : MonoBehaviour
     {
+        public static NavMeshSurface[] Surfaces;
+        
         [SerializeField] private new Camera camera;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Cat cat;
         [SerializeField] private float dragDistance = 15;
         [SerializeField] private Transform[] portalsParentTransform;
 
+        
         private Dictionary<int, List<Portal>> _portals;
-
         private SingleMovable _selectedMovableObject;
         [CanBeNull] private Tuple<int, int> _portalIndex;
         private Vector3 _initialTouchPosition;
@@ -24,6 +27,17 @@ namespace PuzzleCat.Level
         private bool _playerSelected;
         private bool _doRaycast;
         private bool _portalMode;
+
+#if UNITY_EDITOR
+        public void Init(Camera cam, LayerMask layerMask, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals)
+        {
+            camera = cam;
+            selectableLayerMask = layerMask;
+            cat = sceneCat;
+            dragDistance = defaultDragDistance;
+            portalsParentTransform = furniturePortals;
+        }
+#endif
 
         public void SwitchPortalMode(int id)
         {
@@ -42,6 +56,7 @@ namespace PuzzleCat.Level
                 _portalMode = false;
             }
            
+            cat.SetIdle(_portalMode);
         }
         
         private Tuple<int, int> FindCurrentPortalIndex(int portalId)
@@ -162,12 +177,12 @@ namespace PuzzleCat.Level
                 if (_lastTouchPosition.x > _initialTouchPosition.x)
                 {
                     //Right swipe
-                    _selectedMovableObject.MoveRight();
+                    _selectedMovableObject.MoveRight(cat);
                 }
                 else
                 {
                     //Left swipe
-                    _selectedMovableObject.MoveLeft();
+                    _selectedMovableObject.MoveLeft(cat);
                 }
             }
             else
@@ -175,12 +190,12 @@ namespace PuzzleCat.Level
                 if (_lastTouchPosition.y > _initialTouchPosition.y)
                 {
                     //Up swipe
-                    _selectedMovableObject.MoveForward();
+                    _selectedMovableObject.MoveForward(cat);
                 }
                 else
                 {
                     //Down swipe
-                    _selectedMovableObject.MoveBackward();
+                    _selectedMovableObject.MoveBackward(cat);
                 }
             }
         }
@@ -192,22 +207,22 @@ namespace PuzzleCat.Level
             {
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
-                    _selectedMovableObject.MoveLeft();
+                    _selectedMovableObject.MoveLeft(cat);
                 }
 
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    _selectedMovableObject.MoveRight();
+                    _selectedMovableObject.MoveRight(cat);
                 }
 
                 if (Input.GetKeyDown(KeyCode.UpArrow))
                 {
-                    _selectedMovableObject.MoveForward();
+                    _selectedMovableObject.MoveForward(cat);
                 }
 
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
-                    _selectedMovableObject.MoveBackward();
+                    _selectedMovableObject.MoveBackward(cat);
                 }
             }
 
@@ -248,6 +263,8 @@ namespace PuzzleCat.Level
 
         private void Awake()
         {
+            Surfaces = FindObjectsOfType<NavMeshSurface>();
+
             ConstructPortalsDictionary();
         }
 

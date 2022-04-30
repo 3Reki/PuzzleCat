@@ -10,6 +10,21 @@ namespace PuzzleCat.Level
 		[SerializeField] private Vector3Int gridSize;
 		[SerializeField] private List<RoomElement> roomElements;
 
+#if UNITY_EDITOR
+		public void Init()
+		{
+			roomElements = new List<RoomElement>();
+		}
+#endif
+
+		public bool AreCoordinatesValid(Vector3Int coordinates)
+		{
+			coordinates = WorldToRoomCoordinates(coordinates);
+			return coordinates.x >= 0 && coordinates.x < gridSize.x && 
+			       coordinates.y >= 0 && coordinates.y < gridSize.y && 
+			       coordinates.z >= 0 && coordinates.z < gridSize.z;
+		}
+
 		public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)
 		{
 			return worldGridCoordinates - gridWorldPosition;
@@ -20,7 +35,7 @@ namespace PuzzleCat.Level
 			return roomGridCoordinates + gridWorldPosition;
 		}
 
-		public bool TryUsingPortal(IMovable movable, Vector3Int portalPosition, Surface portalSurface)
+		public Portal FindPortal(Vector3Int portalPosition, Surface portalSurface)
 		{
 			foreach (RoomElement roomElement in roomElements)
 			{
@@ -32,15 +47,14 @@ namespace PuzzleCat.Level
 				    && portal.ImpactedSurface == portalSurface
 				    && portal.Active)
 				{
-					portal.Use(movable);
-					return true;
+					return portal;
 				}
 			}
 
-			return false;
+			return null;
 		}
 
-		public bool CanMoveOnCell(Vector3Int coordinates, Surface surface)
+		public bool CanMoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
 		{
 			if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
 			    coordinates.y < 0 || coordinates.y >= gridSize.y ||
@@ -52,10 +66,10 @@ namespace PuzzleCat.Level
 			foreach (RoomElement element in roomElements)
 			{
 				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
-				    && element.IsObstacle
 				    && element.RoomGridPosition.x == coordinates.x
 				    && element.RoomGridPosition.y == coordinates.y
-				    && element.RoomGridPosition.z == coordinates.z)
+				    && element.RoomGridPosition.z == coordinates.z
+				    && !element.CanInteract(movableElement))
 				{
 					return false;
 				}
@@ -85,15 +99,30 @@ namespace PuzzleCat.Level
 		{
 			roomElements.Remove(roomElement);
 		}
+		
+		public RoomElement GetElementAt(Vector3Int roomCoordinates)
+		{
+			foreach (RoomElement element in roomElements)
+			{
+				if (element.RoomGridPosition.x == roomCoordinates.x
+				    && element.RoomGridPosition.y == roomCoordinates.y
+				    && element.RoomGridPosition.z == roomCoordinates.z)
+				{
+					return element;
+				}
+			}
 
-		private RoomElement GetElementAt(Vector3Int coordinates, Surface surface)
+			return null;
+		}
+
+		private RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
 		{
 			foreach (RoomElement element in roomElements)
 			{
 				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
-				    && element.RoomGridPosition.x == coordinates.x
-				    && element.RoomGridPosition.y == coordinates.y
-				    && element.RoomGridPosition.z == coordinates.z)
+				    && element.RoomGridPosition.x == roomCoordinates.x
+				    && element.RoomGridPosition.y == roomCoordinates.y
+				    && element.RoomGridPosition.z == roomCoordinates.z)
 				{
 					return element;
 				}
