@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -101,7 +102,7 @@ namespace PuzzleCat.Level
                 _lookAtDirection = playerAgent.steeringTarget - myTransform.position;
                 myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
                 
-                if (Vector3.Scale(_currentSurface.GetNormal(), _lookAtDirection).Sum() > 0)
+                if (_lookAtDirection.ApplyMask(_currentSurface.GetNormal()) > 0)
                 {
                     catAnimation.StartJumpingUp();
                 }
@@ -117,6 +118,11 @@ namespace PuzzleCat.Level
                 _isGrounded = true;
                 catAnimation.StopJumping();
             }
+        }
+
+        private void Awake()
+        {
+            playerAgent.enabled = true;
         }
 
         private void Update()

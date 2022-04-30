@@ -135,7 +135,9 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 1.0.2
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 297959946825204684, guid: aa55ef0ef03f6a344a6d675085aca8af, type: 2}
+  - {fileID: 11400000, guid: 3093005aad669474db6e48dba01e41d2, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -153,6 +155,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
+    Android: com.DefaultCompany.Mol
     Standalone: com.DefaultCompany.Mol
   buildNumber:
     Standalone: 0

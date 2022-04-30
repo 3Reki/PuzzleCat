@@ -12,19 +12,28 @@ namespace PuzzleCat.Level
         public static NavMeshSurface[] Surfaces;
         
         [SerializeField] private new Camera camera;
+        [SerializeField] private GameObject invisibleQuad;
         [SerializeField] private LayerMask selectableLayerMask;
+        [SerializeField] private LayerMask invisibleLayerMask;
         [SerializeField] private Cat cat;
         [SerializeField] private float dragDistance = 15;
         [SerializeField] private Transform[] portalsParentTransform;
+        [SerializeField] private float holdTouchThreshold = 0.3f;
 
         
         private Dictionary<int, List<Portal>> _portals;
         private SingleMovable _selectedMovableObject;
         [CanBeNull] private Tuple<int, int> _portalIndex;
+        private Touch _touch;
+        private Vector3Int _initialObjectPosition;
+        private Vector3Int _currentObjectPosition;
+        private Vector3Int _currentObjectDirection;
         private Vector3 _initialTouchPosition;
         private Vector3 _lastTouchPosition;
-        private Vector3 _position;
-        private bool _playerSelected;
+        private float _touchStartTime;
+        private bool _touchMoved;
+        private bool _holdingTouch;
+        private bool _playerSelected = true;
         private bool _doRaycast;
         private bool _portalMode;
 
@@ -77,92 +86,105 @@ namespace PuzzleCat.Level
             if (selectedGameObject == null)
             {
                 _selectedMovableObject = null;
-                _playerSelected = false;
-                return;
-            }
-
-            if (_playerSelected || _selectedMovableObject != null)
-            {
-                return;
-            }
-
-            if (Cat.IsCat(selectedGameObject))
-            {
                 _playerSelected = true;
+                invisibleQuad.SetActive(false);
                 return;
             }
 
             _selectedMovableObject = selectedGameObject.GetComponent<SingleMovable>();
+            _playerSelected = false;
+            _initialObjectPosition = _selectedMovableObject.WorldGridPosition;
+            _currentObjectPosition = _initialObjectPosition;
+            invisibleQuad.SetActive(true);
+            invisibleQuad.transform.position = _selectedMovableObject.WorldGridPosition;
+            invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableObject.CurrentSurface.GetNormal());
         }
 
         private void SingleTouch()
         {
-            Touch touch = Input.GetTouch(0);
-            switch (touch.phase)
+            _touch = Input.GetTouch(0);
+            switch (_touch.phase)
             {
                 
                 case TouchPhase.Began:
-                    _initialTouchPosition = touch.position;
-                    _lastTouchPosition = touch.position;
+                    _initialTouchPosition = _touch.position;
+                    _lastTouchPosition = _touch.position;
+                    _touchStartTime = Time.time;
+                    _touchMoved = false;
                     break;
                 
-                
-                case TouchPhase.Ended:
-                    _lastTouchPosition = touch.position;
-
-                    if (Mathf.Abs(_lastTouchPosition.x - _initialTouchPosition.x) > dragDistance ||
-                        Mathf.Abs(_lastTouchPosition.y - _initialTouchPosition.y) > dragDistance)
+                case TouchPhase.Stationary:
+                    if (!_touchMoved && !_holdingTouch && Time.time - _touchStartTime > holdTouchThreshold)
                     {
-                        if (_selectedMovableObject != null)
+                        _holdingTouch = true;
+                        bool raycastResult = Utils.Utils.ScreenPointRaycast(_touch.position, out RaycastHit hit, camera, selectableLayerMask, 100f, true, 2);
+
+                        if (raycastResult)
+                        {
+                            SetSelectedMovableObject(hit.transform.gameObject);
+                        }
+                    }
+                    break;
+                
+                case TouchPhase.Moved:
+                    _lastTouchPosition = _touch.position;
+                    
+                    if ((_lastTouchPosition - _initialTouchPosition).magnitude > dragDistance)
+                    {
+                        _touchMoved = true;
+                        if (!_playerSelected)
                         {
                             HandleSwipe();
-                        }
-                        
+                        } 
+                    }
+                    
+                    break;
+
+                case TouchPhase.Ended:
+                    _holdingTouch = false;
+                    
+                    if (_playerSelected)
+                    {
+                        _lastTouchPosition = _touch.position;
+                        _doRaycast = true;
                     }
                     else
                     {
-                        _position = _lastTouchPosition;
-                        _doRaycast = true;
+                        SetSelectedMovableObject(null);
                     }
-
                     break;
-                
             }
         }
 
         private void SingleTouchRaycast()
         {
-            bool raycastResult = Utils.Utils.ScreenPointRaycast(_position, out RaycastHit hit, camera, -5, 100f, true, 2);
+            bool raycastResult = Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, -5, 100f, true, 2);
 
             if (raycastResult)
             {
                 Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
                 if (_portalMode)
                 {
+                    var portal = hit.collider.GetComponent<Portal>();
+
+                    if (portal != null)
+                    {
+                        portal.UnsetPortal();
+                        return;
+                    }
+                    
                     // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
                     _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), gridPoint, hit.normal.ToSurface());
                     _portalMode = false;
+                    
                     return;
                 }
 
                 if (_playerSelected && hit.normal == cat.transform.up)
                 {
                     cat.TryMovingTo(gridPoint);
-                    return;
                 }
                 
-                Portal portal = hit.collider.GetComponent<Portal>();
-
-                if (portal != null)
-                {
-                    portal.UnsetPortal();
-                    return;
-                }
-                
-                GameObject hitGameObject = hit.transform.gameObject;
-                if (!Utils.Utils.IsInLayerMask(hitGameObject, selectableLayerMask)) return;
-                
-                SetSelectedMovableObject(hitGameObject);
             }
             else
             {
@@ -172,31 +194,50 @@ namespace PuzzleCat.Level
 
         private void HandleSwipe()
         {
-            if (Mathf.Abs(_lastTouchPosition.x - _initialTouchPosition.x) > Mathf.Abs(_lastTouchPosition.y - _initialTouchPosition.y))
+            bool raycastResult = Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, invisibleLayerMask, 100f, true, 2);
+
+            if (!raycastResult)
+                return;
+            
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
+
+            if (_initialObjectPosition == _currentObjectPosition)
             {
-                if (_lastTouchPosition.x > _initialTouchPosition.x)
+                if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
                 {
-                    //Right swipe
-                    _selectedMovableObject.MoveRight(cat);
+                    _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
                 }
-                else
+                else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
                 {
-                    //Left swipe
-                    _selectedMovableObject.MoveLeft(cat);
+                    _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
                 }
             }
-            else
+
+
+            if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) >= 1)
             {
-                if (_lastTouchPosition.y > _initialTouchPosition.y)
+                if (_currentObjectDirection == invisibleQuad.transform.up.ToVector3Int())
                 {
-                    //Up swipe
                     _selectedMovableObject.MoveForward(cat);
                 }
                 else
                 {
-                    //Down swipe
+                    _selectedMovableObject.MoveRight(cat);
+                }
+                _currentObjectPosition += _currentObjectDirection;
+            }
+            else if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) <= -1)
+            {
+                if (_currentObjectDirection == invisibleQuad.transform.up.ToVector3Int())
+                {
                     _selectedMovableObject.MoveBackward(cat);
                 }
+                else
+                {
+                    _selectedMovableObject.MoveLeft(cat);
+                }
+                
+                _currentObjectPosition -= _currentObjectDirection;
             }
         }
 
@@ -235,7 +276,7 @@ namespace PuzzleCat.Level
             
             if (Input.GetMouseButtonUp(0))
             {
-                _position = Input.mousePosition;
+                _lastTouchPosition = Input.mousePosition;
                 _doRaycast = true;
             }
         }
@@ -281,7 +322,7 @@ namespace PuzzleCat.Level
             }
             
 #if UNITY_EDITOR
-            DebugInputs();
+            //DebugInputs();
 #endif
 
             if (_doRaycast)

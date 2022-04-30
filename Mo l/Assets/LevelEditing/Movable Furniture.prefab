@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 1
+  CurrentSurface: 1
   objectTransform: {fileID: 2899510765656753080}
   linkedMovables:
   - {fileID: 2899510765656753084}
-  currentSurface: 1

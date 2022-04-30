@@ -28,6 +28,16 @@ namespace PuzzleCat.Utils
                 Mathf.RoundToInt(vector3.y),
                 Mathf.RoundToInt(vector3.z));
         }
+
+        public static float ApplyMask(this Vector3 vector3, Vector3 mask)
+        {
+            return Vector3.Scale(vector3, mask).Sum();
+        }
+        
+        public static float ApplyMask(this Vector3Int vector3, Vector3Int mask)
+        {
+            return Vector3Int.Scale(vector3, mask).Sum();
+        }
         
         public static float Sum(this Vector3 vector3)
         {
@@ -72,7 +82,6 @@ namespace PuzzleCat.Utils
                 return Surface.BackWall;
             }
 
-            Debug.LogWarning("Not a plane surface");
             return Surface.None;
         }
 
