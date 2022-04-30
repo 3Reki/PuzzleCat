@@ -18,12 +18,12 @@ namespace PuzzleCat
         public float alphaValue = 1.0f;
 
 
-        private int heightReceived;
-        private int widthReceived;
+        private int _heightReceived;
+        private int _widthReceived;
 
-        private List<Material> cellMatList;
-        private List<GameObject> cellList;
-        private GameObject cellInst;
+        private List<Material> _cellMatList;
+        private List<GameObject> _cellList;
+        private GameObject _cellInst;
 
         private Vector3 direction = new Vector3(0f, 1.5f, 0f);
         private float maxDist = 1.5f;
@@ -31,95 +31,103 @@ namespace PuzzleCat
         //private float minAlpha = 0.2f;
         //private float maxAlpha = 0.7f;
 
+        private LayerMask furnitureMask;
+        private LayerMask catPortalMask;
+
+
         private void Awake()
         {
             float x = Mathf.Floor(transform.localScale.x);
             float z = Mathf.Floor(transform.localScale.z);
-            heightReceived = (int)z;
-            widthReceived = (int)x;
+            _heightReceived = (int)z;
+            _widthReceived = (int)x;
+            furnitureMask = LayerMask.GetMask("furniture");
+            catPortalMask = LayerMask.GetMask("catPortal");
         }
 
         private void Start()
         {
-            spawnCell();
+            SpawnCell();
             NonWalkableCell();
-            setMatAlpha();
-
+            SetMatAlpha();
         }
 
         private void NonWalkableCell()
         {
-            for (int i = 0; i < cellList.Count; i++)
+            for (int i = 0; i < _cellList.Count; i++)
             {
                 cellMat.EnableKeyword("_CHANNELSELECTION");
 
-                Vector3 cellPos = cellList[i].transform.position;
+                Vector3 cellPos = _cellList[i].transform.position;
                 Vector3 downRay = cellPos - new Vector3(0f, 0.2f, 0f);
 
-                LayerMask furnitureMask = LayerMask.GetMask("furniture");
-                LayerMask catPortalMask = LayerMask.GetMask("catPortal");
+                
+
+                Material matList = _cellList[i].GetComponent<MeshRenderer>().material;
 
                 if (Physics.Raycast(downRay, direction, maxDist, furnitureMask))
                 {
-                    //cellMat = cellList[i].GetComponent<MeshRenderer>().material;
-                    foreach (GameObject item in cellList)
-                    {
-                        cellList[i].GetComponent<MeshRenderer>().material.color = nonWalkableCells;
-                        cellList[i].GetComponent<MeshRenderer>().material.DisableKeyword("_CHANNELSELECTION_B");
-                        cellList[i].GetComponent<MeshRenderer>().material.EnableKeyword("_CHANNELSELECTION_A");
-                    }
-
+                    SetMatColor("_CHANNELSELECTION_B", "_CHANNELSELECTION_A", "null", matList, walkableCells, _cellList);
                 }
                 else if (Physics.Raycast(downRay, direction, maxDist, catPortalMask))
                 {
-                    foreach (GameObject item in cellList)
-                    {
-                        cellList[i].GetComponent<MeshRenderer>().material.color = portalCells;
-                        cellList[i].GetComponent<MeshRenderer>().material.DisableKeyword("_CHANNELSELECTION_A");
-                        cellList[i].GetComponent<MeshRenderer>().material.EnableKeyword("_CHANNELSELECTION_C");
-                    }
+                    SetMatColor("_CHANNELSELECTION_A", "_CHANNELSELECTION_C", "null", matList, walkableCells, _cellList);
                 }
                 else
                 {
-                    foreach (GameObject item in cellList)
-                    {
-                        cellList[i].GetComponent<MeshRenderer>().material.color = walkableCells;
-                        cellList[i].GetComponent<MeshRenderer>().material.DisableKeyword("_CHANNELSELECTION_A");
-                        cellList[i].GetComponent<MeshRenderer>().material.DisableKeyword("_CHANNELSELECTION_C");
-                        cellList[i].GetComponent<MeshRenderer>().material.EnableKeyword("_CHANNELSELECTION_B");
-                    }
+                    SetMatColor("_CHANNELSELECTION_A", "_CHANNELSELECTION_C", "_CHANNELSELECTION_B", matList, walkableCells, _cellList, true);
                 }
             }
         }
 
-        private void spawnCell()
+        private void SpawnCell()
         {
-            cellList = new List<GameObject>();
+            _cellList = new List<GameObject>();
 
-            for (int x = 0; x < widthReceived; x++)
+            for (int x = 0; x < _widthReceived; x++)
             {
-                for (int y = 0; y < heightReceived; y++)
+                for (int y = 0; y < _heightReceived; y++)
                 {
-                    cellInst = Instantiate(cellPrefab, new Vector3(x, 0.05f, y), Quaternion.Euler(90, 0, 0));
-                    cellList.Add(cellInst);
+                    _cellInst = Instantiate(cellPrefab, new Vector3(x, 0.05f, y), Quaternion.Euler(90, 0, 0));
+                    _cellList.Add(_cellInst);
                 }
             }
-            foreach (GameObject item in cellList)
+            foreach (GameObject item in _cellList)
             {
-                if (heightReceived % 2 == 0 && widthReceived % 2 == 0)
+                if (_heightReceived % 2 == 0 && _widthReceived % 2 == 0)
                 {
-                    item.transform.Translate((-widthReceived / 2) + .5f, (-heightReceived / 2) + .5f, 0);
+                    item.transform.Translate((-_widthReceived / 2) + .5f, (-_heightReceived / 2) + .5f, 0);
                 }
                 else
                 {
-                    item.transform.Translate((-widthReceived / 2), (-heightReceived / 2), 0);
+                    item.transform.Translate((-_widthReceived / 2), (-_heightReceived / 2), 0);
                 }
             }
         }
 
-        private void setMatAlpha()
+        private void SetMatAlpha()
         {
             cellMat.SetFloat("_AlphaValue", alphaValue);
         }
+
+
+
+        private void SetMatColor(string channelA, string channelB, string channelC, Material mat, Color color, List<GameObject> listGo, bool thirdParam = false)
+        {
+
+            // channelA = delete, channelB enable
+            foreach (GameObject item in _cellList)
+            {
+                mat.color = walkableCells;
+                mat.DisableKeyword(channelA);
+                mat.EnableKeyword(channelB);
+
+                if (thirdParam)
+                {
+                    mat.DisableKeyword(channelC);
+                }
+            }
+        }
     }
+
 }
