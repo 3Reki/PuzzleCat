@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,6 +17,7 @@ namespace PuzzleCat.Level
 
         private bool _isMoving;
         private bool _isGrounded = true;
+        private bool _canMove = true;
         private Vector3 _warpDestination;
         private Vector3 _lookAtDirection;
         private Surface _currentSurface = Surface.Floor;
@@ -55,6 +57,9 @@ namespace PuzzleCat.Level
 
         public void TryMovingTo(Vector3Int worldGridDestination)
         {
+            if (!_canMove)
+                return;
+            
             Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
 
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
@@ -82,6 +87,7 @@ namespace PuzzleCat.Level
             _warpDestination = GetWorldPosition(coordinates);
             _lookAtDirection = exitDirection;
             _isMoving = false;
+            _canMove = false;
             _currentSurface = newSurface;
         }
 
@@ -89,6 +95,11 @@ namespace PuzzleCat.Level
         {
             playerAgent.Warp(_warpDestination);
             transform.rotation = Quaternion.LookRotation(_lookAtDirection);
+        }
+
+        public void EndTeleport()
+        {
+            _canMove = true;
         }
 
         private void HandleJump()
@@ -101,7 +112,7 @@ namespace PuzzleCat.Level
                 _lookAtDirection = playerAgent.steeringTarget - myTransform.position;
                 myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
                 
-                if (Vector3.Scale(_currentSurface.GetNormal(), _lookAtDirection).Sum() > 0)
+                if (_lookAtDirection.ApplyMask(_currentSurface.GetNormal()) > 0)
                 {
                     catAnimation.StartJumpingUp();
                 }
@@ -117,6 +128,11 @@ namespace PuzzleCat.Level
                 _isGrounded = true;
                 catAnimation.StopJumping();
             }
+        }
+
+        private void Awake()
+        {
+            playerAgent.enabled = true;
         }
 
         private void Update()
