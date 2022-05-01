@@ -80,10 +80,9 @@ namespace PuzzleCat.Level
 		public void MoveTo(Vector3Int coordinates)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
-			foreach (NavMeshSurface surface in InputManager.Surfaces)
+			foreach (NavMeshSurface navMeshSurface in InputManager.Surfaces)
 			{
-				print("FLOOFY navmeshBuild");
-				surface.BuildNavMesh();
+				navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 			}
 		}
 

@@ -128,7 +128,7 @@ namespace PuzzleCat.Level
                 
                 case TouchPhase.Moved:
                     _lastTouchPosition = _touch.position;
-                    
+                    print((_lastTouchPosition - _initialTouchPosition).magnitude);
                     if ((_lastTouchPosition - _initialTouchPosition).magnitude > dragDistance)
                     {
                         _touchMoved = true;
