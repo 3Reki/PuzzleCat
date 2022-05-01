@@ -160,38 +160,32 @@ namespace PuzzleCat.Level
 
         private void SingleTouchRaycast()
         {
-            bool raycastResult = Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, -5, 100f, true, 2);
-
-            if (raycastResult)
+            if (!Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, -5, 100f, true, 2)) 
+                return;
+            
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
+            
+            if (_portalMode)
             {
-                Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
-                if (_portalMode)
-                {
-                    var portal = hit.collider.GetComponent<Portal>();
+                var portal = hit.collider.GetComponent<Portal>();
 
-                    if (portal != null)
-                    {
-                        portal.UnsetPortal();
-                        return;
-                    }
-                    
-                    // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
-                    _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), gridPoint, hit.normal.ToSurface());
-                    _portalMode = false;
-                    cat.SetIdle(false);
-                    
+                if (portal != null)
+                {
+                    portal.UnsetPortal();
                     return;
                 }
-
-                if (_playerSelected && hit.normal == cat.transform.up)
-                {
-                    cat.TryMovingTo(gridPoint);
-                }
-                
+                    
+                // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
+                _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), gridPoint, hit.normal.ToSurface());
+                _portalMode = false;
+                cat.SetIdle(false);
+                    
+                return;
             }
-            else
+
+            if (_playerSelected && hit.normal == cat.transform.up)
             {
-                SetSelectedMovableObject(null);
+                cat.TryMovingTo(gridPoint);
             }
         }
 
