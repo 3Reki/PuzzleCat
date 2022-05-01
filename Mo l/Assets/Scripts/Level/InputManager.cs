@@ -178,6 +178,7 @@ namespace PuzzleCat.Level
                     // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
                     _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), gridPoint, hit.normal.ToSurface());
                     _portalMode = false;
+                    cat.SetIdle(false);
                     
                     return;
                 }
