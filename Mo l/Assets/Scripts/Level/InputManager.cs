@@ -38,13 +38,15 @@ namespace PuzzleCat.Level
         private bool _portalMode;
 
 #if UNITY_EDITOR
-        public void Init(Camera cam, LayerMask layerMask, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals)
+        public void Init(Camera cam, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals, GameObject quad)
         {
             camera = cam;
-            selectableLayerMask = layerMask;
+            selectableLayerMask = 1 << LayerMask.NameToLayer("Selectable");
+            invisibleLayerMask = 1 << LayerMask.NameToLayer("Invisible");
             cat = sceneCat;
             dragDistance = defaultDragDistance;
             portalsParentTransform = furniturePortals;
+            invisibleQuad = quad;
         }
 #endif
 
