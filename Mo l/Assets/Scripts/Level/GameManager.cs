@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using JetBrains.Annotations;
 using PuzzleCat.Utils;
 using UnityEngine;
@@ -13,6 +15,7 @@ namespace PuzzleCat.Level
         
         [SerializeField] private new Camera camera;
         [SerializeField] private GameObject invisibleQuad;
+        [SerializeField] private Transform catDirectionIndicator;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private LayerMask invisibleLayerMask;
         [SerializeField] private Cat cat;
@@ -38,7 +41,7 @@ namespace PuzzleCat.Level
         private bool _portalMode;
 
 #if UNITY_EDITOR
-        public void Init(Camera cam, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals, GameObject quad)
+        public void Init(Camera cam, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals, GameObject quad, Transform catIndicator)
         {
             camera = cam;
             selectableLayerMask = 1 << LayerMask.NameToLayer("Selectable");
@@ -47,6 +50,7 @@ namespace PuzzleCat.Level
             dragDistance = defaultDragDistance;
             portalsParentTransform = furniturePortals;
             invisibleQuad = quad;
+            catDirectionIndicator = catIndicator;
         }
 #endif
 
@@ -100,6 +104,8 @@ namespace PuzzleCat.Level
             invisibleQuad.SetActive(true);
             invisibleQuad.transform.position = _selectedMovableObject.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableObject.CurrentSurface.GetNormal());
+            selectedGameObject.transform.DOScale(Vector3.one * 1.2f, 0.2f).onComplete =
+                () => selectedGameObject.transform.DOScale(Vector3.one, 0.2f);
         }
 
         private void SingleTouch()
@@ -186,7 +192,17 @@ namespace PuzzleCat.Level
             if (_playerSelected && hit.normal == cat.transform.up)
             {
                 cat.TryMovingTo(gridPoint);
+                
+                catDirectionIndicator.position = hit.point;
+                catDirectionIndicator.gameObject.SetActive(true);
+                StartCoroutine(DisableIndicator());
             }
+        }
+
+        private IEnumerator DisableIndicator()
+        {
+            yield return new WaitForSeconds(0.2f);
+            catDirectionIndicator.gameObject.SetActive(false);
         }
 
         private void HandleSwipe()

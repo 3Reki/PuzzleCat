@@ -72,6 +72,7 @@ namespace PuzzleCat.Level
                 SingleMovable.onMovement += UpdateLinksInstances;
 
             _furnitureLinks.Add(this);
+            NavMeshLink.enabled = IsValidLink();
         }
 
         private void OnDisable()
