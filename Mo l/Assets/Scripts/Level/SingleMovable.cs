@@ -7,6 +7,7 @@ namespace PuzzleCat.Level
 {
 	public class SingleMovable : RoomElement, IMovable
 	{
+		public static OnMovement onMovement;
 		public Surface CurrentSurface;
 		
 		[SerializeField] private Transform objectTransform;
@@ -80,7 +81,7 @@ namespace PuzzleCat.Level
 		public void MoveTo(Vector3Int coordinates)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
-			foreach (NavMeshSurface navMeshSurface in InputManager.Surfaces)
+			foreach (NavMeshSurface navMeshSurface in GameManager.Surfaces)
 			{
 				navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 			}
@@ -185,6 +186,8 @@ namespace PuzzleCat.Level
 				movable.CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.CurrentSurface);
 			}
 
+			onMovement?.Invoke();
+
 			return true;
 		}
 
@@ -223,5 +226,7 @@ namespace PuzzleCat.Level
 
 			return false;
 		}
+		
+		public delegate void OnMovement();
 	}
 }

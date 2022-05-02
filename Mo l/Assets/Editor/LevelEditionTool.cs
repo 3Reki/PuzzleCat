@@ -22,13 +22,13 @@ namespace PuzzleCat.Editor
         {
             CreateAndBakeNavMeshes();
 
-            InputManager inputManager = CreateInputManager();
+            GameManager gameManager = CreateInputManager();
 
             UpdateRoomAndRoomElements();
 
-            CreateUI(inputManager);
+            CreateUI(gameManager);
 
-            UpdateCatPortals();
+            //UpdateCatPortals();
 
             Scene scene = SceneManager.GetActiveScene();
             EditorSceneManager.MarkSceneDirty(scene);
@@ -52,13 +52,13 @@ namespace PuzzleCat.Editor
             }
         }
         
-        private static InputManager CreateInputManager()
+        private static GameManager CreateInputManager()
         {
-            var inputManager = FindObjectOfType<InputManager>();
+            var inputManager = FindObjectOfType<GameManager>();
 
             if (inputManager == null)
             {
-                inputManager = new GameObject("Game Manager").AddComponent<InputManager>();
+                inputManager = new GameObject("Game Manager").AddComponent<GameManager>();
             }
 
             inputManager.Init(Camera.main, FindObjectOfType<Cat>(), 3, GetPortalsParentList(), CreateInvisibleQuad());
@@ -88,9 +88,6 @@ namespace PuzzleCat.Editor
             DestroyImmediate(quad.GetComponent<MeshFilter>());
             DestroyImmediate(quad.GetComponent<MeshRenderer>());
             quad.transform.localScale = new Vector3(40, 40, 1);
-            var yes = quad.AddComponent<NavMeshModifier>();
-            yes.overrideArea = true;
-            yes.area = 1;
             quad.layer = LayerMask.NameToLayer("Invisible");
             quad.SetActive(false);
 
@@ -115,7 +112,7 @@ namespace PuzzleCat.Editor
 
             foreach (RoomElement roomElement in FindObjectsOfType<RoomElement>())
             {
-                foreach (Room room in rooms.Where(room => room.AreCoordinatesValid(roomElement.WorldGridPosition)))
+                foreach (Room room in rooms.Where(room => room.AreCoordinatesValid(room.WorldToRoomCoordinates(roomElement.WorldGridPosition))))
                 {
                     room.AddRoomElement(roomElement);
                     break;
@@ -142,7 +139,7 @@ namespace PuzzleCat.Editor
             }
         }
 
-        private static void CreateUI(InputManager inputManager)
+        private static void CreateUI(GameManager gameManager)
         {
             if (FindObjectOfType<Canvas>() == null)
             {
@@ -161,7 +158,7 @@ namespace PuzzleCat.Editor
                 UnityEventTools.RemovePersistentListener(portalButton.onClick, 0);
             }
             
-            UnityEventTools.AddIntPersistentListener(portalButton.onClick, inputManager.SwitchPortalMode, 1);
+            UnityEventTools.AddIntPersistentListener(portalButton.onClick, gameManager.SwitchPortalMode, 1);
             PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
         }
         

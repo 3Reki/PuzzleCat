@@ -19,7 +19,6 @@ namespace PuzzleCat.Level
 
 		public bool AreCoordinatesValid(Vector3Int coordinates)
 		{
-			coordinates = WorldToRoomCoordinates(coordinates);
 			return coordinates.x >= 0 && coordinates.x < gridSize.x && 
 			       coordinates.y >= 0 && coordinates.y < gridSize.y && 
 			       coordinates.z >= 0 && coordinates.z < gridSize.z;

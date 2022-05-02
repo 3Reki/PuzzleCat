@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using PuzzleCat.Level;
 using UnityEngine;
+using UnityEngine.AI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -47,6 +48,21 @@ namespace PuzzleCat.Utils
         public static int Sum(this Vector3Int vector3)
         {
             return vector3.x + vector3.y + vector3.z;
+        }
+
+        public static int GetNavMeshAreaMask(this Surface surface)
+        {
+            return surface switch
+            {
+                Surface.None => 0,
+                Surface.Floor => 1 << NavMesh.GetAreaFromName("Floor"),
+                Surface.SideWall => 1 << NavMesh.GetAreaFromName("Side Wall"),
+                Surface.BackWall => 1 << NavMesh.GetAreaFromName("Back Wall"),
+                Surface.All => 1 << NavMesh.GetAreaFromName("Floor") + 
+                    1 << NavMesh.GetAreaFromName("Side Wall") + 
+                    1 << NavMesh.GetAreaFromName("Back Wall"),
+                _ => throw new ArgumentOutOfRangeException(nameof(surface), surface, null)
+            };
         }
 
         public static Vector3Int GetNormal(this Surface surface)

@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace PuzzleCat.Level
 {
-    public class InputManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         public static NavMeshSurface[] Surfaces;
         
@@ -163,7 +163,7 @@ namespace PuzzleCat.Level
             if (!Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, -5, 100f, true, 2)) 
                 return;
             
-            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
             
             if (_portalMode)
             {
@@ -196,7 +196,7 @@ namespace PuzzleCat.Level
             if (!raycastResult)
                 return;
             
-            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit);
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
 
             if (_initialObjectPosition == _currentObjectPosition)
             {

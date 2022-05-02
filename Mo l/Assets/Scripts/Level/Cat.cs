@@ -1,4 +1,3 @@
-using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -21,28 +20,24 @@ namespace PuzzleCat.Level
         private Vector3 _warpDestination;
         private Vector3 _lookAtDirection;
         private Surface _currentSurface = Surface.Floor;
+        private NavMeshPath _path;
+        private Vector3 _agentDestination;
 
         private Vector3 _offset
         {
             get
             {
-                Vector3 roundedUp = myTransform.up.Round();
-                if (roundedUp == Vector3.up)
+                switch (_currentSurface)
                 {
-                    return new Vector3(0.5f, 0, 0.5f);
+                    case Surface.Floor:
+                        return new Vector3(0.5f, 0, 0.5f);
+                    case Surface.SideWall:
+                        return new Vector3(0, 0.5f, 0.5f);
+                    case Surface.BackWall:
+                        return new Vector3(0.5f, 0.5f, 1);
                 }
 
-                if (roundedUp == Vector3.right)
-                {
-                    return new Vector3(0, 0.5f, 0.5f);
-                }
-
-                if (roundedUp == Vector3.back)
-                {
-                    return new Vector3(0.5f, 0.5f, 0.5f);
-                }
-
-                Debug.LogWarning("Not on floor");
+                Debug.LogWarning("Not on a valid surface");
                 return Vector3Int.zero;
             }
         }
@@ -59,7 +54,16 @@ namespace PuzzleCat.Level
         {
             if (!_canMove)
                 return;
-            
+
+            _agentDestination = worldGridDestination + _offset;
+            _path = new NavMeshPath();
+
+            if (!playerAgent.CalculatePath(_agentDestination, _path) || _path.status != NavMeshPathStatus.PathComplete)
+            {
+                print("can't go");
+                return;
+            }
+
             Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
 
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
@@ -75,7 +79,15 @@ namespace PuzzleCat.Level
 
         public void MoveTo(Vector3 position)
         {
-            playerAgent.SetDestination(position);
+            if (position == _agentDestination)
+            {
+                playerAgent.SetPath(_path);
+            }
+            else
+            {
+                playerAgent.SetDestination(position);
+            }
+            
             _lookAtDirection = position - myTransform.position;
             _isMoving = true;
         }
@@ -93,6 +105,7 @@ namespace PuzzleCat.Level
 
         public void CastTeleport()
         {
+            playerAgent.areaMask = 1 + _currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
             transform.rotation = Quaternion.LookRotation(_lookAtDirection);
         }
@@ -132,6 +145,7 @@ namespace PuzzleCat.Level
 
         private void Awake()
         {
+            playerAgent.areaMask = 1 + _currentSurface.GetNavMeshAreaMask();
             playerAgent.enabled = true;
         }
 
