@@ -61,7 +61,7 @@ namespace PuzzleCat.Editor
                 inputManager = new GameObject("Game Manager").AddComponent<GameManager>();
             }
 
-            inputManager.Init(Camera.main, FindObjectOfType<Cat>(), 3, GetPortalsParentList(), CreateInvisibleQuad());
+            inputManager.Init(Camera.main, FindObjectOfType<Cat>(), 3, GetPortalsParentList(), CreateInvisibleQuad(), CreateCatIndicator());
             return inputManager;
         }
 
@@ -99,6 +99,24 @@ namespace PuzzleCat.Editor
             }
 
             return quad;
+        }
+
+        private static Transform CreateCatIndicator()
+        {
+            var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            sphere.layer = LayerMask.NameToLayer("Invisible");
+            sphere.tag = "Indicator";
+            sphere.SetActive(false);
+
+            foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
+                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")) && go.CompareTag("Indicator"))
+                .Where(gameObject => gameObject.scene.name != null && gameObject != sphere))
+            {
+                DestroyImmediate(gameObject);
+            }
+
+            return sphere.transform;
         }
         
         private static void UpdateRoomAndRoomElements()
