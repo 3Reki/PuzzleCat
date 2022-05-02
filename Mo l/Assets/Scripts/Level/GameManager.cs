@@ -104,7 +104,7 @@ namespace PuzzleCat.Level
             invisibleQuad.SetActive(true);
             invisibleQuad.transform.position = _selectedMovableObject.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableObject.CurrentSurface.GetNormal());
-            selectedGameObject.transform.DOScale(Vector3.one * 1.2f, 0.2f).onComplete =
+            selectedGameObject.transform.DOScale(Vector3.one * 1.5f, 0.2f).onComplete =
                 () => selectedGameObject.transform.DOScale(Vector3.one, 0.2f);
         }
 
