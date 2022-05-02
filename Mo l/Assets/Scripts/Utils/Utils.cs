@@ -84,25 +84,23 @@ namespace PuzzleCat.Utils
 			return ((layerMask.value & (1 << obj.layer)) > 0);
 		}
 
-		public static Vector3Int WorldPointAsGridPoint(RaycastHit hit)
+		public static Vector3Int WorldPointAsGridPoint(Vector3 upDirection, Vector3 point)
 		{
-			Surface surface = hit.normal.ToSurface();
-			Vector3 point = hit.point;
+			return WorldPointAsGridPoint(upDirection.ToSurface(), point);
+		}
 
-			switch (surface)
+		public static Vector3Int WorldPointAsGridPoint(Surface surface, Vector3 point)
+		{
+			return surface switch
 			{
-				case Surface.Floor:
-					return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y),
-						Mathf.FloorToInt(point.z));
-				case Surface.SideWall:
-					return new Vector3Int(Mathf.RoundToInt(point.x), Mathf.FloorToInt(point.y),
-						Mathf.FloorToInt(point.z));
-				case Surface.BackWall:
-					return new Vector3Int(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y),
-						Mathf.RoundToInt(point.z) - 1);
-				default:
-					return Vector3Int.back * 100;
-			}
+				Surface.Floor => new Vector3Int(Mathf.FloorToInt(point.x), Mathf.RoundToInt(point.y),
+					Mathf.FloorToInt(point.z)),
+				Surface.SideWall => new Vector3Int(Mathf.RoundToInt(point.x), Mathf.FloorToInt(point.y),
+					Mathf.FloorToInt(point.z)),
+				Surface.BackWall => new Vector3Int(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y),
+					Mathf.RoundToInt(point.z) - 1),
+				_ => Vector3Int.back * 100
+			};
 		}
 	}
 

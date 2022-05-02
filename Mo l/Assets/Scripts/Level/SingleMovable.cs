@@ -7,91 +7,93 @@ namespace PuzzleCat.Level
 {
 	public class SingleMovable : RoomElement, IMovable
 	{
+		public static OnMovement onMovement;
+		public Surface CurrentSurface;
+		
 		[SerializeField] private Transform objectTransform;
 		[SerializeField] private SingleMovable[] linkedMovables;
-		[SerializeField] private Surface currentSurface;
-		
+
 		private bool _inPortal;
 		private Vector3Int _portalDirection;
 		private Surface _surfaceBeforePortal;
 		private Vector3Int _direction;
 
-		public void MoveLeft(Cat cat)
+		public bool MoveLeft(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = currentSurface switch
+				movable._direction = CurrentSurface switch
 				{
 					Surface.Floor => Vector3Int.left,
 					Surface.SideWall => Vector3Int.back,
 					Surface.BackWall => Vector3Int.left,
-					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+					_ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
 				};
 			}
-			TryMoving(cat);
+			return TryMoving(cat);
 		}
 
-		public void MoveRight(Cat cat)
+		public bool MoveRight(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = currentSurface switch
+				movable._direction = CurrentSurface switch
 				{
 					Surface.Floor => Vector3Int.right,
 					Surface.SideWall => Vector3Int.forward,
 					Surface.BackWall => Vector3Int.right,
-					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+					_ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
 				};
 			}
-			TryMoving(cat);
+			return TryMoving(cat);
 		}
 
-		public void MoveForward(Cat cat)
+		public bool MoveForward(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = currentSurface switch
+				movable._direction = CurrentSurface switch
 				{
 					Surface.Floor => Vector3Int.forward,
 					Surface.SideWall => Vector3Int.up,
 					Surface.BackWall => Vector3Int.up,
-					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+					_ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
 				};
 			}
-			TryMoving(cat);
+			return TryMoving(cat);
 		}
 
-		public void MoveBackward(Cat cat)
+		public bool MoveBackward(Cat cat)
 		{
 			foreach (SingleMovable movable in linkedMovables)
 			{
-				movable._direction = currentSurface switch
+				movable._direction = CurrentSurface switch
 				{
 					Surface.Floor => Vector3Int.back,
 					Surface.SideWall => Vector3Int.down,
 					Surface.BackWall => Vector3Int.down,
-					_ => throw new ArgumentOutOfRangeException(nameof(currentSurface), currentSurface, null)
+					_ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
 				};
 			}
-			TryMoving(cat);
+			return TryMoving(cat);
 		}
 
 		public void MoveTo(Vector3Int coordinates)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
-			foreach (NavMeshSurface surface in InputManager.Surfaces)
+			foreach (NavMeshSurface navMeshSurface in GameManager.Surfaces)
 			{
-				surface.BuildNavMesh();
+				navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 			}
 		}
 
 		public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
-			currentSurface = newSurface;
+			CurrentSurface = newSurface;
 		}
 
-		private void TryMoving(Cat cat)
+		private bool CanMove(Cat cat)
 		{
 			bool linkedThroughPortal = IsInPortal();
 
@@ -103,7 +105,7 @@ namespace PuzzleCat.Level
 			{
 				if (_direction != _portalDirection && _direction != -_portalDirection)
 				{
-					return;
+					return false;
 				}
 			}
 
@@ -111,7 +113,7 @@ namespace PuzzleCat.Level
 			{
 				if (movable._inPortal)
 				{
-					movable._direction = movable.currentSurface.GetNormal();
+					movable._direction = movable.CurrentSurface.GetNormal();
 
 					if (_direction == -_portalDirection)
 					{
@@ -134,19 +136,29 @@ namespace PuzzleCat.Level
 				}
 
 				if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) == null &&
-					!movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction,
-						movable.currentSurface))
+				    !movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction,
+					    movable.CurrentSurface))
 				{
-					return;
+					return false;
 				}
 
 				if (cat.CurrentRoom == CurrentRoom && underCatPosition == movable.RoomGridPosition)
 				{
-					return;
+					return false;
 				}
 			}
 
-			Surface currentSurfaceCopy = currentSurface;
+			return true;
+		}
+
+		private bool TryMoving(Cat cat)
+		{
+			if (!CanMove(cat))
+			{
+				return false;
+			}
+
+			Surface currentSurfaceCopy = CurrentSurface;
 			foreach (SingleMovable movable in linkedMovables)
 			{
 				Portal portal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
@@ -158,7 +170,7 @@ namespace PuzzleCat.Level
 					if (movable._inPortal)
 					{
 						movable._inPortal = false;
-						movable.currentSurface = _surfaceBeforePortal;
+						movable.CurrentSurface = _surfaceBeforePortal;
 						continue;
 					}
 					
@@ -171,8 +183,12 @@ namespace PuzzleCat.Level
 					continue;
 				}
 
-				movable.CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.currentSurface);
+				movable.CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.CurrentSurface);
 			}
+
+			onMovement?.Invoke();
+
+			return true;
 		}
 
 		private bool IsInPortal()
@@ -210,5 +226,7 @@ namespace PuzzleCat.Level
 
 			return false;
 		}
+		
+		public delegate void OnMovement();
 	}
 }
