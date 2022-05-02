@@ -127,7 +127,6 @@ namespace PuzzleCat.Level
 
 			Active = true;
 			Placed = true;
-			ImpactedSurface = (-myTransform.forward).ToSurface();
 		}
 	}
 }

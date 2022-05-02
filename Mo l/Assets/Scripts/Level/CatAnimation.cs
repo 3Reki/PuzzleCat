@@ -13,8 +13,6 @@ namespace PuzzleCat.Level
         private static readonly int _speed = Animator.StringToHash("Speed");
         private static readonly int _teleport = Animator.StringToHash("Teleport");
         private static readonly int _idleDown = Animator.StringToHash("IdleDown");
-        private static readonly int _jumpUp = Animator.StringToHash("JumpUp");
-        private static readonly int _jumpDown = Animator.StringToHash("JumpDown");
         private float _defaultSpeed;
 
         public void SetIdleDown(bool idleState)
@@ -47,6 +45,11 @@ namespace PuzzleCat.Level
         public void Warp()
         {
             catController.CastTeleport();
+        }
+
+        public void TeleportAnimationEnd()
+        {
+            catController.EndTeleport();
         }
 
         private void Awake()

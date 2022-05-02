@@ -9,7 +9,6 @@ using UnityEditor.Rendering;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,11 +20,29 @@ namespace PuzzleCat.Editor
         [MenuItem("Level Edition/Link Scripts")]
         public static void LinkScripts()
         {
+            CreateAndBakeNavMeshes();
+
+            GameManager gameManager = CreateInputManager();
+
+            UpdateRoomAndRoomElements();
+
+            CreateUI(gameManager);
+
+            //UpdateCatPortals();
+
+            Scene scene = SceneManager.GetActiveScene();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+        }
+
+        private static void CreateAndBakeNavMeshes()
+        {
             if (FindObjectOfType<NavMeshSurface>() == null)
             {
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Navigation Meshes.prefab"));
+                PrefabUtility.InstantiatePrefab(
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Navigation Meshes.prefab"));
             }
-            
+
             var navMeshSurfaces = FindObjectsOfType<NavMeshSurface>();
 
             foreach (NavMeshSurface navMeshSurface in navMeshSurfaces)
@@ -33,32 +50,69 @@ namespace PuzzleCat.Editor
                 navMeshSurface.BuildNavMesh();
                 PrefabUtility.RecordPrefabInstancePropertyModifications(navMeshSurface);
             }
-            
-            var inputManager = FindObjectOfType<InputManager>();
-            
+        }
+        
+        private static GameManager CreateInputManager()
+        {
+            var inputManager = FindObjectOfType<GameManager>();
+
             if (inputManager == null)
             {
-                inputManager = new GameObject("Game Manager").AddComponent<InputManager>();
+                inputManager = new GameObject("Game Manager").AddComponent<GameManager>();
             }
-            
-            inputManager.Init(Camera.main, LayerMask.GetMask(new []{"Selectable"}), FindObjectOfType<Cat>(), 15, GetPortalsParentList());
 
-            Room[] rooms = FindObjectsOfType<Room>();
+            inputManager.Init(Camera.main, FindObjectOfType<Cat>(), 3, GetPortalsParentList(), CreateInvisibleQuad());
+            return inputManager;
+        }
+
+        private static Transform[] GetPortalsParentList()
+        {
+            var portalsParents = new HashSet<Transform>();
+            
+            foreach (Portal portal in Resources.FindObjectsOfTypeAll<Portal>())
+            {
+                if (portal.gameObject.scene.name == null || portal.catPortal)
+                {
+                    continue;
+                }
+
+                portalsParents.Add(portal.transform.parent);
+            }
+
+            return portalsParents.ToArray();
+        }
+
+        private static GameObject CreateInvisibleQuad()
+        {
+            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            DestroyImmediate(quad.GetComponent<MeshFilter>());
+            DestroyImmediate(quad.GetComponent<MeshRenderer>());
+            quad.transform.localScale = new Vector3(40, 40, 1);
+            quad.layer = LayerMask.NameToLayer("Invisible");
+            quad.SetActive(false);
+
+            foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
+                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")))
+                .Where(gameObject => gameObject.scene.name != null && gameObject != quad))
+            {
+                DestroyImmediate(gameObject);
+            }
+
+            return quad;
+        }
+        
+        private static void UpdateRoomAndRoomElements()
+        {
+            var rooms = FindObjectsOfType<Room>();
 
             foreach (Room room in rooms)
             {
-                room.transform.position = room.gridWorldPosition + new Vector3(room.gridSize.x * 0.5f, 0, room.gridSize.z * 0.5f);
-                room.transform.GetChild(1).localPosition = new Vector3(0, room.gridSize.y * 0.5f, room.gridSize.z * 0.5f);
-                room.transform.GetChild(2).localPosition = new Vector3(-room.gridSize.x * 0.5f, room.gridSize.y * 0.5f, 0);
-                room.transform.GetChild(0).localScale = new Vector3(room.gridSize.x, room.gridSize.z, 1);
-                room.transform.GetChild(1).localScale = new Vector3(room.gridSize.x, room.gridSize.y, 1);
-                room.transform.GetChild(2).localScale = new Vector3(room.gridSize.z, room.gridSize.y, 1);
                 room.Init();
             }
 
             foreach (RoomElement roomElement in FindObjectsOfType<RoomElement>())
             {
-                foreach (Room room in rooms.Where(room => room.AreCoordinatesValid(roomElement.WorldGridPosition)))
+                foreach (Room room in rooms.Where(room => room.AreCoordinatesValid(room.WorldToRoomCoordinates(roomElement.WorldGridPosition))))
                 {
                     room.AddRoomElement(roomElement);
                     break;
@@ -69,7 +123,7 @@ namespace PuzzleCat.Editor
             {
                 PrefabUtility.RecordPrefabInstancePropertyModifications(room);
             }
-            
+
             foreach (SerializedObject movable in FindObjectsOfType<SingleMovable>()
                 .Select(movable => new SerializedObject(movable))
                 .Where(movable => movable.FindProperty("linkedMovables").arraySize > 1))
@@ -82,9 +136,11 @@ namespace PuzzleCat.Editor
                         .SetAsSingleMovableArray(movable.FindProperty("linkedMovables").GetAsSingleMovableArray());
                     serializedObject.ApplyModifiedProperties();
                 }
-                
             }
-            
+        }
+
+        private static void CreateUI(GameManager gameManager)
+        {
             if (FindObjectOfType<Canvas>() == null)
             {
                 PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/In Game Canvas.prefab"));
@@ -102,14 +158,18 @@ namespace PuzzleCat.Editor
                 UnityEventTools.RemovePersistentListener(portalButton.onClick, 0);
             }
             
-            UnityEventTools.AddIntPersistentListener(portalButton.onClick, inputManager.SwitchPortalMode, 1);
+            UnityEventTools.AddIntPersistentListener(portalButton.onClick, gameManager.SwitchPortalMode, 1);
             PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
-            
+        }
+        
+        private static void UpdateCatPortals()
+        {
             foreach (SerializedObject catPortal in FindObjectsOfType<Portal>()
                 .Select(portal => new SerializedObject(portal))
                 .Where(portal => portal.FindProperty("catPortal").boolValue))
             {
-                Vector3 rotation = ((Transform) catPortal.FindProperty("myTransform").objectReferenceValue).rotation.eulerAngles;
+                Vector3 rotation = ((Transform) catPortal.FindProperty("myTransform").objectReferenceValue).rotation
+                    .eulerAngles;
                 if (rotation.x % 360 <= 90.1f && rotation.x % 360 > 89.9f)
                 {
                     catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.Floor);
@@ -125,30 +185,9 @@ namespace PuzzleCat.Editor
                     catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.BackWall);
                     catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(-1, 0, 0);
                 }
-                
+
                 catPortal.ApplyModifiedProperties();
             }
-
-            Scene scene = SceneManager.GetActiveScene();
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
-        }
-        
-        private static Transform[] GetPortalsParentList()
-        {
-            var portalsParents = new HashSet<Transform>();
-            
-            foreach (Portal portal in Resources.FindObjectsOfTypeAll<Portal>())
-            {
-                if (portal.gameObject.scene.name == null || portal.catPortal)
-                {
-                    continue;
-                }
-
-                portalsParents.Add(portal.transform.parent);
-            }
-
-            return portalsParents.ToArray();
         }
     }
 }

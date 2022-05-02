@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using PuzzleCat.Level;
 using UnityEngine;
+using UnityEngine.AI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,6 +29,16 @@ namespace PuzzleCat.Utils
                 Mathf.RoundToInt(vector3.y),
                 Mathf.RoundToInt(vector3.z));
         }
+
+        public static float ApplyMask(this Vector3 vector3, Vector3 mask)
+        {
+            return Vector3.Scale(vector3, mask).Sum();
+        }
+        
+        public static float ApplyMask(this Vector3Int vector3, Vector3Int mask)
+        {
+            return Vector3Int.Scale(vector3, mask).Sum();
+        }
         
         public static float Sum(this Vector3 vector3)
         {
@@ -37,6 +48,21 @@ namespace PuzzleCat.Utils
         public static int Sum(this Vector3Int vector3)
         {
             return vector3.x + vector3.y + vector3.z;
+        }
+
+        public static int GetNavMeshAreaMask(this Surface surface)
+        {
+            return surface switch
+            {
+                Surface.None => 0,
+                Surface.Floor => 1 << NavMesh.GetAreaFromName("Floor"),
+                Surface.SideWall => 1 << NavMesh.GetAreaFromName("Side Wall"),
+                Surface.BackWall => 1 << NavMesh.GetAreaFromName("Back Wall"),
+                Surface.All => 1 << NavMesh.GetAreaFromName("Floor") + 
+                    1 << NavMesh.GetAreaFromName("Side Wall") + 
+                    1 << NavMesh.GetAreaFromName("Back Wall"),
+                _ => throw new ArgumentOutOfRangeException(nameof(surface), surface, null)
+            };
         }
 
         public static Vector3Int GetNormal(this Surface surface)
@@ -72,7 +98,6 @@ namespace PuzzleCat.Utils
                 return Surface.BackWall;
             }
 
-            Debug.LogWarning("Not a plane surface");
             return Surface.None;
         }
 

@@ -526,7 +526,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436702566138972030}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: -1372625422
   m_Radius: 0.1
   m_Speed: 3.5
@@ -1247,6 +1247,7 @@ MonoBehaviour:
   catController: {fileID: 1436702566138972024}
   playerAgent: {fileID: 1436702566138972029}
   animator: {fileID: 5203169396772453177}
+  jumpSpeed: 1
 --- !u!1 &4864181990570716447
 GameObject:
   m_ObjectHideFlags: 0
