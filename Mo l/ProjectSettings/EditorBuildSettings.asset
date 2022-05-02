@@ -11,6 +11,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GB_Test/GB_Scenes/DemoLevel01.unity
     guid: 670d5eb2576141745bb328959f5c38d4
+  - enabled: 1
+    path: Assets/Levels/Tutorial/Level_Tutorial_001.unity
+    guid: fbd349ab17974b042a4c8c4f78e2ad08
+  - enabled: 1
+    path: Assets/Levels/Tutorial/Level_Tutorial_002.unity
+    guid: a4148c26a880ea24c9b32ae0a9e8af71
+  - enabled: 1
+    path: Assets/Levels/Tutorial/Level_Tutorial_003.unity
+    guid: 5b71c75008bcf0641b48ea9a88429df0
+  - enabled: 1
+    path: Assets/Levels/Tutorial/Level_Tutorial_004.unity
+    guid: 3397fa9eb1903384bb766d164370c172
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: aa55ef0ef03f6a344a6d675085aca8af,
       type: 2}
