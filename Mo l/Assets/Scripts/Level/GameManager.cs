@@ -219,7 +219,6 @@ namespace PuzzleCat.Level
 
             if (_initialObjectPosition == _currentObjectPosition)
             {
-                Debug.Log("setup");
                 if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
                 {
                     _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
@@ -237,7 +236,6 @@ namespace PuzzleCat.Level
 
             if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) >= 1)
             {
-                Debug.Log("forward");
                 if (_forwardMovementFunction())
                 {
                     _currentObjectPosition += _currentObjectDirection;
@@ -246,7 +244,6 @@ namespace PuzzleCat.Level
             }
             else if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) <= -1)
             {
-                Debug.Log("backward");
                 if (_backwardMovementFunction())
                 {
                     _currentObjectPosition -= _currentObjectDirection;
