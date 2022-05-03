@@ -39,6 +39,9 @@ namespace PuzzleCat.Level
         private bool _playerSelected = true;
         private bool _doRaycast;
         private bool _portalMode;
+        private Func<bool> _forwardMovementFunction = () => true;
+        private Func<bool> _backwardMovementFunction = () => true;
+        private RaycastHit _hit;
 
 #if UNITY_EDITOR
         public void Init(Camera cam, Cat sceneCat, float defaultDragDistance, Transform[] furniturePortals, GameObject quad, Transform catIndicator)
@@ -125,18 +128,18 @@ namespace PuzzleCat.Level
                     if (!_touchMoved && !_holdingTouch && Time.time - _touchStartTime > holdTouchThreshold)
                     {
                         _holdingTouch = true;
-                        bool raycastResult = Utils.Utils.ScreenPointRaycast(_touch.position, out RaycastHit hit, camera, selectableLayerMask, 100f, true, 2);
+                        bool raycastResult = Utils.Utils.ScreenPointRaycast(_touch.position, out _hit, camera, selectableLayerMask, 100f, true, 2);
 
                         if (raycastResult)
                         {
-                            SetSelectedMovableObject(hit.transform.gameObject);
+                            SetSelectedMovableObject(_hit.transform.gameObject);
                         }
                     }
                     break;
                 
                 case TouchPhase.Moved:
                     _lastTouchPosition = _touch.position;
-                    print((_lastTouchPosition - _initialTouchPosition).magnitude);
+                    
                     if ((_lastTouchPosition - _initialTouchPosition).magnitude > dragDistance)
                     {
                         _touchMoved = true;
@@ -166,14 +169,14 @@ namespace PuzzleCat.Level
 
         private void SingleTouchRaycast()
         {
-            if (!Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, -5, 100f, true, 2)) 
+            if (!Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out _hit, camera, -5, 100f, true, 2)) 
                 return;
             
-            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
             
             if (_portalMode)
             {
-                var portal = hit.collider.GetComponent<Portal>();
+                var portal = _hit.collider.GetComponent<Portal>();
 
                 if (portal != null)
                 {
@@ -182,18 +185,18 @@ namespace PuzzleCat.Level
                 }
                     
                 // ReSharper disable once PossibleNullReferenceException : _portalIndex is not null if _portalMode is true
-                _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), gridPoint, hit.normal.ToSurface());
+                _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(_hit.transform.parent.GetComponent<Room>(), gridPoint, _hit.normal.ToSurface());
                 _portalMode = false;
                 cat.SetIdle(false);
                     
                 return;
             }
 
-            if (_playerSelected && hit.normal == cat.transform.up)
+            if (_playerSelected && _hit.normal == cat.transform.up)
             {
                 cat.TryMovingTo(gridPoint);
                 
-                catDirectionIndicator.position = hit.point;
+                catDirectionIndicator.position = _hit.point;
                 catDirectionIndicator.gameObject.SetActive(true);
                 StartCoroutine(DisableIndicator());
             }
@@ -205,52 +208,49 @@ namespace PuzzleCat.Level
             catDirectionIndicator.gameObject.SetActive(false);
         }
 
+        
+
         private void HandleSwipe()
         {
-            bool raycastResult = Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out RaycastHit hit, camera, invisibleLayerMask, 100f, true, 2);
-
-            if (!raycastResult)
+            if (!Utils.Utils.ScreenPointRaycast(_lastTouchPosition, out _hit, camera, invisibleLayerMask, 100f, true, 2))
                 return;
             
-            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
 
             if (_initialObjectPosition == _currentObjectPosition)
             {
+                Debug.Log("setup");
                 if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
                 {
                     _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
+                    _forwardMovementFunction = () => _selectedMovableObject.MoveForward(cat);
+                    _backwardMovementFunction = () => _selectedMovableObject.MoveBackward(cat);
                 }
                 else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
                 {
                     _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
+                    _forwardMovementFunction = () => _selectedMovableObject.MoveRight(cat);
+                    _backwardMovementFunction = () => _selectedMovableObject.MoveLeft(cat);
                 }
             }
 
 
             if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) >= 1)
             {
-                if (_currentObjectDirection == invisibleQuad.transform.up.ToVector3Int())
+                Debug.Log("forward");
+                if (_forwardMovementFunction())
                 {
-                    _selectedMovableObject.MoveForward(cat);
+                    _currentObjectPosition += _currentObjectDirection;
                 }
-                else
-                {
-                    _selectedMovableObject.MoveRight(cat);
-                }
-                _currentObjectPosition += _currentObjectDirection;
+                
             }
             else if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) <= -1)
             {
-                if (_currentObjectDirection == invisibleQuad.transform.up.ToVector3Int())
+                Debug.Log("backward");
+                if (_backwardMovementFunction())
                 {
-                    _selectedMovableObject.MoveBackward(cat);
+                    _currentObjectPosition -= _currentObjectDirection;
                 }
-                else
-                {
-                    _selectedMovableObject.MoveLeft(cat);
-                }
-                
-                _currentObjectPosition -= _currentObjectDirection;
             }
         }
 
