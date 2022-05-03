@@ -81,10 +81,6 @@ namespace PuzzleCat.Level
 		public void MoveTo(Vector3Int coordinates)
 		{
 			objectTransform.position = GetWorldPosition(coordinates);
-			foreach (NavMeshSurface navMeshSurface in GameManager.Surfaces)
-			{
-				navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
-			}
 		}
 
 		public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)

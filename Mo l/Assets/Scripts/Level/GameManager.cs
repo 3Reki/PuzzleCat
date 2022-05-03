@@ -11,8 +11,6 @@ namespace PuzzleCat.Level
 {
     public class GameManager : MonoBehaviour
     {
-        public static NavMeshSurface[] Surfaces;
-        
         [SerializeField] private new Camera camera;
         [SerializeField] private GameObject invisibleQuad;
         [SerializeField] private Transform catDirectionIndicator;
@@ -23,6 +21,8 @@ namespace PuzzleCat.Level
         [SerializeField] private Transform[] portalsParentTransform;
         [SerializeField] private float holdTouchThreshold = 0.3f;
 
+        
+        private static NavMeshSurface[] _surfaces;
         
         private Dictionary<int, List<Portal>> _portals;
         private SingleMovable _selectedMovableObject;
@@ -56,6 +56,15 @@ namespace PuzzleCat.Level
             catDirectionIndicator = catIndicator;
         }
 #endif
+
+        public static void UpdateNavMeshes()
+        {
+            Debug.Log("update");
+            foreach (NavMeshSurface navMeshSurface in _surfaces)
+            {
+                navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            }
+        }
 
         public void SwitchPortalMode(int id)
         {
@@ -314,7 +323,8 @@ namespace PuzzleCat.Level
 
         private void Awake()
         {
-            Surfaces = FindObjectsOfType<NavMeshSurface>();
+            _surfaces = FindObjectsOfType<NavMeshSurface>();
+            SingleMovable.onMovement += UpdateNavMeshes;
 
             ConstructPortalsDictionary();
         }
