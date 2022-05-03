@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using PuzzleCat.Level;
+using PuzzleCat.Controller;
+using PuzzleCat.Level_Elements;
 using PuzzleCat.Utils;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -142,7 +143,7 @@ namespace PuzzleCat.Editor
                 PrefabUtility.RecordPrefabInstancePropertyModifications(room);
             }
 
-            foreach (SerializedObject movable in FindObjectsOfType<SingleMovable>()
+            foreach (SerializedObject movable in FindObjectsOfType<MovableElement>()
                 .Select(movable => new SerializedObject(movable))
                 .Where(movable => movable.FindProperty("linkedMovables").arraySize > 1))
             {
@@ -176,7 +177,7 @@ namespace PuzzleCat.Editor
                 UnityEventTools.RemovePersistentListener(portalButton.onClick, 0);
             }
             
-            UnityEventTools.AddIntPersistentListener(portalButton.onClick, gameManager.SwitchPortalMode, 1);
+            //UnityEventTools.AddIntPersistentListener(portalButton.onClick, gameManager.SwitchPortalMode, 1); // todo
             PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
         }
         

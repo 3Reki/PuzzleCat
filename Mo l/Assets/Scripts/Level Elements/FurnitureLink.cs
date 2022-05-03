@@ -3,7 +3,7 @@ using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.Level_Elements
 {
     public class FurnitureLink : RoomElement
     {
@@ -64,7 +64,7 @@ namespace PuzzleCat.Level
         private void OnEnable()
         {
             if (_furnitureLinks.Count == 0)
-                SingleMovable.onMovement += UpdateLinksInstances;
+                MovableElement.onMovement += UpdateLinksInstances;
 
             _furnitureLinks.Add(this);
             NavMeshLink.enabled = IsValidLink();
@@ -75,7 +75,7 @@ namespace PuzzleCat.Level
             _furnitureLinks.Remove(this);
 
             if (_furnitureLinks.Count == 0)
-                SingleMovable.onMovement -= UpdateLinksInstances;
+                MovableElement.onMovement -= UpdateLinksInstances;
         }
 
         private void Awake()

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using PuzzleCat.Level;
+using PuzzleCat.Level_Elements;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -134,22 +134,22 @@ namespace PuzzleCat.Utils
             }
         }
 
-        public static SingleMovable[] GetAsSingleMovableArray(this SerializedProperty prop)
+        public static MovableElement[] GetAsSingleMovableArray(this SerializedProperty prop)
         {
             if (prop == null) throw new ArgumentNullException("prop");
             if (!prop.isArray)
                 throw new ArgumentException("SerializedProperty does not represent an Array.", "prop");
 
-            var arr = new SingleMovable[prop.arraySize];
+            var arr = new MovableElement[prop.arraySize];
             for (int i = 0; i < arr.Length; i++)
             {
-                arr[i] = (SingleMovable) prop.GetArrayElementAtIndex(i).objectReferenceValue;
+                arr[i] = (MovableElement) prop.GetArrayElementAtIndex(i).objectReferenceValue;
             }
 
             return arr;
         }
 
-        public static void SetAsSingleMovableArray(this SerializedProperty prop, SingleMovable[] arr)
+        public static void SetAsSingleMovableArray(this SerializedProperty prop, MovableElement[] arr)
         {
             if (prop == null) throw new ArgumentNullException("prop");
             if (!prop.isArray)

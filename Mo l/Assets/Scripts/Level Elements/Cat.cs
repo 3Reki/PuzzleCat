@@ -1,8 +1,9 @@
+using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.Level_Elements
 {
     public class Cat : RoomElement, IMovable
     {
@@ -45,6 +46,11 @@ namespace PuzzleCat.Level
         public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
 
+        public bool IsUnderCat(RoomElement roomElement)
+        {
+            return roomElement.WorldGridPosition == WorldGridPosition - currentSurface.GetNormal();
+        }
+
         public void SetIdle(bool idleState)
         {
             catAnimation.SetIdleDown(idleState);
@@ -60,7 +66,6 @@ namespace PuzzleCat.Level
 
             if (!playerAgent.CalculatePath(_agentDestination, _path) || _path.status != NavMeshPathStatus.PathComplete)
             {
-                print("can't go");
                 return;
             }
 
