@@ -13,13 +13,13 @@ namespace PuzzleCat.Level
         [SerializeField] private NavMeshAgent playerAgent;
         [SerializeField] private Transform myTransform;
         [SerializeField] private CatAnimation catAnimation;
+        [SerializeField] private Surface currentSurface = Surface.Floor;
 
         private bool _isMoving;
         private bool _isGrounded = true;
         private bool _canMove = true;
         private Vector3 _warpDestination;
         private Vector3 _lookAtDirection;
-        private Surface _currentSurface = Surface.Floor;
         private NavMeshPath _path;
         private Vector3 _agentDestination;
 
@@ -27,7 +27,7 @@ namespace PuzzleCat.Level
         {
             get
             {
-                switch (_currentSurface)
+                switch (currentSurface)
                 {
                     case Surface.Floor:
                         return new Vector3(0.5f, 0, 0.5f);
@@ -100,12 +100,12 @@ namespace PuzzleCat.Level
             _lookAtDirection = exitDirection;
             _isMoving = false;
             _canMove = false;
-            _currentSurface = newSurface;
+            currentSurface = newSurface;
         }
 
         public void CastTeleport()
         {
-            playerAgent.areaMask = 1 + _currentSurface.GetNavMeshAreaMask();
+            playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
             transform.rotation = Quaternion.LookRotation(_lookAtDirection);
         }
@@ -125,7 +125,7 @@ namespace PuzzleCat.Level
                 _lookAtDirection = playerAgent.steeringTarget - myTransform.position;
                 myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
                 
-                if (_lookAtDirection.ApplyMask(_currentSurface.GetNormal()) > 0)
+                if (_lookAtDirection.ApplyMask(currentSurface.GetNormal()) > 0)
                 {
                     catAnimation.StartJumpingUp();
                 }
@@ -145,7 +145,7 @@ namespace PuzzleCat.Level
 
         private void Awake()
         {
-            playerAgent.areaMask = 1 + _currentSurface.GetNavMeshAreaMask();
+            playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.enabled = true;
         }
 
