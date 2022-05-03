@@ -101,14 +101,14 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _EmissiveIntensity: 1
+    - _EmissiveIntensity: 0.3
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GradientControl: 5.77
+    - _GradientControl: 10
     - _GradientIntensity: 1
-    - _GradientThresholdTransitionIntensity: 4.19
+    - _GradientThresholdTransitionIntensity: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -125,9 +125,9 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color_1: {r: 0.8962264, g: 0, b: 0.45990562, a: 1}
-    - _Color_2: {r: 1, g: 0.8674295, b: 0, a: 1}
+    - _Color_1: {r: 0, g: 0.9921569, b: 0.97647065, a: 1}
+    - _Color_2: {r: 0.89665264, g: 0.64705884, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissiveColor: {r: 0.4716981, g: 0, b: 0.12690346, a: 1}
+    - _EmissiveColor: {r: 0.83571434, g: 0, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

@@ -204,15 +204,14 @@ ParticleSystemRenderer:
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
-  m_Mesh: {fileID: -7088255725639655886, guid: 534b7eef137c07f4ebbd4ad2de653a71, type: 3}
+  m_Mesh: {fileID: -3603621592185656372, guid: 0b4dff9b12c22ff4fa820a5d8f3f3d29, type: 3}
   m_Mesh1: {fileID: -1702221011971735783, guid: 948be9ed7a2642f4692a3ef33b8f4964,
     type: 3}
-  m_Mesh2: {fileID: -4922695112159652507, guid: 26e9f7a8b457efd478d1ca846395cc23,
-    type: 3}
+  m_Mesh2: {fileID: 5846050348429113829, guid: 4aa34c19a4307e0418261e94ab53e68a, type: 3}
   m_Mesh3: {fileID: 0}
-  m_MeshWeighting: 0.1
+  m_MeshWeighting: 0.2
   m_MeshWeighting1: 1
-  m_MeshWeighting2: 0.2
+  m_MeshWeighting2: 0.1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!198 &410086741
@@ -783,7 +782,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 15
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 1
@@ -843,7 +842,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 16
+    type: 6
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0.8}
@@ -851,8 +850,8 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0.7}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 0.8, y: 0.8, z: 0.6}
-    placementMode: 2
+    m_Scale: {x: 8, y: 8, z: 5}
+    placementMode: 1
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
     m_MeshSpawn:
@@ -911,7 +910,7 @@ ParticleSystem:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-    m_Mesh: {fileID: -4371421742928353349, guid: cd2d68efa0377a44a9e5ac8cad5a3445,
+    m_Mesh: {fileID: 7206491445348604884, guid: e10c09307efcd8443ac79339a5b10c37,
       type: 3}
     m_MeshRenderer: {fileID: 0}
     m_SkinnedMeshRenderer: {fileID: 0}
@@ -4991,8 +4990,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410086739}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.347, z: 0.0000000069827}
+  m_LocalScale: {x: 1, y: 1, z: 1.2091038}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 687392915}
@@ -5341,8 +5340,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.1
-      minScalar: 0.25
+      scalar: 0.15
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6370,8 +6369,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.8980392, g: 0, b: 0.4627451, a: 1}
-        key1: {r: 1, g: 0.87058824, b: 0, a: 1}
+        key0: {r: 0, g: 0.99215686, b: 0.9764706, a: 1}
+        key1: {r: 0.8980392, g: 0.64705884, b: 1, a: 1}
         key2: {r: 1, g: 0.6367924, b: 0.89238304, a: 1}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -6379,7 +6378,7 @@ ParticleSystem:
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 37586
+        ctime1: 35466
         ctime2: 65535
         ctime3: 0
         ctime4: 0
@@ -9813,7 +9812,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 687392912}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.56000006}
+  m_LocalPosition: {x: 0, y: 0, z: 0.828}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9874,7 +9873,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.66
+  orthographic size: 4.42
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -9950,7 +9949,6 @@ GameObject:
   - component: {fileID: 1069455942}
   - component: {fileID: 1069455941}
   - component: {fileID: 1069455940}
-  - component: {fileID: 1069455939}
   m_Layer: 0
   m_Name: floor
   m_TagString: Untagged
@@ -9958,26 +9956,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1069455939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069455938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fca473716ac1b7348b4cc8e583f9824a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 0
-  parent: {fileID: 6741085050403089746, guid: 030d5b0c3ca511943afed781bc9a0b4f, type: 3}
-  cellPrefab: {fileID: 0}
-  cellMat: {fileID: 0}
-  walkableCells: {r: 0, g: 1, b: 0, a: 1}
-  nonWalkableCells: {r: 1, g: 0, b: 0, a: 1}
-  portalCells: {r: 0, g: 0, b: 1, a: 1}
-  alphaValue: 1
 --- !u!65 &1069455940
 BoxCollider:
   m_ObjectHideFlags: 0
