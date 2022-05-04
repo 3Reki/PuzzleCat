@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
@@ -94,7 +95,6 @@ namespace PuzzleCat.LevelElements
             }
             
             _lookAtDirection = position - myTransform.position;
-            _isMoving = true;
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
@@ -103,7 +103,6 @@ namespace PuzzleCat.LevelElements
             catAnimation.StartTeleportAnimation();
             _warpDestination = GetWorldPosition(coordinates);
             _lookAtDirection = exitDirection;
-            _isMoving = false;
             _canMove = false;
             currentSurface = newSurface;
         }
@@ -148,6 +147,25 @@ namespace PuzzleCat.LevelElements
             }
         }
 
+        private void HandleMovementChecking()
+        {
+            if (playerAgent.remainingDistance > 0)
+            {
+                _isMoving = true;
+                return;
+            }
+            
+            if (!_isMoving) return;
+            
+            _isMoving = false;
+
+            if (onArrival != null)
+            {
+                onArrival();
+                onArrival = null;
+            }
+        }
+
         private void Awake()
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
@@ -157,16 +175,7 @@ namespace PuzzleCat.LevelElements
         private void Update()
         {
             HandleJump();
-
-            if (!_isMoving || playerAgent.remainingDistance > 0) return;
-
-            _isMoving = false;
-
-            if (onArrival != null)
-            {
-                onArrival();
-                onArrival = null;
-            }
+            HandleMovementChecking();
         }
     }
 }
