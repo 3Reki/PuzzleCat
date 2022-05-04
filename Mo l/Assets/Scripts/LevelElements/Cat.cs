@@ -3,7 +3,7 @@ using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace PuzzleCat.Level_Elements
+namespace PuzzleCat.LevelElements
 {
     public class Cat : RoomElement, IMovable
     {

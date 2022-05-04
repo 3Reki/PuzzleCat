@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PuzzleCat
+namespace PuzzleCat.Controller
 {
     public class InputManager : MonoBehaviour
     {

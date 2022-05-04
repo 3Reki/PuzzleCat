@@ -1,7 +1,7 @@
 using PuzzleCat.Utils;
 using UnityEngine;
 
-namespace PuzzleCat.Level_Elements
+namespace PuzzleCat.LevelElements
 {
 	public class RoomElement : MonoBehaviour
 	{

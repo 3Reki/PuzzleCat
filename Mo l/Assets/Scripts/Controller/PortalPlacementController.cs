@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using PuzzleCat.Level_Elements;
+using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.UI;
