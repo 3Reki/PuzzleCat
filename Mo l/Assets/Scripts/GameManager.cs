@@ -52,6 +52,7 @@ namespace PuzzleCat
             PortalMode,
             FurnitureMovement,
             PlayerMovement,
+            CameraMovement,
             Menu
         }
     }

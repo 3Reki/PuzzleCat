@@ -98,6 +98,7 @@ namespace PuzzleCat.Editor
             serializedObjects[3].FindProperty("portalsParentTransform").SetAsTransformArray(GetPortalsParentList());
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<CameraController>()));
+            serializedObjects[4].FindProperty("cameraTransform").objectReferenceValue = Camera.main.transform;
             serializedObjects[4].FindProperty("camera").objectReferenceValue = Camera.main;
 
             foreach (SerializedObject serializedObject in serializedObjects)

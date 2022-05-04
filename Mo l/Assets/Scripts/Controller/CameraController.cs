@@ -5,13 +5,16 @@ namespace PuzzleCat.Controller
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private InputManager inputManager;
+        [SerializeField] private Transform cameraTransform;
         [SerializeField] private new Camera camera;
         [Range(100, 200)]
         [SerializeField] private float maxZoomPercentage = 100;
         [Range(0, 100)]
         [SerializeField] private float minZoomPercentage = 50;
         [SerializeField] private float zoomSpeed = 5;
-        
+        [SerializeField] private float movementSpeed = 5;
+
+        private Vector2 _lastTouchPosition;
         private float _maxZoom;
         private float _minZoom;
         private float _previousTouchesDistance;
@@ -41,11 +44,38 @@ namespace PuzzleCat.Controller
             }
         }
 
+        public void HandleCameraMovement()
+        {
+            if (inputManager.FirstTouchPosition == _lastTouchPosition) return;
+            
+            cameraTransform.position -=
+                cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) * movementSpeed * 0.0001f;
+            _lastTouchPosition = inputManager.FirstTouchPosition;
+        }
+        
+        private void OnGameStateChanged(GameManager.GameState state)
+        {
+            if (state == GameManager.GameState.CameraMovement)
+            {
+                _lastTouchPosition = inputManager.FirstTouchPosition;
+            }
+        }
+        
+        private void Awake()
+        {
+            GameManager.OnGameStateChanged += OnGameStateChanged;
+        }
+
         private void Start()
         {
             var orthographicSize = camera.orthographicSize;
             _maxZoom = orthographicSize * maxZoomPercentage * 0.01f;
             _minZoom = orthographicSize * minZoomPercentage * 0.01f;
+        }
+        
+        private void OnDestroy()
+        {
+            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
     }
 }

@@ -6,9 +6,9 @@ namespace PuzzleCat.Controller
     {
         public int TouchCount { get; private set; }
         public bool TwoTouchesDone { get; private set; }
-        public Vector3 FirstTouchPosition { get; private set; }
+        public Vector2 FirstTouchPosition { get; private set; }
         public TouchPhase FirstTouchPhase { get; private set; }
-        public Vector3 SecondTouchPosition { get; private set; }
+        public Vector2 SecondTouchPosition { get; private set; }
         public TouchPhase SecondTouchPhase { get; private set; }
 
         public bool CameraTouchesFinished => FirstTouchPhase is TouchPhase.Ended or TouchPhase.Canceled || 
