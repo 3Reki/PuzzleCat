@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
@@ -14,15 +13,21 @@ namespace PuzzleCat.Controller
         [SerializeField] private Button portalButton;
         
         private Dictionary<int, List<Portal>> _portals;
-        private Tuple<int, int> _portalIndex;
+        private int _portalGroupId;
+        private int? _portalId;
         
         public void SwitchPortalMode(int id)
         {
-            _portalIndex = FindCurrentPortalIndex(id);
+            if (GameManager.Instance.State == GameManager.GameState.PortalMode)
+            {
+                GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+                return;
+            }
 
-            GameManager.Instance.UpdateGameState(_portalIndex == null
-                ? GameManager.GameState.PlayerMovement
-                : GameManager.GameState.PortalMode);
+            _portalGroupId = id;
+            _portalId = FindCurrentPortalIndex(id);
+
+            GameManager.Instance.UpdateGameState(GameManager.GameState.PortalMode);
         }
         
         public void HandlePortalPlacement()
@@ -38,21 +43,28 @@ namespace PuzzleCat.Controller
             if (portal != null)
             {
                 portal.UnsetPortal();
+                _portalId = FindCurrentPortalIndex(_portalGroupId);
+                return;
+            }
+
+            if (_portalId == null)
+            {
+                Debug.LogWarning("Attempt to place portal when none is available");
                 return;
             }
             
-            _portals[_portalIndex.Item1][_portalIndex.Item2].SetPortal(hit.transform.parent.GetComponent<Room>(), 
+            _portals[_portalGroupId][_portalId.Value].SetPortal(hit.transform.parent.GetComponent<Room>(), 
                 Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point), hit.normal.ToSurface());
-            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+            _portalId = FindCurrentPortalIndex(_portalGroupId);
         }
         
-        private Tuple<int, int> FindCurrentPortalIndex(int portalId)
+        private int? FindCurrentPortalIndex(int portalGroupId)
         {
-            for (var i = 0; i < _portals[portalId].Count; i++)
+            for (var i = 0; i < _portals[portalGroupId].Count; i++)
             {
-                if (!_portals[portalId][i].Placed)
+                if (!_portals[portalGroupId][i].Placed)
                 {
-                    return new Tuple<int, int>(portalId, i);
+                    return i;
                 }
             }
 
