@@ -3,7 +3,7 @@ using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.LevelElements
 {
     public class FurnitureLink : RoomElement
     {
@@ -35,30 +35,25 @@ namespace PuzzleCat.Level
                 GetRoomCoordinates(NavMeshLink.endPoint), GetRoomCoordinates(NavMeshLink.startPoint)
             })
             {
-                print(point);
                 _roomElement = CurrentRoom.GetElementAt(point);
 
                 if (_roomElement != null && _roomElement.ImpactedSurface == Surface.All && !Cat.IsCat(_roomElement))
                 {
-                    print("top false");
                     return false;
                 }
 
                 _roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal());
-                print(point - _surface.GetNormal());
 
                 if (_roomElement == null)
                 {
                     if (CurrentRoom.AreCoordinatesValid(point - _surface.GetNormal()))
                     {
-                        print("bot valid false");
                         return false;
                     }
                         
                 }
                 else if (_roomElement.ImpactedSurface != Surface.All)
                 {
-                    print("bot false");
                     return false;
                 }
             }
@@ -69,7 +64,7 @@ namespace PuzzleCat.Level
         private void OnEnable()
         {
             if (_furnitureLinks.Count == 0)
-                SingleMovable.onMovement += UpdateLinksInstances;
+                MovableElement.onMovement += UpdateLinksInstances;
 
             _furnitureLinks.Add(this);
             NavMeshLink.enabled = IsValidLink();
@@ -80,7 +75,7 @@ namespace PuzzleCat.Level
             _furnitureLinks.Remove(this);
 
             if (_furnitureLinks.Count == 0)
-                SingleMovable.onMovement -= UpdateLinksInstances;
+                MovableElement.onMovement -= UpdateLinksInstances;
         }
 
         private void Awake()

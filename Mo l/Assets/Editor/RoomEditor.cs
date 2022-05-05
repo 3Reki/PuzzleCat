@@ -1,4 +1,4 @@
-using PuzzleCat.Level;
+using PuzzleCat.LevelElements;
 using UnityEditor;
 using UnityEngine;
 

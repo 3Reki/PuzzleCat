@@ -1,8 +1,10 @@
+using System;
+using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.LevelElements
 {
     public class Cat : RoomElement, IMovable
     {
@@ -45,6 +47,11 @@ namespace PuzzleCat.Level
         public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
 
+        public bool IsUnderCat(RoomElement roomElement)
+        {
+            return roomElement.WorldGridPosition == WorldGridPosition - currentSurface.GetNormal();
+        }
+
         public void SetIdle(bool idleState)
         {
             catAnimation.SetIdleDown(idleState);
@@ -60,7 +67,6 @@ namespace PuzzleCat.Level
 
             if (!playerAgent.CalculatePath(_agentDestination, _path) || _path.status != NavMeshPathStatus.PathComplete)
             {
-                print("can't go");
                 return;
             }
 
@@ -89,7 +95,6 @@ namespace PuzzleCat.Level
             }
             
             _lookAtDirection = position - myTransform.position;
-            _isMoving = true;
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
@@ -98,7 +103,6 @@ namespace PuzzleCat.Level
             catAnimation.StartTeleportAnimation();
             _warpDestination = GetWorldPosition(coordinates);
             _lookAtDirection = exitDirection;
-            _isMoving = false;
             _canMove = false;
             currentSurface = newSurface;
         }
@@ -143,6 +147,25 @@ namespace PuzzleCat.Level
             }
         }
 
+        private void HandleMovementChecking()
+        {
+            if (playerAgent.remainingDistance > 0)
+            {
+                _isMoving = true;
+                return;
+            }
+            
+            if (!_isMoving) return;
+            
+            _isMoving = false;
+
+            if (onArrival != null)
+            {
+                onArrival();
+                onArrival = null;
+            }
+        }
+
         private void Awake()
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
@@ -152,16 +175,7 @@ namespace PuzzleCat.Level
         private void Update()
         {
             HandleJump();
-
-            if (!_isMoving || playerAgent.remainingDistance > 0) return;
-
-            _isMoving = false;
-
-            if (onArrival != null)
-            {
-                onArrival();
-                onArrival = null;
-            }
+            HandleMovementChecking();
         }
     }
 }

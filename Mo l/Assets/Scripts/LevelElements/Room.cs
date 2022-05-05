@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using PuzzleCat.Utils;
 using UnityEngine;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.LevelElements
 {
 	public class Room : MonoBehaviour
 	{
