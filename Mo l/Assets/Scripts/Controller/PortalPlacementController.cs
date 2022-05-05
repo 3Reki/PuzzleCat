@@ -52,10 +52,15 @@ namespace PuzzleCat.Controller
                 Debug.LogWarning("Attempt to place portal when none is available");
                 return;
             }
+
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
             
-            _portals[_portalGroupId][_portalId.Value].SetPortal(hit.transform.parent.GetComponent<Room>(), 
-                Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point), hit.normal.ToSurface());
-            _portalId = FindCurrentPortalIndex(_portalGroupId);
+            if (_portals[_portalGroupId][_portalId.Value].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
+            {
+                _portals[_portalGroupId][_portalId.Value].SetPortal(hit.transform.parent.GetComponent<Room>(), 
+                    gridPoint, hit.normal.ToSurface());
+                _portalId = FindCurrentPortalIndex(_portalGroupId);
+            }
         }
         
         private int? FindCurrentPortalIndex(int portalGroupId)

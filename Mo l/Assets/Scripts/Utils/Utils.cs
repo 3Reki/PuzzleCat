@@ -39,6 +39,12 @@ namespace PuzzleCat.Utils
 		public static bool ScreenPointRaycast(Vector3 screenPoint, out RaycastHit hit, Camera camera,
 			LayerMask layerMask, float maxDistance = 100, bool drawRay = false, float drawRayDuration = 0f)
 		{
+			if (IsPointerOverUI())
+			{
+				hit = new RaycastHit();
+				return false;
+			}
+			
 			Ray ray = camera.ScreenPointToRay(screenPoint);
 
 			if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
@@ -111,5 +117,14 @@ namespace PuzzleCat.Utils
 		SideWall,
 		BackWall,
 		All
+	}
+	
+	public enum Direction
+	{
+		None,
+		Up,
+		Right,
+		Down,
+		Left
 	}
 }
