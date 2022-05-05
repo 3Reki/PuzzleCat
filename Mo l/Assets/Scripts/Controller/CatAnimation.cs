@@ -1,7 +1,8 @@
+using PuzzleCat.LevelElements;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.Controller
 {
     public class CatAnimation : MonoBehaviour
     {
@@ -9,7 +10,7 @@ namespace PuzzleCat.Level
         [SerializeField] private NavMeshAgent playerAgent;
         [SerializeField] private Animator animator;
         [SerializeField] private float jumpSpeed;
-        
+
         private static readonly int _speed = Animator.StringToHash("Speed");
         private static readonly int _teleport = Animator.StringToHash("Teleport");
         private static readonly int _idleDown = Animator.StringToHash("IdleDown");
@@ -17,15 +18,15 @@ namespace PuzzleCat.Level
 
         public void SetIdleDown(bool idleState)
         {
-			animator.SetBool(_idleDown, idleState);
+            animator.SetBool(_idleDown, idleState);
         }
-        
+
         public void StartJumpingUp()
         {
             animator.Play("Jump Up");
             playerAgent.speed = jumpSpeed;
         }
-        
+
         public void StartJumpingDown()
         {
             animator.Play("Jump Down");

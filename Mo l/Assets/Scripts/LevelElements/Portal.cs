@@ -2,7 +2,7 @@ using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 
-namespace PuzzleCat.Level
+namespace PuzzleCat.LevelElements
 {
 	public class Portal : RoomElement
 	{
