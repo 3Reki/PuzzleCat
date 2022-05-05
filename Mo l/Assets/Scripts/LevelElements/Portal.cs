@@ -60,7 +60,7 @@ namespace PuzzleCat.LevelElements
 			Room linkedRoom = _linkedPortal.CurrentRoom;
 			RoomElement roomElement = movable.RoomElement;
 
-			roomElement.transform.rotation = ArrivalElementRotation(roomElement);
+			roomElement.transform.rotation *= ArrivalElementAddedRotation(roomElement);
 			if (catPortal)
 			{
 				((Cat) movable).MoveTo(myTransform.position + (movable.RoomElement.transform.position - myTransform.position).normalized);
@@ -141,7 +141,7 @@ namespace PuzzleCat.LevelElements
 				}
 				else
 				{
-					if (_adjacentDirection == _linkedPortal._adjacentDirection)
+					if (_adjacentDirection != _linkedPortal._adjacentDirection)
 					{
 						_linkedPortal = _adjacentPortal._linkedPortal;
 						_adjacentPortal._linkedPortal = _linkedPortal._adjacentPortal;
@@ -210,10 +210,21 @@ namespace PuzzleCat.LevelElements
 			};
 		}
 
-		private Quaternion ArrivalElementRotation(RoomElement roomElement)
+		private Quaternion ArrivalElementAddedRotation(RoomElement roomElement)
 		{
-			return Quaternion.FromToRotation(myTransform.position - roomElement.transform.position, _linkedPortal.ImpactedSurface.GetNormal()) *
-			       roomElement.transform.rotation;
+			return (ImpactedSurface, _linkedPortal.ImpactedSurface) switch
+			{
+				(Surface.Floor, Surface.Floor) => Quaternion.Euler(180, 0, 0),
+				(Surface.Floor, Surface.BackWall) => Quaternion.Euler(-270, 0, 0),
+				(Surface.Floor, Surface.SideWall) => Quaternion.Euler(0, 0, 270),
+				(Surface.BackWall, Surface.Floor) => Quaternion.Euler(270, 0, 0),
+				(Surface.BackWall, Surface.BackWall) => Quaternion.Euler(180, 0, 0),
+				(Surface.BackWall, Surface.SideWall) => Quaternion.Euler(0, -270, 0),
+				(Surface.SideWall, Surface.Floor) => Quaternion.Euler(0, 0, -270),
+				(Surface.SideWall, Surface.BackWall) => Quaternion.Euler(0, 270, 0),
+				(Surface.SideWall, Surface.SideWall) => Quaternion.Euler(0, 0, 180),
+				_ => throw new ArgumentOutOfRangeException()
+			};
 		}
 
 		private Vector3Int ArrivalWorldPosition() => _linkedPortal.WorldGridPosition + _linkedPortal.arrivalPositionOffset;
