@@ -104,6 +104,13 @@ namespace PuzzleCat.Controller
             {
                 cameraController.HandleZoom();
             }
+
+#if UNITY_EDITOR
+            if (UnityEngine.Device.SystemInfo.deviceType == DeviceType.Desktop)
+            {
+                cameraController.HandleZoomInEditor();
+            }
+#endif
         }
     }
 }

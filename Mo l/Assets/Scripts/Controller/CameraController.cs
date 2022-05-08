@@ -43,6 +43,17 @@ namespace PuzzleCat.Controller
                     (inputManager.SecondTouchPosition - inputManager.FirstTouchPosition).magnitude;
             }
         }
+        
+#if UNITY_EDITOR
+        public void HandleZoomInEditor()
+        {
+            if (inputManager.IsScrolling)
+            {
+                camera.orthographicSize =
+                    Mathf.Clamp(camera.orthographicSize - inputManager.MouseScroll * zoomSpeed * 0.01f, _minZoom, _maxZoom);
+            }
+        }
+#endif
 
         public void HandleCameraMovement()
         {
