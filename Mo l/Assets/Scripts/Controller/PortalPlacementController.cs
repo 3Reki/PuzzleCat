@@ -10,7 +10,6 @@ namespace PuzzleCat.Controller
     {
         [SerializeField] private InputManager inputManager;
         [SerializeField] private Transform[] portalsParentTransform;
-        [SerializeField] private Button portalButton;
         
         private Dictionary<int, List<Portal>> _portals;
         private int _portalGroupId;
@@ -76,11 +75,6 @@ namespace PuzzleCat.Controller
             return null;
         }
 
-        private void OnGameStateChanged(GameManager.GameState state)
-        {
-            portalButton.interactable = state != GameManager.GameState.Menu;
-        }
-
         private void ConstructPortalsDictionary()
         {
             _portals = new Dictionary<int, List<Portal>>();
@@ -103,13 +97,7 @@ namespace PuzzleCat.Controller
 
         private void Awake()
         {
-            GameManager.OnGameStateChanged += OnGameStateChanged;
             ConstructPortalsDictionary();
-        }
-
-        private void OnDestroy()
-        {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
     }
 }

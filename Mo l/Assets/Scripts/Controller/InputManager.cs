@@ -19,9 +19,59 @@ namespace PuzzleCat.Controller
         private Touch _firstTouch;
         private Touch _secondTouch;
 
+#if UNITY_EDITOR
+        public float MouseScroll { get; private set; }
+        public bool IsScrolling => MouseScroll != 0;
+        private Vector2 _lastMousePosition;
+        
+        private void EditorInputs()
+        {
+            MouseScroll = Input.mouseScrollDelta.y;
+            
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                FirstTouchPhase = TouchPhase.Began;
+                _lastMousePosition = Input.mousePosition;
+            } 
+            else if (Input.GetKey(KeyCode.Mouse0))
+            {
+                if (_lastMousePosition != (Vector2) Input.mousePosition)
+                {
+                    FirstTouchPhase = TouchPhase.Moved;
+                    _lastMousePosition = Input.mousePosition;
+                }
+                else
+                {
+                    FirstTouchPhase = TouchPhase.Stationary;
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                FirstTouchPhase = TouchPhase.Ended;
+            }
+            else
+            {
+                TouchCount = 0;
+                return;
+            }
+            
+            FirstTouchPosition = _lastMousePosition;
+            TouchCount = 1;
+        }
+#endif
+
         private void Update()
         {
             TouchCount = Input.touchCount;
+
+#if UNITY_EDITOR
+            if (UnityEngine.Device.SystemInfo.deviceType == DeviceType.Desktop)
+            {
+                EditorInputs();
+                TwoTouchesDone = false;
+                return;
+            }
+#endif
 
             if (TouchCount <= 0)
             {
