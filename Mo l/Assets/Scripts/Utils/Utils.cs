@@ -108,6 +108,11 @@ namespace PuzzleCat.Utils
 				_ => Vector3Int.back * 100
 			};
 		}
+
+		public static Vector3Int[] GetDirectionVectors(Surface surface)
+		{
+			return new[] { surface.Up(), surface.Right(), -surface.Up(), -surface.Right() };
+		}
 	}
 
 	public enum Surface
@@ -121,7 +126,6 @@ namespace PuzzleCat.Utils
 	
 	public enum Direction
 	{
-		None,
 		Up,
 		Right,
 		Down,

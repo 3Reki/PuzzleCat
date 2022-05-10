@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -16,9 +18,9 @@ namespace PuzzleCat.LevelElements
 		[SerializeField] private Transform myTransform;
 		[SerializeField] private bool isGreyPortal;
 		
+		private static bool _canLink;
 		private Portal _linkedPortal;
-		private Portal _adjacentPortal;
-		private Direction _adjacentDirection;
+		private readonly Portal[] _adjacentPortals = new Portal[4]; // 4 directions : up, right, down and left
 
 		public override Vector3Int WorldGridPosition
 		{
@@ -90,29 +92,14 @@ namespace PuzzleCat.LevelElements
 			Room parentRoom = hit.parent.GetComponent<Room>();
 			Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
 
-			Vector3Int[] directionVectors =
-			{
-				hit.up.ToVector3Int(), hit.right.ToVector3Int(), (-hit.up).ToVector3Int(),
-				(-hit.right).ToVector3Int()
-			};
-			Direction[] directions =
-			{
-				Direction.Up, Direction.Right, Direction.Down, Direction.Left
-			};
+			Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
 
 			for (var i = 0; i < directionVectors.Length; i++)
 			{
-				_adjacentPortal = parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType);
-
-				if (_adjacentPortal == null)
+				if (parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType) != null)
 				{
-					continue;
+					return true;
 				}
-
-				_adjacentPortal._adjacentPortal = this;
-				_adjacentDirection = directions[i];
-
-				return true;
 			}
 
 			return false;
@@ -133,36 +120,162 @@ namespace PuzzleCat.LevelElements
 
 			if (isGreyPortal)
 			{
-				_linkedPortal = _adjacentPortal._linkedPortal._adjacentPortal;
-				if (_linkedPortal == null)
-				{
-					_adjacentPortal.Active = false;
-					_adjacentPortal._linkedPortal.Active = false;
-				}
-				else
-				{
-					if (_adjacentDirection != _linkedPortal._adjacentDirection)
-					{
-						_linkedPortal = _adjacentPortal._linkedPortal;
-						_adjacentPortal._linkedPortal = _linkedPortal._adjacentPortal;
-						_linkedPortal._linkedPortal = this;
-						_adjacentPortal._linkedPortal._linkedPortal = _adjacentPortal;
-					}
+				Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
+				Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
 
-					_linkedPortal._linkedPortal = this;
-					Active = true;
-					_linkedPortal.Active = true;
-					_adjacentPortal.Active = true;
-					_adjacentPortal._linkedPortal.Active = true;
+				for (var i = 0; i < directionVectors.Length; i++)
+				{
+					_adjacentPortals[i] = parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType);
+
+					if (_adjacentPortals[i] != null)
+					{
+						_adjacentPortals[i]._adjacentPortals[(i + 2) % 4] = this;
+					}
 				}
+
+				TryLinkingPortals();
 
 				return;
 			}
 
-			if (_linkedPortal.Placed && _linkedPortal._adjacentPortal == null)
+			if (!_linkedPortal.Placed) return;
+			
+			foreach (Portal portal in _linkedPortal._adjacentPortals)
 			{
-				Active = true;
-				_linkedPortal.Active = true;
+				if (portal != null)
+				{
+					return;
+				}
+			}
+			
+			print("Linked");
+			Active = true;
+			_linkedPortal.Active = true;
+		}
+
+		private void TryLinkingPortals()
+		{
+			var allAdjacentPortals = new List<Portal>();
+			Portal defaultLinked = null;
+			GetAllAdjacentPortals(ref allAdjacentPortals, ref defaultLinked);
+
+			var checkedPortals = new HashSet<Portal>();
+			foreach (Portal adjacentPortal in allAdjacentPortals)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					checkedPortals.Clear();
+					if (CanLinkPortals(ref checkedPortals, adjacentPortal, defaultLinked, i))
+					{
+						print("Linked");
+						checkedPortals.Clear();
+						LinkPortals(ref checkedPortals, adjacentPortal, defaultLinked, i);
+						return;
+					}
+				}
+			}
+
+			checkedPortals.Clear();
+			Unlink(ref checkedPortals);
+			checkedPortals.Clear();
+			defaultLinked.Unlink(ref checkedPortals);
+		}
+
+		private void Unlink(ref HashSet<Portal> checkedPortals)
+		{
+			if (checkedPortals.Contains(this))
+			{
+				return;
+			}
+			
+			checkedPortals.Add(this);
+			Active = false;
+			
+			foreach (Portal adjacentPortal in _adjacentPortals)
+			{
+				if (adjacentPortal != null)
+				{
+					adjacentPortal.Unlink(ref checkedPortals);
+				}
+			}
+		}
+
+		private static void LinkPortals(ref HashSet<Portal> checkedPortals, Portal portal1, Portal portal2, int rotationOffset)
+		{
+			if (checkedPortals.Contains(portal1))
+			{
+				return;
+			}
+			
+			checkedPortals.Add(portal1);
+			portal1._linkedPortal = portal2;
+			portal1.Active = true;
+			portal2._linkedPortal = portal1;
+			portal2.Active = true;
+
+			for (int i = 0; i < 4; i++)
+			{
+				if (portal1._adjacentPortals[(i + rotationOffset) % 4] != null)
+				{
+					LinkPortals(ref checkedPortals, portal1._adjacentPortals[(i + rotationOffset) % 4],
+						portal2._adjacentPortals[(i % 2 == 1) ? (i + 2) % 4 : i], rotationOffset);
+				}
+			}
+		}
+
+		private static bool CanLinkPortals(ref HashSet<Portal> checkedPortals, Portal portal1, Portal portal2, int rotationOffset)
+		{
+			if (checkedPortals.Contains(portal1))
+			{
+				return true;
+			}
+			
+			checkedPortals.Add(portal1);
+
+			for (int i = 0; i < 4; i++)
+			{
+				if ((portal1._adjacentPortals[(i + rotationOffset) % 4] == null) != (portal2._adjacentPortals[
+					(i % 2 == 1) ? (i + 2) % 4 : i] == null))
+				{
+					return false;
+				}
+
+				if (portal1._adjacentPortals[(i + rotationOffset) % 4] == null)
+				{
+					continue;
+				}
+
+				_canLink = CanLinkPortals(ref checkedPortals, portal1._adjacentPortals[(i + rotationOffset) % 4],
+					portal2._adjacentPortals[(i % 2 == 1) ? (i + 2) % 4 : i], rotationOffset);
+
+				if (!_canLink)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private void GetAllAdjacentPortals(ref List<Portal> portals, ref Portal defaultLinked)
+		{
+			if (portals.Contains(this))
+			{
+				return;
+			}
+
+			portals.Add(this);
+			if (defaultLinkedPortal != null)
+			{
+				defaultLinked = defaultLinkedPortal;
+			}
+
+			foreach (Portal adjacentPortal in _adjacentPortals)
+			{
+				if (adjacentPortal != null)
+				{
+					adjacentPortal.GetAllAdjacentPortals(ref portals, ref defaultLinked);
+				}
 			}
 		}
 
@@ -176,25 +289,25 @@ namespace PuzzleCat.LevelElements
 			Placed = false;
 			Active = false;
 			
-			if (isGreyPortal)
-			{
-				if (_linkedPortal != null)
-				{
-					_linkedPortal.Active = false;
-				}
-
-				_adjacentPortal.Active = false;
-				_adjacentPortal._linkedPortal.Active = false;
-				_adjacentPortal._adjacentPortal = null;
-
-				return;
-			}
-
-			if (_adjacentPortal != null)
-			{
-				_adjacentPortal.UnsetPortal();
-				return;
-			}
+			// if (isGreyPortal)
+			// {
+			// 	if (_linkedPortal != null)
+			// 	{
+			// 		_linkedPortal.Active = false;
+			// 	}
+			//
+			// 	_adjacentPortal.Active = false;
+			// 	_adjacentPortal._linkedPortal.Active = false;
+			// 	_adjacentPortal._adjacentPortal = null;
+			//
+			// 	return;
+			// }
+			//
+			// if (_adjacentPortal != null)
+			// {
+			// 	_adjacentPortal.UnsetPortal();
+			// 	return;
+			// }
 
 			_linkedPortal.Active = false;
 		}
