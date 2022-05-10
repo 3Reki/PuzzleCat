@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using PuzzleCat.Level;
+using PuzzleCat.Controller;
+using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -21,13 +22,9 @@ namespace PuzzleCat.Editor
         public static void LinkScripts()
         {
             CreateAndBakeNavMeshes();
-
-            GameManager gameManager = CreateInputManager();
-
+            CreateGameManagerAndControllers();
+            CreateUI();
             UpdateRoomAndRoomElements();
-
-            CreateUI(gameManager);
-
             //UpdateCatPortals();
 
             Scene scene = SceneManager.GetActiveScene();
@@ -51,18 +48,58 @@ namespace PuzzleCat.Editor
                 PrefabUtility.RecordPrefabInstancePropertyModifications(navMeshSurface);
             }
         }
-        
-        private static GameManager CreateInputManager()
-        {
-            var inputManager = FindObjectOfType<GameManager>();
 
-            if (inputManager == null)
+        private static void CreateGameManagerAndControllers()
+        {
+            foreach (GameManager gameManager in FindObjectsOfType<GameManager>())
             {
-                inputManager = new GameObject("Game Manager").AddComponent<GameManager>();
+                DestroyImmediate(gameManager.gameObject);
+            }
+            
+            var manager = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Game Manager.prefab")).GetComponent<GameManager>();
+            var serializedObjects = new List<SerializedObject>();
+            
+            serializedObjects.Add(new SerializedObject(manager));
+            serializedObjects[0].FindProperty("cat").objectReferenceValue = FindObjectOfType<Cat>();
+            serializedObjects[0].FindProperty("mainCamera").objectReferenceValue = Camera.main;
+            
+            Transform controllers = manager.transform.GetChild(0);
+            
+            serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
+            serializedObjects[1].FindProperty("catDirectionIndicator").objectReferenceValue = CreateCatIndicator();
+            
+            serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));
+            serializedObjects[2].FindProperty("invisibleQuad").objectReferenceValue = CreateInvisibleQuad();
+            
+            serializedObjects.Add(new SerializedObject(controllers.GetComponent<PortalPlacementController>()));
+            serializedObjects[3].FindProperty("portalsParentTransform").SetAsTransformArray(GetPortalsParentList());
+            
+            serializedObjects.Add(new SerializedObject(controllers.GetComponent<CameraController>()));
+            serializedObjects[4].FindProperty("cameraTransform").objectReferenceValue = Camera.main.transform;
+            serializedObjects[4].FindProperty("camera").objectReferenceValue = Camera.main;
+
+            foreach (SerializedObject serializedObject in serializedObjects)
+            {
+                serializedObject.ApplyModifiedProperties();
+            }
+        }
+        
+        private static void CreateUI()
+        {
+            if (FindObjectOfType<Canvas>() == null)
+            {
+                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/In Game Canvas.prefab"));
             }
 
-            inputManager.Init(Camera.main, FindObjectOfType<Cat>(), 3, GetPortalsParentList(), CreateInvisibleQuad(), CreateCatIndicator());
-            return inputManager;
+            var menuManagerSO = new SerializedObject(FindObjectOfType<MenuManager>());
+            menuManagerSO.FindProperty("portalPlacementController").objectReferenceValue = 
+                FindObjectOfType<PortalPlacementController>();
+            menuManagerSO.ApplyModifiedProperties();
+
+            if (FindObjectOfType<EventSystem>() == null)
+            {
+                new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
+            }
         }
 
         private static Transform[] GetPortalsParentList()
@@ -92,7 +129,7 @@ namespace PuzzleCat.Editor
             quad.SetActive(false);
 
             foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
-                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")))
+                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")) && !go.CompareTag("Indicator"))
                 .Where(gameObject => gameObject.scene.name != null && gameObject != quad))
             {
                 DestroyImmediate(gameObject);
@@ -118,7 +155,7 @@ namespace PuzzleCat.Editor
 
             return sphere.transform;
         }
-        
+
         private static void UpdateRoomAndRoomElements()
         {
             var rooms = FindObjectsOfType<Room>();
@@ -142,7 +179,7 @@ namespace PuzzleCat.Editor
                 PrefabUtility.RecordPrefabInstancePropertyModifications(room);
             }
 
-            foreach (SerializedObject movable in FindObjectsOfType<SingleMovable>()
+            foreach (SerializedObject movable in FindObjectsOfType<MovableElement>()
                 .Select(movable => new SerializedObject(movable))
                 .Where(movable => movable.FindProperty("linkedMovables").arraySize > 1))
             {
@@ -157,29 +194,6 @@ namespace PuzzleCat.Editor
             }
         }
 
-        private static void CreateUI(GameManager gameManager)
-        {
-            if (FindObjectOfType<Canvas>() == null)
-            {
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/In Game Canvas.prefab"));
-            }
-
-            if (FindObjectOfType<EventSystem>() == null)
-            {
-                new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
-            }
-
-            var portalButton = FindObjectOfType<Canvas>().transform.GetChild(0).GetComponent<Button>();
-
-            while (portalButton.onClick.GetPersistentEventCount() > 0)
-            {
-                UnityEventTools.RemovePersistentListener(portalButton.onClick, 0);
-            }
-            
-            UnityEventTools.AddIntPersistentListener(portalButton.onClick, gameManager.SwitchPortalMode, 1);
-            PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
-        }
-        
         private static void UpdateCatPortals()
         {
             foreach (SerializedObject catPortal in FindObjectsOfType<Portal>()

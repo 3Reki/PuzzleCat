@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PuzzleCat
+namespace PuzzleCat.Visuals
 {
 [ExecuteInEditMode]
     public class WorkingGridRT : MonoBehaviour
