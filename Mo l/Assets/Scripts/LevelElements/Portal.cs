@@ -153,9 +153,74 @@ namespace PuzzleCat.LevelElements
 			_linkedPortal.Active = true;
 		}
 
+		public void UnsetPortal()
+		{
+			if (catPortal)
+				return;
+			
+			CurrentRoom.RemoveRoomElement(this);
+			gameObject.SetActive(false);
+			Placed = false;
+			Active = false;
+
+			for (var i = 0; i < _adjacentPortals.Length; i++)
+			{
+				if (_adjacentPortals[i] != null)
+				{
+					_adjacentPortals[i]._adjacentPortals[(i + 2) % 4] = null;
+				}
+			}
+
+			var checkedPortals = new HashSet<Portal>();
+			for (var i = 0; i < _adjacentPortals.Length; i++)
+			{
+				if (_adjacentPortals[i] != null)
+				{
+					checkedPortals.Clear();
+					if (_adjacentPortals[i].ConnectedToDefault(ref checkedPortals))
+					{
+						_adjacentPortals[i].TryLinkingPortals();
+					}
+					else
+					{
+						_adjacentPortals[i].UnsetWithoutVerification();
+					}
+					_adjacentPortals[i] = null;
+				}
+			}
+		}
+
+
+
+		private void UnsetWithoutVerification()
+		{
+			CurrentRoom.RemoveRoomElement(this);
+			gameObject.SetActive(false);
+			Placed = false;
+			Active = false;
+
+			for (var i = 0; i < _adjacentPortals.Length; i++)
+			{
+				if (_adjacentPortals[i] != null)
+				{
+					_adjacentPortals[i]._adjacentPortals[(i + 2) % 4] = null;
+				}
+			}
+
+			var checkedPortals = new HashSet<Portal>();
+			for (var i = 0; i < _adjacentPortals.Length; i++)
+			{
+				if (_adjacentPortals[i] != null)
+				{
+					_adjacentPortals[i].UnsetWithoutVerification();
+					_adjacentPortals[i] = null;
+				}
+			}
+		}
+		
 		private void TryLinkingPortals()
 		{
-			var allAdjacentPortals = new List<Portal>();
+			var allAdjacentPortals = new HashSet<Portal>();
 			Portal defaultLinked = null;
 			GetAllAdjacentPortals(ref allAdjacentPortals, ref defaultLinked);
 
@@ -183,12 +248,11 @@ namespace PuzzleCat.LevelElements
 
 		private void Unlink(ref HashSet<Portal> checkedPortals)
 		{
-			if (checkedPortals.Contains(this))
+			if (!checkedPortals.Add(this))
 			{
 				return;
 			}
 			
-			checkedPortals.Add(this);
 			Active = false;
 			
 			foreach (Portal adjacentPortal in _adjacentPortals)
@@ -202,12 +266,11 @@ namespace PuzzleCat.LevelElements
 
 		private static void LinkPortals(ref HashSet<Portal> checkedPortals, Portal portal1, Portal portal2, int rotationOffset)
 		{
-			if (checkedPortals.Contains(portal1))
+			if (!checkedPortals.Add(portal1))
 			{
 				return;
 			}
 			
-			checkedPortals.Add(portal1);
 			portal1._linkedPortal = portal2;
 			portal1.Active = true;
 			portal2._linkedPortal = portal1;
@@ -225,12 +288,10 @@ namespace PuzzleCat.LevelElements
 
 		private static bool CanLinkPortals(ref HashSet<Portal> checkedPortals, Portal portal1, Portal portal2, int rotationOffset)
 		{
-			if (checkedPortals.Contains(portal1))
+			if (!checkedPortals.Add(portal1))
 			{
 				return true;
 			}
-			
-			checkedPortals.Add(portal1);
 
 			for (int i = 0; i < 4; i++)
 			{
@@ -257,14 +318,13 @@ namespace PuzzleCat.LevelElements
 			return true;
 		}
 
-		private void GetAllAdjacentPortals(ref List<Portal> portals, ref Portal defaultLinked)
+		private void GetAllAdjacentPortals(ref HashSet<Portal> portals, ref Portal defaultLinked)
 		{
-			if (portals.Contains(this))
+			if (!portals.Add(this))
 			{
 				return;
 			}
 
-			portals.Add(this);
 			if (defaultLinkedPortal != null)
 			{
 				defaultLinked = defaultLinkedPortal;
@@ -279,37 +339,29 @@ namespace PuzzleCat.LevelElements
 			}
 		}
 
-		public void UnsetPortal()
+		private bool ConnectedToDefault(ref HashSet<Portal> portals)
 		{
-			if (catPortal)
-				return;
+			if (!portals.Add(this))
+			{
+				return false;
+			}
 
-			CurrentRoom.RemoveRoomElement(this);
-			gameObject.SetActive(false);
-			Placed = false;
-			Active = false;
-			
-			// if (isGreyPortal)
-			// {
-			// 	if (_linkedPortal != null)
-			// 	{
-			// 		_linkedPortal.Active = false;
-			// 	}
-			//
-			// 	_adjacentPortal.Active = false;
-			// 	_adjacentPortal._linkedPortal.Active = false;
-			// 	_adjacentPortal._adjacentPortal = null;
-			//
-			// 	return;
-			// }
-			//
-			// if (_adjacentPortal != null)
-			// {
-			// 	_adjacentPortal.UnsetPortal();
-			// 	return;
-			// }
+			if (!isGreyPortal)
+			{
+				return true;
+			}
 
-			_linkedPortal.Active = false;
+			foreach (Portal adjacentPortal in _adjacentPortals)
+			{
+				if (adjacentPortal == null) continue;
+				
+				if (adjacentPortal.ConnectedToDefault(ref portals))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private static Vector3 GetOffset(Surface surfaceType)
