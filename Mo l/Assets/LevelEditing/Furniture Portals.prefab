@@ -116,9 +116,10 @@ MonoBehaviour:
   Id: 1
   Placed: 0
   catPortal: 0
-  linkedPortal: {fileID: 8888376099418581756}
+  defaultLinkedPortal: {fileID: 8888376099418581756}
   arrivalPositionOffset: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 8888376098738652555}
+  isGreyPortal: 0
 --- !u!1 &8888376098864625037
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,6 +269,7 @@ MonoBehaviour:
   Id: 1
   Placed: 0
   catPortal: 0
-  linkedPortal: {fileID: 8888376098738652559}
+  defaultLinkedPortal: {fileID: 8888376098738652559}
   arrivalPositionOffset: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 8888376099418581757}
+  isGreyPortal: 0
