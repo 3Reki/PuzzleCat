@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -19,8 +18,9 @@ namespace PuzzleCat.LevelElements
 		[SerializeField] private bool isGreyPortal;
 		
 		private static bool _canLink;
-		private Portal _linkedPortal;
 		private readonly Portal[] _adjacentPortals = new Portal[4]; // 4 directions : up, right, down and left
+		private Portal _linkedPortal;
+		private float _rotationOffset;
 
 		public override Vector3Int WorldGridPosition
 		{
@@ -62,7 +62,7 @@ namespace PuzzleCat.LevelElements
 			Room linkedRoom = _linkedPortal.CurrentRoom;
 			RoomElement roomElement = movable.RoomElement;
 
-			roomElement.transform.rotation *= ArrivalElementAddedRotation(roomElement);
+			roomElement.transform.rotation = ArrivalElementAddedRotation() * roomElement.transform.rotation;
 			if (catPortal)
 			{
 				((Cat) movable).MoveTo(myTransform.position + (movable.RoomElement.transform.position - myTransform.position).normalized);
@@ -150,7 +150,9 @@ namespace PuzzleCat.LevelElements
 			
 			print("Linked");
 			Active = true;
+			_rotationOffset = 0;
 			_linkedPortal.Active = true;
+			_linkedPortal._rotationOffset = 0;
 		}
 
 		public void UnsetPortal()
@@ -230,9 +232,9 @@ namespace PuzzleCat.LevelElements
 			GetAllAdjacentPortals(ref allAdjacentPortals, ref defaultLinked);
 
 			var checkedPortals = new HashSet<Portal>();
-			foreach (Portal adjacentPortal in allAdjacentPortals)
+			for (int i = 0; i < 4; i++)
 			{
-				for (int i = 0; i < 4; i++)
+				foreach (Portal adjacentPortal in allAdjacentPortals)
 				{
 					checkedPortals.Clear();
 					if (CanLinkPortals(ref checkedPortals, adjacentPortal, defaultLinked, i))
@@ -278,8 +280,10 @@ namespace PuzzleCat.LevelElements
 			
 			portal1._linkedPortal = portal2;
 			portal1.Active = true;
+			portal1._rotationOffset = -rotationOffset * 90;
 			portal2._linkedPortal = portal1;
 			portal2.Active = true;
+			portal2._rotationOffset = -rotationOffset * 90;
 
 			for (int i = 0; i < 4; i++)
 			{
@@ -380,19 +384,20 @@ namespace PuzzleCat.LevelElements
 			};
 		}
 
-		private Quaternion ArrivalElementAddedRotation(RoomElement roomElement)
+		private Quaternion ArrivalElementAddedRotation()
 		{
+			Debug.Log(_rotationOffset);
 			return (ImpactedSurface, _linkedPortal.ImpactedSurface) switch
 			{
-				(Surface.Floor, Surface.Floor) => Quaternion.Euler(180, 0, 0),
-				(Surface.Floor, Surface.BackWall) => Quaternion.Euler(-270, 0, 0),
-				(Surface.Floor, Surface.SideWall) => Quaternion.Euler(0, 0, 270),
-				(Surface.BackWall, Surface.Floor) => Quaternion.Euler(270, 0, 0),
-				(Surface.BackWall, Surface.BackWall) => Quaternion.Euler(180, 0, 0),
-				(Surface.BackWall, Surface.SideWall) => Quaternion.Euler(0, -270, 0),
-				(Surface.SideWall, Surface.Floor) => Quaternion.Euler(0, 0, -270),
-				(Surface.SideWall, Surface.BackWall) => Quaternion.Euler(0, 270, 0),
-				(Surface.SideWall, Surface.SideWall) => Quaternion.Euler(0, 0, 180),
+				(Surface.Floor, Surface.Floor) => Quaternion.Euler(180, -_rotationOffset + 180, 0),
+				(Surface.Floor, Surface.BackWall) => Quaternion.Euler(0, 0, _rotationOffset + 180) * Quaternion.Euler(-270, 0, 0), // no
+				(Surface.Floor, Surface.SideWall) => Quaternion.Euler(-(_rotationOffset + 90), 0, -270),
+				(Surface.BackWall, Surface.Floor) => Quaternion.Euler(270, -_rotationOffset + 180, 0),
+				(Surface.BackWall, Surface.BackWall) => Quaternion.Euler(180, 0, -_rotationOffset + 180),
+				(Surface.BackWall, Surface.SideWall) => Quaternion.Euler(-_rotationOffset, 0, 0) * Quaternion.Euler(0, -270, 0),
+				(Surface.SideWall, Surface.Floor) => Quaternion.Euler(0, -(_rotationOffset + 90), 270),
+				(Surface.SideWall, Surface.BackWall) => Quaternion.Euler(_rotationOffset, 270, 0),
+				(Surface.SideWall, Surface.SideWall) => Quaternion.Euler(0, 0, 180) * Quaternion.Euler(_rotationOffset + 180, 0, 0),
 				_ => throw new ArgumentOutOfRangeException()
 			};
 		}
