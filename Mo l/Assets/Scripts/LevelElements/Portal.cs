@@ -177,7 +177,7 @@ namespace PuzzleCat.LevelElements
 				if (_adjacentPortals[i] != null)
 				{
 					checkedPortals.Clear();
-					if (_adjacentPortals[i].ConnectedToDefault(ref checkedPortals))
+					if (_adjacentPortals[i].IsConnectedTo(ref checkedPortals, portal => !portal.isGreyPortal))
 					{
 						_adjacentPortals[i].TryLinkingPortals();
 					}
@@ -188,6 +188,12 @@ namespace PuzzleCat.LevelElements
 					_adjacentPortals[i] = null;
 				}
 			}
+		}
+
+		public bool IsConnectedTo(Portal portal)
+		{
+			var checkedPortals = new HashSet<Portal>();
+			return IsConnectedTo(ref checkedPortals, p => p == portal);
 		}
 
 
@@ -206,8 +212,7 @@ namespace PuzzleCat.LevelElements
 					_adjacentPortals[i]._adjacentPortals[(i + 2) % 4] = null;
 				}
 			}
-
-			var checkedPortals = new HashSet<Portal>();
+			
 			for (var i = 0; i < _adjacentPortals.Length; i++)
 			{
 				if (_adjacentPortals[i] != null)
@@ -339,14 +344,14 @@ namespace PuzzleCat.LevelElements
 			}
 		}
 
-		private bool ConnectedToDefault(ref HashSet<Portal> portals)
+		private bool IsConnectedTo(ref HashSet<Portal> portals, Func<Portal, bool> predicate)
 		{
 			if (!portals.Add(this))
 			{
 				return false;
 			}
 
-			if (!isGreyPortal)
+			if (predicate.Invoke(this))
 			{
 				return true;
 			}
@@ -355,7 +360,7 @@ namespace PuzzleCat.LevelElements
 			{
 				if (adjacentPortal == null) continue;
 				
-				if (adjacentPortal.ConnectedToDefault(ref portals))
+				if (adjacentPortal.IsConnectedTo(ref portals, predicate))
 				{
 					return true;
 				}
