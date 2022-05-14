@@ -14,6 +14,8 @@ namespace PuzzleCat.LevelElements
         [SerializeField] private MovableElement[] linkedMovables;
 
         private bool _inPortal;
+        private bool _onPortal;
+        private Portal _steppedOnPortal;
         private Vector3Int _portalDirection;
         private Surface _surfaceBeforePortal;
         private Vector3Int _direction;
@@ -96,6 +98,7 @@ namespace PuzzleCat.LevelElements
         private bool CanMove()
         {
             bool linkedThroughPortal = IsInPortal();
+            bool onPortal = IsOnPortal();
 
             if (!linkedThroughPortal)
             {
@@ -133,10 +136,15 @@ namespace PuzzleCat.LevelElements
                     continue;
                 }
 
-                Portal portal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
-                
-                if ((portal == null || !portal.Active) && !movable.CurrentRoom.CanMoveOnCell(movable, 
-                    movable.RoomGridPosition + movable._direction, movable.CurrentSurface))
+                Portal portal = 
+                    movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
+                Portal sameSurfacePortal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction,
+                    movable.CurrentSurface);
+
+                if ((portal == null || !portal.Active) && 
+                    !(onPortal && sameSurfacePortal != null && sameSurfacePortal.IsConnectedTo(movable._steppedOnPortal)) &&
+                    !movable.CurrentRoom.CanMoveOnCell(movable, 
+                        movable.RoomGridPosition + movable._direction, movable.CurrentSurface))
                 {
                     return false;
                 }
@@ -157,40 +165,72 @@ namespace PuzzleCat.LevelElements
                 return false;
             }
 
-            Surface currentSurfaceCopy = CurrentSurface;
+            bool onPortal = IsOnPortal();
+            
             foreach (MovableElement movable in linkedMovables)
             {
-                Portal portal =
-                    movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
-
-                if (portal != null && portal.Active)
-                {
-                    portal.Use(movable);
-
-                    if (movable._inPortal)
-                    {
-                        movable._inPortal = false;
-                        movable.CurrentSurface = _surfaceBeforePortal;
-                        continue;
-                    }
-
-                    movable._inPortal = true;
-                    foreach (MovableElement linkedMovable in linkedMovables)
-                    {
-                        linkedMovable._portalDirection = _direction;
-                        _surfaceBeforePortal = currentSurfaceCopy;
-                    }
-
-                    continue;
-                }
-
-                movable.CurrentRoom.MoveOnCell(movable, movable.RoomGridPosition + movable._direction,
-                    movable.CurrentSurface);
+                movable.PrepareMovement(CurrentSurface, onPortal,
+                    movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()),
+                    movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction, movable.CurrentSurface));
             }
 
             onMovement?.Invoke();
 
             return true;
+        }
+
+        private void PrepareMovement(Surface currentSurface, bool onPortal, Portal portal, Portal sameSurfacePortal)
+        {
+            if (portal != null && portal.Active)
+            {
+                portal.Use(this);
+
+                if (_inPortal)
+                {
+                    _inPortal = false;
+                    _onPortal = false;
+                    CurrentSurface = _surfaceBeforePortal;
+                    return;
+                }
+
+                _inPortal = true;
+                _onPortal = true;
+                _steppedOnPortal = CurrentRoom.FindPortal(RoomGridPosition, CurrentSurface);
+                foreach (MovableElement linkedMovable in linkedMovables)
+                {
+                    linkedMovable._portalDirection = _direction;
+                    _surfaceBeforePortal = currentSurface;
+                }
+
+                return;
+            }
+
+            if (onPortal)
+            {
+                if (sameSurfacePortal != null && sameSurfacePortal.IsConnectedTo(_steppedOnPortal))
+                {
+                    _onPortal = true;
+                    MoveTo(CurrentRoom.RoomToWorldCoordinates(RoomGridPosition + _direction));
+                    return;
+                }
+
+                _onPortal = false;
+            }
+
+            CurrentRoom.MoveOnCell(this, RoomGridPosition + _direction, CurrentSurface);
+        }
+
+        private bool IsOnPortal()
+        {
+            foreach (MovableElement movable in linkedMovables)
+            {
+                if (movable._onPortal)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool IsInPortal()
