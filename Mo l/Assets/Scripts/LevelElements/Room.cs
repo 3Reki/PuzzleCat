@@ -114,7 +114,7 @@ namespace PuzzleCat.LevelElements
 			return null;
 		}
 
-		private RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
+		public RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
 		{
 			foreach (RoomElement element in roomElements)
 			{
