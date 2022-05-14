@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using PuzzleCat.LevelElements;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,8 +18,9 @@ namespace PuzzleCat
         [SerializeField] private Cat cat;
         [SerializeField] private Camera mainCamera;
 
-        private static NavMeshSurface[] _surfaces;
-        
+        private NavMeshSurface[] _surfaces;
+        private IEnumerator _updateNavEnumerator;
+        private float _lastNavUpdateFrameCount;
 
         public void UpdateGameState(GameState newState)
         {
@@ -26,25 +28,43 @@ namespace PuzzleCat
             OnGameStateChanged?.Invoke(newState);
         }
 
-        private static void UpdateNavMeshes()
+        private void UpdateNavMeshes()
         {
+            if (Time.frameCount - _lastNavUpdateFrameCount < 3)
+            {
+                StopCoroutine(_updateNavEnumerator);
+            }
+            
+            _updateNavEnumerator = UpdateNavMeshesCoroutine();
+            StartCoroutine(_updateNavEnumerator);
+        }
+
+        private IEnumerator UpdateNavMeshesCoroutine()
+        {
+            _lastNavUpdateFrameCount = Time.frameCount;
+            for (int i = 0; i < 3; i++)
+            {
+                yield return null;
+            }
+            
             foreach (NavMeshSurface navMeshSurface in _surfaces)
             {
                 navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+                yield return null;
             }
         }
 
         private void Awake()
         {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-            }
-
             Instance = this;
             State = GameState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.onMovement += UpdateNavMeshes;
+        }
+
+        private void OnDestroy()
+        {
+            MovableElement.onMovement -= UpdateNavMeshes;
         }
 
         public enum GameState

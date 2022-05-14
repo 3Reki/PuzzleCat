@@ -44,7 +44,7 @@ namespace PuzzleCat.LevelElements
 				    && portal.RoomGridPosition.y == portalPosition.y
 				    && portal.RoomGridPosition.z == portalPosition.z
 				    && portal.ImpactedSurface == portalSurface
-				    && portal.Active)
+				    && portal.Placed)
 				{
 					return portal;
 				}
@@ -114,7 +114,7 @@ namespace PuzzleCat.LevelElements
 			return null;
 		}
 
-		private RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
+		public RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
 		{
 			foreach (RoomElement element in roomElements)
 			{

@@ -75,6 +75,28 @@ namespace PuzzleCat.Utils
                 _ => throw new ArgumentOutOfRangeException(nameof(surface), surface, null)
             };
         }
+        
+        public static Vector3Int Up(this Surface surface)
+        {
+            return surface switch
+            {
+                Surface.Floor => Vector3Int.forward,
+                Surface.SideWall => Vector3Int.up,
+                Surface.BackWall => Vector3Int.up,
+                _ => throw new ArgumentOutOfRangeException(nameof(surface), surface, null)
+            };
+        }
+        
+        public static Vector3Int Right(this Surface surface)
+        {
+            return surface switch
+            {
+                Surface.Floor => Vector3Int.right,
+                Surface.SideWall => Vector3Int.forward,
+                Surface.BackWall => Vector3Int.right,
+                _ => throw new ArgumentOutOfRangeException(nameof(surface), surface, null)
+            };
+        }
 
         public static Surface ToSurface(this Vector3 surfaceNormal)
         {

@@ -42,7 +42,7 @@ namespace PuzzleCat.LevelElements
                     return false;
                 }
 
-                _roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal());
+                _roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal(), Surface.All);
 
                 if (_roomElement == null)
                 {
