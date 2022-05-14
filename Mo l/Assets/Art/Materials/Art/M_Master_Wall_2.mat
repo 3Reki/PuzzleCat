@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Master
+  m_Name: M_Master_Wall_2
   m_Shader: {fileID: -6465566751694194690, guid: 9e8f7d0d19f4b934d88bb8695ebb37f7,
     type: 3}
   m_ShaderKeywords: 
@@ -21,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BCAOM_tex:
-        m_Texture: {fileID: 2800000, guid: c46a6e5594b369d4892d9ca6efc7b482, type: 3}
+        m_Texture: {fileID: 2800000, guid: a92cdc2784d3f5643870dee5f7dc3669, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -128,7 +128,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CurvatureColor: {r: 0, g: 1, b: 0.020491838, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0.2, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

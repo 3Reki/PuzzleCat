@@ -5166,6 +5166,8 @@ GameObject:
   - component: {fileID: 7769034303979845173}
   - component: {fileID: 8530986564157491029}
   - component: {fileID: 4371282099278975472}
+  - component: {fileID: 2575321066054651043}
+  - component: {fileID: 5158587281809963772}
   m_Layer: 3
   m_Name: SM_Book_Packed
   m_TagString: Untagged
@@ -10022,3 +10024,33 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!65 &2575321066054651043
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129520667661260768}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.021224, y: 1.0238104, z: 0.97673786}
+  m_Center: {x: 0, y: 0, z: 0.21484944}
+--- !u!114 &5158587281809963772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129520667661260768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e0efbf966be9b549ab6e49fcc08490e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ImpactedSurface: 4
+  IsObstacle: 1
+  CurrentSurface: 0
+  objectTransform: {fileID: 8906443673795104090}
+  linkedMovables: []
