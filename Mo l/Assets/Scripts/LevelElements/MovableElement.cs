@@ -133,10 +133,10 @@ namespace PuzzleCat.LevelElements
                     continue;
                 }
 
-                if (movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()) ==
-                    null &&
-                    !movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction,
-                        movable.CurrentSurface))
+                Portal portal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
+                
+                if ((portal == null || !portal.Active) && !movable.CurrentRoom.CanMoveOnCell(movable, 
+                    movable.RoomGridPosition + movable._direction, movable.CurrentSurface))
                 {
                     return false;
                 }
@@ -163,7 +163,7 @@ namespace PuzzleCat.LevelElements
                 Portal portal =
                     movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface());
 
-                if (portal != null)
+                if (portal != null && portal.Active)
                 {
                     portal.Use(movable);
 
