@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Levels/Tutorial/Level_Tutorial_003.unity
     guid: 5b71c75008bcf0641b48ea9a88429df0
   - enabled: 1
-    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD5_Finish.unity
+    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD5.unity
     guid: bf63cad4f1295734fb9c02829d9288a3
   - enabled: 1
     path: Assets/Scenes/GB_Test/GB_Scenes/DemoLevel01.unity
@@ -36,13 +36,13 @@ EditorBuildSettings:
     path: Assets/Levels/Tutorial/Level_Tutorial_004.unity
     guid: 3397fa9eb1903384bb766d164370c172
   - enabled: 1
-    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD3_Finish.unity
+    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD3.unity
     guid: 70d458883cd74e440a05f3b001d473d3
   - enabled: 1
-    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD2_Finish.unity
+    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD2.unity
     guid: c4e907c0647509e449911679ec709c24
   - enabled: 1
-    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD1_Finish.unity
+    path: Assets/Scenes/RAP_LD_Scene/Playtest/Raph_LD1.unity
     guid: 9dc22cd83e42dd34498a31486a2ae845
   - enabled: 1
     path: Assets/Scenes/GB_Test/GB_Scenes/GB_Level05.unity

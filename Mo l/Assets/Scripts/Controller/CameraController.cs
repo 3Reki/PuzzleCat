@@ -38,18 +38,29 @@ namespace PuzzleCat.Controller
                 float diff = (inputManager.SecondTouchPosition - inputManager.FirstTouchPosition).magnitude - _previousTouchesDistance;
 
                 camera.orthographicSize =
-                    Mathf.Clamp(camera.orthographicSize - diff * zoomSpeed * 0.0001f, _minZoom, _maxZoom);
+                    Mathf.Clamp(camera.orthographicSize - diff / Screen.dpi * zoomSpeed, _minZoom, _maxZoom);
                 _previousTouchesDistance =
                     (inputManager.SecondTouchPosition - inputManager.FirstTouchPosition).magnitude;
             }
         }
+        
+#if UNITY_EDITOR
+        public void HandleZoomInEditor()
+        {
+            if (inputManager.IsScrolling)
+            {
+                camera.orthographicSize =
+                    Mathf.Clamp(camera.orthographicSize - inputManager.MouseScroll * zoomSpeed * 0.01f, _minZoom, _maxZoom);
+            }
+        }
+#endif
 
         public void HandleCameraMovement()
         {
             if (inputManager.FirstTouchPosition == _lastTouchPosition) return;
             
             cameraTransform.position -=
-                cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) * movementSpeed * 0.0001f;
+                cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) / Screen.dpi * movementSpeed;
             _lastTouchPosition = inputManager.FirstTouchPosition;
         }
         

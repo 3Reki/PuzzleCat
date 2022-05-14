@@ -22,9 +22,8 @@ namespace PuzzleCat.Editor
         public static void LinkScripts()
         {
             CreateAndBakeNavMeshes();
-            CreateUI();
             CreateGameManagerAndControllers();
-            LinkPortalButtons();
+            CreateUI();
             UpdateRoomAndRoomElements();
             //UpdateCatPortals();
 
@@ -49,29 +48,7 @@ namespace PuzzleCat.Editor
                 PrefabUtility.RecordPrefabInstancePropertyModifications(navMeshSurface);
             }
         }
-        
-        private static void CreateUI()
-        {
-            if (FindObjectOfType<Canvas>() == null)
-            {
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/In Game Canvas.prefab"));
-            }
 
-            if (FindObjectOfType<EventSystem>() == null)
-            {
-                new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
-            }
-
-            var portalButton = FindObjectOfType<Canvas>().transform.GetChild(0).GetComponent<Button>();
-
-            while (portalButton.onClick.GetPersistentEventCount() > 0)
-            {
-                UnityEventTools.RemovePersistentListener(portalButton.onClick, 0);
-            }
-            
-            PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
-        }
-        
         private static void CreateGameManagerAndControllers()
         {
             foreach (GameManager gameManager in FindObjectsOfType<GameManager>())
@@ -104,6 +81,24 @@ namespace PuzzleCat.Editor
             foreach (SerializedObject serializedObject in serializedObjects)
             {
                 serializedObject.ApplyModifiedProperties();
+            }
+        }
+        
+        private static void CreateUI()
+        {
+            if (FindObjectOfType<Canvas>() == null)
+            {
+                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/In Game Canvas.prefab"));
+            }
+
+            var menuManagerSO = new SerializedObject(FindObjectOfType<MenuManager>());
+            menuManagerSO.FindProperty("portalPlacementController").objectReferenceValue = 
+                FindObjectOfType<PortalPlacementController>();
+            menuManagerSO.ApplyModifiedProperties();
+
+            if (FindObjectOfType<EventSystem>() == null)
+            {
+                new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
             }
         }
 
@@ -160,20 +155,7 @@ namespace PuzzleCat.Editor
 
             return sphere.transform;
         }
-        
-        private static void LinkPortalButtons()
-        {
-            var portalButton = FindObjectOfType<Canvas>().transform.GetChild(0).GetComponent<Button>();
-            var portalController = FindObjectOfType<PortalPlacementController>();
-            
-            UnityEventTools.AddIntPersistentListener(portalButton.onClick, portalController.SwitchPortalMode, 1);
-            PrefabUtility.RecordPrefabInstancePropertyModifications(portalButton);
 
-            SerializedObject portalControllerSO = new SerializedObject(portalController);
-            portalControllerSO.FindProperty("portalButton").objectReferenceValue = portalButton;
-            portalControllerSO.ApplyModifiedProperties();
-        }
-        
         private static void UpdateRoomAndRoomElements()
         {
             var rooms = FindObjectsOfType<Room>();
