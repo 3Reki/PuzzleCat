@@ -103,7 +103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputManager: {fileID: 816794182855563764}
   portalsParentTransform: []
-  portalButton: {fileID: 0}
 --- !u!114 &816794181756018611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,8 +120,8 @@ MonoBehaviour:
   camera: {fileID: 0}
   maxZoomPercentage: 120
   minZoomPercentage: 50
-  zoomSpeed: 70
-  movementSpeed: 60
+  zoomSpeed: 4
+  movementSpeed: 4
 --- !u!1 &816794182855563767
 GameObject:
   m_ObjectHideFlags: 0
