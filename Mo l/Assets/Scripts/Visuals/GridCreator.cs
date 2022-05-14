@@ -5,17 +5,18 @@ namespace PuzzleCat.Visuals
 {
     public class GridCreator : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject cellPrefab;
-        [SerializeField]
-        private Material cellMat;
+        [SerializeField] private GameObject cellPrefab;
+        [SerializeField] private Material cellMat;
+        [SerializeField] private float cellHeight = .05f;
+        [SerializeField] private Transform cellParent;
 
         public Color walkableCells = Color.green;
         public Color nonWalkableCells = Color.red;
         public Color portalCells = Color.blue;
-        [Range(0.0f, 1.0f)]
-        public float alphaValue = 1.0f;
-
+        
+        [Range(0.0f, 1.0f)] public float alphaValue = 1.0f; //ici coco
+        // 0.5
+        //0.0
 
         private int _heightReceived;
         private int _widthReceived;
@@ -27,12 +28,8 @@ namespace PuzzleCat.Visuals
         private Vector3 direction = new Vector3(0f, 1.5f, 0f);
         private float maxDist = 1.5f;
 
-        //private float minAlpha = 0.2f;
-        //private float maxAlpha = 0.7f;
-
-        private LayerMask furnitureMask;
-        private LayerMask catPortalMask;
-
+        [SerializeField] private LayerMask furnitureMask;
+        [SerializeField] private LayerMask catPortalMask;
 
         private void Awake()
         {
@@ -87,7 +84,7 @@ namespace PuzzleCat.Visuals
             {
                 for (int y = 0; y < _heightReceived; y++)
                 {
-                    _cellInst = Instantiate(cellPrefab, new Vector3(x, 0.05f, y), Quaternion.Euler(90, 0, 0));
+                    _cellInst = Instantiate(cellPrefab, new Vector3(x, cellHeight, y), Quaternion.Euler(90, 0, 0), cellParent);
                     _cellList.Add(_cellInst);
                 }
             }
@@ -108,9 +105,6 @@ namespace PuzzleCat.Visuals
         {
             cellMat.SetFloat("_AlphaValue", alphaValue);
         }
-
-
-
         private void SetMatColor(string channelA, string channelB, string channelC, Material mat, Color color, List<GameObject> listGo, bool thirdParam = false)
         {
 
@@ -128,5 +122,4 @@ namespace PuzzleCat.Visuals
             }
         }
     }
-
 }
