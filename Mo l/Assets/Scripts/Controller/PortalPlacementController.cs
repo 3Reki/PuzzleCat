@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PuzzleCat.Controller
 {
@@ -13,20 +12,19 @@ namespace PuzzleCat.Controller
         
         private Dictionary<int, List<Portal>> _portals;
         private int _portalGroupId;
-        private int? _portalId;
-        
-        public void SwitchPortalMode(int id)
+        private int _portalId;
+
+        public void UpdateSelectedPortalGroup(int id)
         {
-            if (GameManager.Instance.State == GameManager.GameState.PortalMode)
+            if (_portalGroupId == id)
             {
-                GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+                _portalGroupId = -1;
+                _portalId = -1;
                 return;
             }
-
+            
             _portalGroupId = id;
             _portalId = FindCurrentPortalIndex(id);
-
-            GameManager.Instance.UpdateGameState(GameManager.GameState.PortalMode);
         }
         
         public void HandlePortalPlacement()
@@ -42,11 +40,21 @@ namespace PuzzleCat.Controller
             if (portal != null)
             {
                 portal.UnsetPortal();
+                
+                if (_portalGroupId == -1)
+                {
+                    return;
+                }
+                
                 _portalId = FindCurrentPortalIndex(_portalGroupId);
+            }
+
+            if (_portalGroupId == -1)
+            {
                 return;
             }
 
-            if (_portalId == null)
+            if (_portalId == -1)
             {
                 Debug.LogWarning("Attempt to place portal when none is available");
                 return;
@@ -54,15 +62,15 @@ namespace PuzzleCat.Controller
 
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
             
-            if (_portals[_portalGroupId][_portalId.Value].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
+            if (_portals[_portalGroupId][_portalId].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
             {
-                _portals[_portalGroupId][_portalId.Value].SetPortal(hit.transform.parent.GetComponent<Room>(), 
+                _portals[_portalGroupId][_portalId].SetPortal(hit.transform.parent.GetComponent<Room>(), 
                     gridPoint, hit.normal.ToSurface());
                 _portalId = FindCurrentPortalIndex(_portalGroupId);
             }
         }
         
-        private int? FindCurrentPortalIndex(int portalGroupId)
+        private int FindCurrentPortalIndex(int portalGroupId)
         {
             for (var i = 0; i < _portals[portalGroupId].Count; i++)
             {
@@ -72,7 +80,7 @@ namespace PuzzleCat.Controller
                 }
             }
 
-            return null;
+            return -1;
         }
 
         private void ConstructPortalsDictionary()
@@ -94,10 +102,33 @@ namespace PuzzleCat.Controller
                 }
             }
         }
+        
+        private void OnGameStateChanged(GameManager.GameState state)
+        {
+            if (state == GameManager.GameState.PortalMode)
+            {
+                _portalGroupId = -1;
+                _portalId = -1;
+            }
+        }
 
         private void Awake()
         {
             ConstructPortalsDictionary();
+            GameManager.OnGameStateChanged += OnGameStateChanged;
+        }
+        
+        private void OnDestroy()
+        {
+            GameManager.OnGameStateChanged -= OnGameStateChanged;
+        }
+
+        private void Start()
+        {
+            if (portalsParentTransform.Length == 0)
+            {
+                // TODO
+            }
         }
     }
 }

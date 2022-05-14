@@ -56,15 +56,15 @@ namespace PuzzleCat
 
         private void Awake()
         {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-            }
-
             Instance = this;
             State = GameState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.onMovement += UpdateNavMeshes;
+        }
+
+        private void OnDestroy()
+        {
+            MovableElement.onMovement -= UpdateNavMeshes;
         }
 
         public enum GameState
