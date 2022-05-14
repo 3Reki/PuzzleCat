@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -11,9 +13,14 @@ namespace PuzzleCat.LevelElements
 		public bool catPortal;
 		public bool Active { get; private set; }
 
-		[SerializeField] private Portal linkedPortal;
+		[SerializeField] private Portal defaultLinkedPortal;
 		[SerializeField] private Vector3Int arrivalPositionOffset;
 		[SerializeField] private Transform myTransform;
+		[SerializeField] private bool isGreyPortal;
+		
+		private static bool _canLink;
+		private Portal _linkedPortal;
+		private readonly Portal[] _adjacentPortals = new Portal[4]; // 4 directions : up, right, down and left
 
 		public override Vector3Int WorldGridPosition
 		{
@@ -33,7 +40,7 @@ namespace PuzzleCat.LevelElements
 				return false;
 			}
 			
-			if (!linkedPortal.CurrentRoom.CanMoveOnCell(movable, ArrivalRoomPosition(), ImpactedSurface))
+			if (!_linkedPortal.CurrentRoom.CanMoveOnCell(movable, ArrivalRoomPosition(), ImpactedSurface))
 			{
 				print("Can't move");
 				return false;
@@ -52,26 +59,55 @@ namespace PuzzleCat.LevelElements
 
 		public void Use(IMovable movable)
 		{
-			Room linkedRoom = linkedPortal.CurrentRoom;
+			Room linkedRoom = _linkedPortal.CurrentRoom;
 			RoomElement roomElement = movable.RoomElement;
 
-			roomElement.transform.rotation = ArrivalElementRotation(roomElement);
+			roomElement.transform.rotation *= ArrivalElementAddedRotation(roomElement);
 			if (catPortal)
 			{
 				((Cat) movable).MoveTo(myTransform.position + (movable.RoomElement.transform.position - myTransform.position).normalized);
-				((Cat) movable).onArrival = () => movable.TeleportTo(ArrivalWorldPosition(), linkedPortal.ImpactedSurface, linkedPortal.arrivalPositionOffset);
+				((Cat) movable).onArrival = () => movable.TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
 			}
 			else
 			{
-				movable.TeleportTo(ArrivalWorldPosition(), linkedPortal.ImpactedSurface, ImpactedSurface.GetNormal());
+				movable.TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, ImpactedSurface.GetNormal());
 			}
 			CurrentRoom.RemoveRoomElement(roomElement);
 			linkedRoom.AddRoomElement(roomElement);
 			roomElement.SetRoom(linkedRoom);
 		}
+		
+		public bool CanSetPortal(Transform hit, Vector3Int worldGridPosition, Surface surfaceType)
+		{
+			if (hit.GetComponent<RoomElement>() != null)
+			{
+				return false;
+			}
+
+			if (!isGreyPortal)
+			{
+				return true;
+			}
+
+			Room parentRoom = hit.parent.GetComponent<Room>();
+			Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
+
+			Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
+
+			for (var i = 0; i < directionVectors.Length; i++)
+			{
+				if (parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType) != null)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 		public void SetPortal(Room parentRoom, Vector3Int worldGridPosition, Surface surfaceType)
 		{
+			_linkedPortal = defaultLinkedPortal;
 			gameObject.SetActive(true);
 			myTransform.position = worldGridPosition + GetOffset(surfaceType);
 			myTransform.rotation = Quaternion.FromToRotation(myTransform.up, surfaceType.GetNormal()) *
@@ -82,10 +118,164 @@ namespace PuzzleCat.LevelElements
 			SetRoom(parentRoom);
 			Placed = true;
 
-			if (linkedPortal.Placed)
+			if (isGreyPortal)
 			{
-				Active = true;
-				linkedPortal.Active = true;
+				Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
+				Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
+
+				for (var i = 0; i < directionVectors.Length; i++)
+				{
+					_adjacentPortals[i] = parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType);
+
+					if (_adjacentPortals[i] != null)
+					{
+						_adjacentPortals[i]._adjacentPortals[(i + 2) % 4] = this;
+					}
+				}
+
+				TryLinkingPortals();
+
+				return;
+			}
+
+			if (!_linkedPortal.Placed) return;
+			
+			foreach (Portal portal in _linkedPortal._adjacentPortals)
+			{
+				if (portal != null)
+				{
+					return;
+				}
+			}
+			
+			print("Linked");
+			Active = true;
+			_linkedPortal.Active = true;
+		}
+
+		private void TryLinkingPortals()
+		{
+			var allAdjacentPortals = new List<Portal>();
+			Portal defaultLinked = null;
+			GetAllAdjacentPortals(ref allAdjacentPortals, ref defaultLinked);
+
+			var checkedPortals = new HashSet<Portal>();
+			foreach (Portal adjacentPortal in allAdjacentPortals)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					checkedPortals.Clear();
+					if (CanLinkPortals(ref checkedPortals, adjacentPortal, defaultLinked, i))
+					{
+						print("Linked");
+						checkedPortals.Clear();
+						LinkPortals(ref checkedPortals, adjacentPortal, defaultLinked, i);
+						return;
+					}
+				}
+			}
+
+			checkedPortals.Clear();
+			Unlink(ref checkedPortals);
+			checkedPortals.Clear();
+			defaultLinked.Unlink(ref checkedPortals);
+		}
+
+		private void Unlink(ref HashSet<Portal> checkedPortals)
+		{
+			if (checkedPortals.Contains(this))
+			{
+				return;
+			}
+			
+			checkedPortals.Add(this);
+			Active = false;
+			
+			foreach (Portal adjacentPortal in _adjacentPortals)
+			{
+				if (adjacentPortal != null)
+				{
+					adjacentPortal.Unlink(ref checkedPortals);
+				}
+			}
+		}
+
+		private static void LinkPortals(ref HashSet<Portal> checkedPortals, Portal portal1, Portal portal2, int rotationOffset)
+		{
+			if (checkedPortals.Contains(portal1))
+			{
+				return;
+			}
+			
+			checkedPortals.Add(portal1);
+			portal1._linkedPortal = portal2;
+			portal1.Active = true;
+			portal2._linkedPortal = portal1;
+			portal2.Active = true;
+
+			for (int i = 0; i < 4; i++)
+			{
+				if (portal1._adjacentPortals[(i + rotationOffset) % 4] != null)
+				{
+					LinkPortals(ref checkedPortals, portal1._adjacentPortals[(i + rotationOffset) % 4],
+						portal2._adjacentPortals[(i % 2 == 1) ? (i + 2) % 4 : i], rotationOffset);
+				}
+			}
+		}
+
+		private static bool CanLinkPortals(ref HashSet<Portal> checkedPortals, Portal portal1, Portal portal2, int rotationOffset)
+		{
+			if (checkedPortals.Contains(portal1))
+			{
+				return true;
+			}
+			
+			checkedPortals.Add(portal1);
+
+			for (int i = 0; i < 4; i++)
+			{
+				if ((portal1._adjacentPortals[(i + rotationOffset) % 4] == null) != (portal2._adjacentPortals[
+					(i % 2 == 1) ? (i + 2) % 4 : i] == null))
+				{
+					return false;
+				}
+
+				if (portal1._adjacentPortals[(i + rotationOffset) % 4] == null)
+				{
+					continue;
+				}
+
+				_canLink = CanLinkPortals(ref checkedPortals, portal1._adjacentPortals[(i + rotationOffset) % 4],
+					portal2._adjacentPortals[(i % 2 == 1) ? (i + 2) % 4 : i], rotationOffset);
+
+				if (!_canLink)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private void GetAllAdjacentPortals(ref List<Portal> portals, ref Portal defaultLinked)
+		{
+			if (portals.Contains(this))
+			{
+				return;
+			}
+
+			portals.Add(this);
+			if (defaultLinkedPortal != null)
+			{
+				defaultLinked = defaultLinkedPortal;
+			}
+
+			foreach (Portal adjacentPortal in _adjacentPortals)
+			{
+				if (adjacentPortal != null)
+				{
+					adjacentPortal.GetAllAdjacentPortals(ref portals, ref defaultLinked);
+				}
 			}
 		}
 
@@ -98,7 +288,28 @@ namespace PuzzleCat.LevelElements
 			gameObject.SetActive(false);
 			Placed = false;
 			Active = false;
-			linkedPortal.Active = false;
+			
+			// if (isGreyPortal)
+			// {
+			// 	if (_linkedPortal != null)
+			// 	{
+			// 		_linkedPortal.Active = false;
+			// 	}
+			//
+			// 	_adjacentPortal.Active = false;
+			// 	_adjacentPortal._linkedPortal.Active = false;
+			// 	_adjacentPortal._adjacentPortal = null;
+			//
+			// 	return;
+			// }
+			//
+			// if (_adjacentPortal != null)
+			// {
+			// 	_adjacentPortal.UnsetPortal();
+			// 	return;
+			// }
+
+			_linkedPortal.Active = false;
 		}
 
 		private static Vector3 GetOffset(Surface surfaceType)
@@ -112,14 +323,30 @@ namespace PuzzleCat.LevelElements
 			};
 		}
 
-		private Quaternion ArrivalElementRotation(RoomElement roomElement)
+		private Quaternion ArrivalElementAddedRotation(RoomElement roomElement)
 		{
-			return Quaternion.FromToRotation(myTransform.position - roomElement.transform.position, linkedPortal.ImpactedSurface.GetNormal()) *
-			       roomElement.transform.rotation;
+			return (ImpactedSurface, _linkedPortal.ImpactedSurface) switch
+			{
+				(Surface.Floor, Surface.Floor) => Quaternion.Euler(180, 0, 0),
+				(Surface.Floor, Surface.BackWall) => Quaternion.Euler(-270, 0, 0),
+				(Surface.Floor, Surface.SideWall) => Quaternion.Euler(0, 0, 270),
+				(Surface.BackWall, Surface.Floor) => Quaternion.Euler(270, 0, 0),
+				(Surface.BackWall, Surface.BackWall) => Quaternion.Euler(180, 0, 0),
+				(Surface.BackWall, Surface.SideWall) => Quaternion.Euler(0, -270, 0),
+				(Surface.SideWall, Surface.Floor) => Quaternion.Euler(0, 0, -270),
+				(Surface.SideWall, Surface.BackWall) => Quaternion.Euler(0, 270, 0),
+				(Surface.SideWall, Surface.SideWall) => Quaternion.Euler(0, 0, 180),
+				_ => throw new ArgumentOutOfRangeException()
+			};
 		}
 
-		private Vector3Int ArrivalWorldPosition() => linkedPortal.WorldGridPosition + linkedPortal.arrivalPositionOffset;
-		private Vector3Int ArrivalRoomPosition() => linkedPortal.RoomGridPosition + linkedPortal.arrivalPositionOffset;
+		private Vector3Int ArrivalWorldPosition() => _linkedPortal.WorldGridPosition + _linkedPortal.arrivalPositionOffset;
+		private Vector3Int ArrivalRoomPosition() => _linkedPortal.RoomGridPosition + _linkedPortal.arrivalPositionOffset;
+
+		private void Awake()
+		{
+			_linkedPortal = defaultLinkedPortal;
+		}
 
 		private void Start()
 		{
