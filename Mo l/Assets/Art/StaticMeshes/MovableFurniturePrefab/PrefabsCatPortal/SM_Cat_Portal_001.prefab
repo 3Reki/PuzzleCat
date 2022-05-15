@@ -97,10 +97,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
-  IsObstacle: 1
+  IsObstacle: 0
   Id: 0
   Placed: 0
-  catPortal: 0
+  catPortal: 1
   defaultLinkedPortal: {fileID: 0}
   arrivalPositionOffset: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 932008265842885602}
