@@ -15,6 +15,7 @@ namespace PuzzleCat.Controller
         private static readonly int _velocityX = Animator.StringToHash("VelX");
         private static readonly int _teleport = Animator.StringToHash("Teleport");
         private static readonly int _idleDown = Animator.StringToHash("IdleDown");
+        private static readonly int _endMirrorReached = Animator.StringToHash("EndMirrorReached");
         private float _defaultSpeed;
 
         public void SetIdleDown(bool idleState)
@@ -43,6 +44,11 @@ namespace PuzzleCat.Controller
         {
             animator.SetTrigger(_teleport);
         }
+        
+        public void JumpInMirror()
+        {
+            animator.SetTrigger(_endMirrorReached);
+        }
 
         public void Warp()
         {
@@ -52,6 +58,11 @@ namespace PuzzleCat.Controller
         public void TeleportAnimationEnd()
         {
             catController.EndTeleport();
+        }
+
+        public void EndLevel()
+        {
+            Cat.EndLevel();
         }
 
         private void Awake()

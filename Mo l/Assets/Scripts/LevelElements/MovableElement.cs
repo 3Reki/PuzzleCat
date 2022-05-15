@@ -182,7 +182,7 @@ namespace PuzzleCat.LevelElements
         {
             if (portal != null && portal.Active)
             {
-                portal.Use(this);
+                portal.Interact(this);
 
                 if (_inPortal)
                 {

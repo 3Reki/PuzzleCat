@@ -51,20 +51,12 @@ namespace PuzzleCat.LevelElements
 
 		public override void Interact(RoomElement movable)
 		{
-			if (CanInteract(movable))
-			{
-				Use(movable);
-			}
-		}
-
-		public void Use(RoomElement movable)
-		{
 			Room linkedRoom = _linkedPortal.CurrentRoom;
 
 			movable.transform.rotation = ArrivalElementAddedRotation() * movable.transform.rotation;
 			if (catPortal)
 			{
-				((Cat) movable).MoveTo(myTransform.position, 1); // todo
+				((Cat) movable).MoveTo(myTransform.position, 1);
 				((Cat) movable).onArrival = () => ((Cat) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
 			}
 			else
@@ -75,7 +67,7 @@ namespace PuzzleCat.LevelElements
 			linkedRoom.AddRoomElement(movable);
 			movable.SetRoom(linkedRoom);
 		}
-		
+
 		public bool IsConnectedTo(Portal portal)
 		{
 			var checkedPortals = new HashSet<Portal>();

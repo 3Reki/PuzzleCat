@@ -73,7 +73,8 @@ namespace PuzzleCat
             FurnitureMovement,
             PlayerMovement,
             CameraMovement,
-            Menu
+            Menu,
+            End
         }
     }
 }

@@ -45,6 +45,11 @@ namespace PuzzleCat.LevelElements
 
         public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
+        
+        public static void EndLevel()
+        {
+            GameManager.Instance.UpdateGameState(GameManager.GameState.End);
+        }
 
         public bool IsUnderCat(RoomElement roomElement)
         {
@@ -105,7 +110,6 @@ namespace PuzzleCat.LevelElements
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
         {
-            print(_lookAtDirection);
             myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
             catAnimation.StartTeleportAnimation();
             _warpDestination = GetWorldPosition(coordinates);
@@ -118,13 +122,18 @@ namespace PuzzleCat.LevelElements
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
-            //transform.Rotate(_lookAtDirection);
             myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
         }
 
         public void EndTeleport()
         {
             _canMove = true;
+        }
+
+        public void JumpInMirror()
+        {
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            catAnimation.JumpInMirror();
         }
 
         private void HandleJump()

@@ -86,7 +86,10 @@ namespace PuzzleCat.LevelElements
 				return;
 			}
 
-			element.Interact(movableElement);
+			if (element.CanInteract(movableElement))
+			{
+				element.Interact(movableElement);
+			}
 		}
 
 		public void AddRoomElement(RoomElement roomElement)
