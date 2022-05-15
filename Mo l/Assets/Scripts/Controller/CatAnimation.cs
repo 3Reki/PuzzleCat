@@ -12,6 +12,7 @@ namespace PuzzleCat.Controller
         [SerializeField] private float jumpSpeed;
 
         private static readonly int _speed = Animator.StringToHash("Speed");
+        private static readonly int _velocityX = Animator.StringToHash("VelX");
         private static readonly int _teleport = Animator.StringToHash("Teleport");
         private static readonly int _idleDown = Animator.StringToHash("IdleDown");
         private float _defaultSpeed;
@@ -61,6 +62,7 @@ namespace PuzzleCat.Controller
         private void Update()
         {
             animator.SetFloat(_speed, playerAgent.velocity.magnitude);
+            animator.SetFloat(_velocityX, playerAgent.transform.InverseTransformDirection(playerAgent.velocity).x);
         }
     }
 }
