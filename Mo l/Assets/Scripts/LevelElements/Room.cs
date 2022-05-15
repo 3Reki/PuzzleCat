@@ -53,7 +53,7 @@ namespace PuzzleCat.LevelElements
 			return null;
 		}
 
-		public bool CanMoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
+		public bool CanMoveOnCell(RoomElement movableElement, Vector3Int coordinates, Surface surface)
 		{
 			if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
 			    coordinates.y < 0 || coordinates.y >= gridSize.y ||
@@ -77,7 +77,7 @@ namespace PuzzleCat.LevelElements
 			return true;
 		}
 
-		public void MoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
+		public void MoveOnCell(RoomElement movableElement, Vector3Int coordinates, Surface surface)
 		{
 			RoomElement element = GetElementAt(coordinates, surface);
 			if (element == null)

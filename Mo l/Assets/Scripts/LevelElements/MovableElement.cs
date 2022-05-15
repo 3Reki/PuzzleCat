@@ -1,11 +1,10 @@
 using System;
-using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
 
 namespace PuzzleCat.LevelElements
 {
-    public class MovableElement : RoomElement, IMovable
+    public class MovableElement : RoomElement
     {
         public static OnMovement onMovement;
         public Surface CurrentSurface;
@@ -84,9 +83,9 @@ namespace PuzzleCat.LevelElements
             return TryMoving();
         }
 
-        public void MoveTo(Vector3Int coordinates)
+        public override void MoveTo(Vector3Int destination)
         {
-            objectTransform.position = GetWorldPosition(coordinates);
+            objectTransform.position = GetWorldPosition(destination);
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
