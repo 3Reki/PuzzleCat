@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using PuzzleCat.Controller;
 using UnityEngine;
@@ -16,11 +17,18 @@ namespace PuzzleCat
         [SerializeField] private Toggle[] portalToggles;
         [SerializeField] private Sprite portalBookOpen;
         [SerializeField] private Sprite portalBookClosed;
+        
         [SerializeField] private GameObject pauseCanvasGameObject;
         [SerializeField] private RectTransform pauseMenuTransform;
+        
+        [SerializeField] private GameObject endLevelCanvasGameObject;
+        [SerializeField] private Image endLevelBackground;
+        [SerializeField] private RectTransform endLevelFrame;
+        [SerializeField] private Button nextLevelButton;
 
         private GameManager.GameState _unpausedGameState;
         private float _menuInitialPositionY;
+        private float _backgroundInitialAlpha;
         private bool _gamePaused;
         private bool _menuAlreadyClosed;
         
@@ -82,9 +90,21 @@ namespace PuzzleCat
             }
         }
 
-        public void LoadMenu()
+        public void ActivateLevelEndMenu()
+        {
+            endLevelCanvasGameObject.SetActive(true);
+            endLevelBackground.DOFade(_backgroundInitialAlpha, .4f);
+            endLevelFrame.DOScale(1, .4f).SetEase(Ease.OutBack);
+        }
+
+        public void LoadMainMenu()
         {
             SceneManager.LoadScene(0);
+        }
+
+        public void LoadNextLevel()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
         private void Awake()
@@ -109,6 +129,23 @@ namespace PuzzleCat
                             selectedPortalCheckmark.DOFade(0, .3f);
                         }
                     });
+            }
+
+            if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings)
+            {
+                nextLevelButton.interactable = false;
+            }
+
+            _backgroundInitialAlpha = endLevelBackground.color.a;
+            endLevelBackground.color = new Color(endLevelBackground.color.r, endLevelBackground.color.g, endLevelBackground.color.b, 0);
+            endLevelFrame.localScale = Vector3.zero;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ActivateLevelEndMenu();
             }
         }
     }
