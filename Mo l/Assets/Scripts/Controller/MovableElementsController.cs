@@ -87,8 +87,6 @@ namespace PuzzleCat.Controller
             invisibleQuad.SetActive(true);
             invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
-            selectedGameObject.transform.DOScale(Vector3.one * 1.5f, 0.2f).onComplete =
-                () => selectedGameObject.transform.DOScale(Vector3.one, 0.2f);
         }
 
         private void HandleJunction(Vector3Int gridPoint)
