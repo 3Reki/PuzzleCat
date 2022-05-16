@@ -24,7 +24,7 @@ namespace PuzzleCat.Visuals
         private List<Material> _cellMatList;
         private List<GameObject> _cellList;
         private GameObject _cellInst;
-
+        
         private Vector3 direction = new Vector3(0f, 1.5f, 0f);
         private float maxDist = 1.5f;
 
@@ -39,17 +39,41 @@ namespace PuzzleCat.Visuals
             _widthReceived = (int)x;
             furnitureMask = LayerMask.GetMask("furniture");
             catPortalMask = LayerMask.GetMask("catPortal");
+
         }
 
         private void Start()
         {
             SpawnCell();
             NonWalkableCell();
-            SetMatAlpha();
+            SetMatAlphaInit();
+        }
+
+
+        private void Update()//debug
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                VisualizeGrid(0.5f);
+            }
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                VisualizeGrid(.0f);
+            }
+        }
+
+        private void VisualizeGrid(float value)
+        {
+            for (int i = 0; i < _cellMatList.Count; i++)
+            {
+                _cellMatList[i].SetFloat("_Alpha", value);
+            }
         }
 
         private void NonWalkableCell()
         {
+            _cellMatList = new List<Material>();
+
             for (int i = 0; i < _cellList.Count; i++)
             {
                 cellMat.EnableKeyword("_CHANNELSELECTION");
@@ -60,7 +84,7 @@ namespace PuzzleCat.Visuals
                 
 
                 Material matList = _cellList[i].GetComponent<MeshRenderer>().material;
-
+                
                 if (Physics.Raycast(downRay, direction, maxDist, furnitureMask))
                 {
                     SetMatColor("_CHANNELSELECTION_B", "_CHANNELSELECTION_A", "null", matList, walkableCells, _cellList);
@@ -73,9 +97,10 @@ namespace PuzzleCat.Visuals
                 {
                     SetMatColor("_CHANNELSELECTION_A", "_CHANNELSELECTION_C", "_CHANNELSELECTION_B", matList, walkableCells, _cellList, true);
                 }
+                _cellMatList.Add(_cellList[i].GetComponent<MeshRenderer>().material);
+
             }
         }
-
         private void SpawnCell()
         {
             _cellList = new List<GameObject>();
@@ -100,8 +125,7 @@ namespace PuzzleCat.Visuals
                 }
             }
         }
-
-        private void SetMatAlpha()
+        private void SetMatAlphaInit()
         {
             cellMat.SetFloat("_AlphaValue", alphaValue);
         }

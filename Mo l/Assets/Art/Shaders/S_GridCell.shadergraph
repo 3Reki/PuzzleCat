@@ -1365,7 +1365,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "c0db3df526fa440e8799780f61ae6d88",
     "m_Id": 0,
-    "m_DisplayName": "Aplha",
+    "m_DisplayName": "Alpha",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1543,10 +1543,10 @@
     "m_Guid": {
         "m_GuidSerialized": "b6e44e48-6f02-4229-91d0-12ba66f136ed"
     },
-    "m_Name": "Aplha",
+    "m_Name": "Alpha",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Aplha",
-    "m_DefaultReferenceName": "_Aplha",
+    "m_RefNameGeneratedByDisplayName": "Alpha",
+    "m_DefaultReferenceName": "_Alpha",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
