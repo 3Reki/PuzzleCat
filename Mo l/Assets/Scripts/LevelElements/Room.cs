@@ -121,7 +121,7 @@ namespace PuzzleCat.LevelElements
 		{
 			foreach (RoomElement element in roomElements)
 			{
-				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
+				if ((element.ImpactedSurface == surface)
 				    && element.RoomGridPosition.x == roomCoordinates.x
 				    && element.RoomGridPosition.y == roomCoordinates.y
 				    && element.RoomGridPosition.z == roomCoordinates.z)
