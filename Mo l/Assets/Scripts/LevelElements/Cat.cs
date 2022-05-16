@@ -143,6 +143,7 @@ namespace PuzzleCat.LevelElements
                 if (!_isGrounded) return;
 
                 _isGrounded = false;
+                _canMove = false;
                 _lookAtDirection = playerAgent.steeringTarget - myTransform.position;
                 myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
                 
@@ -160,6 +161,7 @@ namespace PuzzleCat.LevelElements
             else if (!_isGrounded)
             {
                 _isGrounded = true;
+                _canMove = true;
                 catAnimation.StopJumping();
             }
         }
