@@ -113,13 +113,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 0
-  Id: 2
+  Id: 1
   Placed: 0
   catPortal: 0
   defaultLinkedPortal: {fileID: 8888376099418581756}
   arrivalPositionOffset: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 8888376098738652555}
-  isGreyPortal: 0
+  isGreyPortal: 1
 --- !u!1 &8888376098864625037
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8888376098864625036}
   m_Layer: 0
-  m_Name: Furniture Portals
+  m_Name: 2 Grey Furniture Portals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,10 +266,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 0
-  Id: 2
+  Id: 1
   Placed: 0
   catPortal: 0
   defaultLinkedPortal: {fileID: 8888376098738652559}
   arrivalPositionOffset: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 8888376099418581757}
-  isGreyPortal: 0
+  isGreyPortal: 1
