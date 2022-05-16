@@ -1,4 +1,3 @@
-using System;
 using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine.AI;
 
 namespace PuzzleCat.LevelElements
 {
-    public class Cat : RoomElement, IMovable
+    public class Cat : RoomElement
     {
         public delegate void OnArrival();
 
@@ -46,6 +45,11 @@ namespace PuzzleCat.LevelElements
 
         public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
+        
+        public static void EndLevel()
+        {
+            GameManager.Instance.UpdateGameState(GameManager.GameState.End);
+        }
 
         public bool IsUnderCat(RoomElement roomElement)
         {
@@ -77,13 +81,19 @@ namespace PuzzleCat.LevelElements
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
             }
         }
-
-        public void MoveTo(Vector3Int coordinates)
+        
+        public override void MoveTo(Vector3Int destination)
         {
-            MoveTo(coordinates + _offset);
+            MoveTo(destination + _offset, 0);
+        }
+        
+        public void MoveTo(Vector3 destination, float aimedDistance)
+        {
+            playerAgent.stoppingDistance = aimedDistance;
+            MoveTo(destination);
         }
 
-        public void MoveTo(Vector3 position)
+        private void MoveTo(Vector3 position)
         {
             if (position == _agentDestination)
             {
@@ -95,11 +105,12 @@ namespace PuzzleCat.LevelElements
             }
             
             _lookAtDirection = position - myTransform.position;
+            playerAgent.isStopped = false;
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
         {
-            transform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
             catAnimation.StartTeleportAnimation();
             _warpDestination = GetWorldPosition(coordinates);
             _lookAtDirection = exitDirection;
@@ -111,12 +122,18 @@ namespace PuzzleCat.LevelElements
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
-            transform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
         }
 
         public void EndTeleport()
         {
             _canMove = true;
+        }
+
+        public void JumpInMirror()
+        {
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            catAnimation.JumpInMirror();
         }
 
         private void HandleJump()
@@ -149,14 +166,18 @@ namespace PuzzleCat.LevelElements
 
         private void HandleMovementChecking()
         {
-            if (playerAgent.remainingDistance > 0)
+            if (playerAgent.remainingDistance > playerAgent.stoppingDistance)
             {
                 _isMoving = true;
                 return;
             }
             
             if (!_isMoving) return;
-            
+
+            playerAgent.velocity = Vector3.zero;
+            _lookAtDirection = myTransform.InverseTransformDirection(playerAgent.destination - myTransform.position);
+            _lookAtDirection.y = 0;
+            _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
             _isMoving = false;
 
             if (onArrival != null)

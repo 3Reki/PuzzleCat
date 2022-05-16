@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 0
-  Id: 1
+  Id: 2
   Placed: 0
   catPortal: 0
   defaultLinkedPortal: {fileID: 8888376099418581756}
@@ -266,7 +266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 0
-  Id: 1
+  Id: 2
   Placed: 0
   catPortal: 0
   defaultLinkedPortal: {fileID: 8888376098738652559}

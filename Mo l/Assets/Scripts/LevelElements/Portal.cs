@@ -32,7 +32,7 @@ namespace PuzzleCat.LevelElements
 			}
 		}
 
-		public override bool CanInteract(IMovable movable)
+		public override bool CanInteract(RoomElement movable)
 		{
 			if (!Active || !Cat.IsCat(movable) || !catPortal)
 			{
@@ -49,34 +49,33 @@ namespace PuzzleCat.LevelElements
 			return true;
 		}
 
-		public override void Interact(IMovable movable)
-		{
-			if (CanInteract(movable))
-			{
-				Use(movable);
-			}
-		}
-
-		public void Use(IMovable movable)
+		public override void Interact(RoomElement movable)
 		{
 			Room linkedRoom = _linkedPortal.CurrentRoom;
-			RoomElement roomElement = movable.RoomElement;
 
-			roomElement.transform.rotation = ArrivalElementAddedRotation() * roomElement.transform.rotation;
+			movable.transform.rotation = ArrivalElementAddedRotation() * movable.transform.rotation;
 			if (catPortal)
 			{
-				((Cat) movable).MoveTo(myTransform.position + (movable.RoomElement.transform.position - myTransform.position).normalized);
-				((Cat) movable).onArrival = () => movable.TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
+				((Cat) movable).MoveTo(myTransform.position, 1);
+				((Cat) movable).onArrival = () => ((Cat) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
 			}
 			else
 			{
-				movable.TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, ImpactedSurface.GetNormal());
+				((MovableElement) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, ImpactedSurface.GetNormal());
 			}
-			CurrentRoom.RemoveRoomElement(roomElement);
-			linkedRoom.AddRoomElement(roomElement);
-			roomElement.SetRoom(linkedRoom);
+			CurrentRoom.RemoveRoomElement(movable);
+			linkedRoom.AddRoomElement(movable);
+			movable.SetRoom(linkedRoom);
 		}
-		
+
+		public bool IsConnectedTo(Portal portal)
+		{
+			var checkedPortals = new HashSet<Portal>();
+			return IsConnectedTo(ref checkedPortals, p => p == portal);
+		}
+
+		#region SetAndLink
+
 		public bool CanSetPortal(Transform hit, Vector3Int worldGridPosition, Surface surfaceType)
 		{
 			if (hit.GetComponent<RoomElement>() != null)
@@ -111,8 +110,8 @@ namespace PuzzleCat.LevelElements
 			gameObject.SetActive(true);
 			myTransform.position = worldGridPosition + GetOffset(surfaceType);
 			myTransform.rotation = Quaternion.FromToRotation(myTransform.up, surfaceType.GetNormal()) *
-			                      myTransform.rotation *
-			                      Quaternion.Euler(90, 0, 0);
+			                       myTransform.rotation *
+			                       Quaternion.Euler(90, 0, 0);
 			ImpactedSurface = surfaceType;
 			parentRoom.AddRoomElement(this);
 			SetRoom(parentRoom);
@@ -190,12 +189,6 @@ namespace PuzzleCat.LevelElements
 					_adjacentPortals[i] = null;
 				}
 			}
-		}
-
-		public bool IsConnectedTo(Portal portal)
-		{
-			var checkedPortals = new HashSet<Portal>();
-			return IsConnectedTo(ref checkedPortals, p => p == portal);
 		}
 
 
@@ -326,6 +319,8 @@ namespace PuzzleCat.LevelElements
 
 			return true;
 		}
+		
+		#endregion
 
 		private void GetAllAdjacentPortals(ref HashSet<Portal> portals, ref Portal defaultLinked)
 		{
@@ -386,11 +381,10 @@ namespace PuzzleCat.LevelElements
 
 		private Quaternion ArrivalElementAddedRotation()
 		{
-			Debug.Log(_rotationOffset);
 			return (ImpactedSurface, _linkedPortal.ImpactedSurface) switch
 			{
 				(Surface.Floor, Surface.Floor) => Quaternion.Euler(180, -_rotationOffset + 180, 0),
-				(Surface.Floor, Surface.BackWall) => Quaternion.Euler(0, 0, _rotationOffset + 180) * Quaternion.Euler(-270, 0, 0), // no
+				(Surface.Floor, Surface.BackWall) => Quaternion.Euler(0, 0, _rotationOffset + 180) * Quaternion.Euler(-270, 0, 0),
 				(Surface.Floor, Surface.SideWall) => Quaternion.Euler(-(_rotationOffset + 90), 0, -270),
 				(Surface.BackWall, Surface.Floor) => Quaternion.Euler(270, -_rotationOffset + 180, 0),
 				(Surface.BackWall, Surface.BackWall) => Quaternion.Euler(180, 0, -_rotationOffset + 180),

@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 6128598471874818231}
   - component: {fileID: 8280378771434456189}
   - component: {fileID: 5756482888948683701}
+  - component: {fileID: 4485804469081184403}
   m_Layer: 0
   m_Name: SM_Cat_Portal_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7107520529339694866
 Transform:
@@ -101,6 +102,20 @@ MonoBehaviour:
   Id: 1
   Placed: 0
   catPortal: 0
-  linkedPortal: {fileID: 0}
+  defaultLinkedPortal: {fileID: 0}
   arrivalPositionOffset: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 7107520529339694866}
+  isGreyPortal: 0
+--- !u!65 &4485804469081184403
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631680449565615528}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0467103, y: 1.2834806, z: 0.28337136}
+  m_Center: {x: 0.0046742857, y: -0.0003323556, z: 0.047988668}

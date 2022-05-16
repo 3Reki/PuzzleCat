@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using PuzzleCat.Controller;
 using UnityEngine;
@@ -16,11 +17,18 @@ namespace PuzzleCat
         [SerializeField] private Toggle[] portalToggles;
         [SerializeField] private Sprite portalBookOpen;
         [SerializeField] private Sprite portalBookClosed;
+        
         [SerializeField] private GameObject pauseCanvasGameObject;
         [SerializeField] private RectTransform pauseMenuTransform;
+        
+        [SerializeField] private GameObject endLevelCanvasGameObject;
+        [SerializeField] private Image endLevelBackground;
+        [SerializeField] private RectTransform endLevelFrame;
+        [SerializeField] private Button nextLevelButton;
 
         private GameManager.GameState _unpausedGameState;
         private float _menuInitialPositionY;
+        private float _backgroundInitialAlpha;
         private bool _gamePaused;
         private bool _menuAlreadyClosed;
         
@@ -82,34 +90,75 @@ namespace PuzzleCat
             }
         }
 
-        public void LoadMenu()
+        public void LoadMainMenu()
         {
             SceneManager.LoadScene(0);
+        }
+
+        public void LoadNextLevel()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        
+        private void ActivateLevelEndMenu()
+        {
+            endLevelCanvasGameObject.SetActive(true);
+            endLevelBackground.DOFade(_backgroundInitialAlpha, .4f);
+            endLevelFrame.DOScale(1, .4f).SetEase(Ease.OutBack);
+        }
+
+        private void SetupPortalToggles()
+        {
+            foreach (Toggle portalToggle in portalToggles)
+            {
+                portalToggle.onValueChanged.AddListener(isOn =>
+                {
+                    if (isOn)
+                    {
+                        var toggleTransform = (RectTransform) portalToggle.transform;
+                        toggleTransform.DOScale(1.2f, 0.2f).onComplete =
+                            () => portalToggle.transform.DOScale(1f, 0.2f);
+                        selectedPortalCheckmark.rectTransform.anchoredPosition = new Vector2(
+                            toggleTransform.anchoredPosition.x - toggleTransform.sizeDelta.x * 0.5f, 0);
+                        selectedPortalCheckmark.DOFade(1, .3f);
+                    }
+                    else
+                    {
+                        selectedPortalCheckmark.DOFade(0, .3f);
+                    }
+                });
+            }
+        }
+
+        private void OnGameStateChanged(GameManager.GameState state)
+        {
+            if (state == GameManager.GameState.End)
+            {
+                ActivateLevelEndMenu();
+            }
         }
 
         private void Awake()
         {
             _menuInitialPositionY = pauseMenuTransform.anchoredPosition.y;
+            
+            SetupPortalToggles();
 
-            foreach (Toggle portalToggle in portalToggles)
+            if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings)
             {
-                portalToggle.onValueChanged.AddListener(isOn =>
-                    {
-                        if (isOn)
-                        {
-                            var toggleTransform = (RectTransform) portalToggle.transform;
-                            toggleTransform.DOScale(1.2f, 0.2f).onComplete =
-                                () => portalToggle.transform.DOScale(1f, 0.2f);
-                            selectedPortalCheckmark.rectTransform.anchoredPosition = new Vector2(
-                                toggleTransform.anchoredPosition.x - toggleTransform.sizeDelta.x * 0.5f, 0);
-                            selectedPortalCheckmark.DOFade(1, .3f);
-                        }
-                        else
-                        {
-                            selectedPortalCheckmark.DOFade(0, .3f);
-                        }
-                    });
+                nextLevelButton.interactable = false;
             }
+
+            _backgroundInitialAlpha = endLevelBackground.color.a;
+            endLevelBackground.color = new Color(endLevelBackground.color.r, endLevelBackground.color.g, endLevelBackground.color.b, 0);
+            endLevelFrame.localScale = Vector3.zero;
+
+            GameManager.OnGameStateChanged += OnGameStateChanged;
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
     }
 }

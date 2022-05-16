@@ -50,7 +50,7 @@ namespace PuzzleCat.Controller
             if (inputManager.IsScrolling)
             {
                 camera.orthographicSize =
-                    Mathf.Clamp(camera.orthographicSize - inputManager.MouseScroll * zoomSpeed * 0.01f, _minZoom, _maxZoom);
+                    Mathf.Clamp(camera.orthographicSize - inputManager.MouseScroll * zoomSpeed * 0.5f, _minZoom, _maxZoom);
             }
         }
 #endif
