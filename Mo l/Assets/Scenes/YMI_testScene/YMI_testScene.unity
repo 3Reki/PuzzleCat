@@ -5166,7 +5166,8 @@ GameObject:
   - component: {fileID: 1563335025}
   - component: {fileID: 1563335024}
   - component: {fileID: 1563335023}
-  - component: {fileID: 1563335027}
+  - component: {fileID: 1563335028}
+  - component: {fileID: 1563335029}
   m_Layer: 0
   m_Name: Cube_001
   m_TagString: Untagged
@@ -5246,13 +5247,13 @@ Transform:
   m_GameObject: {fileID: 1563335021}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.1, z: 0}
-  m_LocalScale: {x: 5, y: 0.2, z: 3}
+  m_LocalScale: {x: 6, y: 0.2, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1563335027
+--- !u!114 &1563335028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5261,16 +5262,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 1563335021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd7f074d485ebb44ba4c9e6d976f3d60, type: 3}
+  m_Script: {fileID: 11500000, guid: 08f116dd104949e4e8c06b43ecf562a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 0}
-  cellMat: {fileID: 0}
+  Direction: 0
+  _cellPrefab: {fileID: 7485145627170963994, guid: ffae5c6d556e3eb44bc0c45e83c53965,
+    type: 3}
+  _instancesParent: {fileID: 2065807280}
+  _cellSurfaceSpacing: 0.05
+--- !u!114 &1563335029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1563335021}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ea6dc227a2faed419eaa55120b69a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 7485145627170963994, guid: ffae5c6d556e3eb44bc0c45e83c53965,
+    type: 3}
+  cellMat: {fileID: 2100000, guid: 509b4b9f5b7f4b44eb4624d6e8e16480, type: 2}
   cellHeight: 0.05
-  cellParent: {fileID: 0}
+  cellParent: {fileID: 2065807280}
   walkableCells: {r: 0, g: 1, b: 0, a: 1}
   nonWalkableCells: {r: 1, g: 0, b: 0, a: 1}
   portalCells: {r: 0, g: 0, b: 1, a: 1}
+  alphaValue: 1
   furnitureMask:
     serializedVersion: 2
     m_Bits: 0
