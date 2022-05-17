@@ -27,6 +27,8 @@ namespace PuzzleCat.Visuals
         
         private Vector3 direction = new Vector3(0f, 1.5f, 0f);
         private float maxDist = 1.5f;
+        private bool _isActive = false;
+
 
         [SerializeField] private LayerMask furnitureMask;
         [SerializeField] private LayerMask catPortalMask;
@@ -48,17 +50,18 @@ namespace PuzzleCat.Visuals
             NonWalkableCell();
             SetMatAlphaInit();
         }
-
-
+        
         private void Update()//debug
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                VisualizeGrid(0.5f);
-            }
-            if (Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && !_isActive)
             {
                 VisualizeGrid(.0f);
+                _isActive = true;
+            }
+            else if(Input.GetKeyDown(KeyCode.Mouse0) && _isActive)
+            {
+                VisualizeGrid(.5f);
+                _isActive = false;
             }
         }
 
