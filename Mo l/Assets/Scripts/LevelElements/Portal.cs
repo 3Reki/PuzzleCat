@@ -9,14 +9,14 @@ namespace PuzzleCat.LevelElements
 	{
 		public int Id;
 		[HideInInspector] public bool Placed;
-		public bool catPortal;
+		public bool CatPortal;
 		public bool Active { get; private set; }
+		public bool GreyPortal;
 
 		[SerializeField] private Portal defaultLinkedPortal;
 		[SerializeField] private Vector3Int arrivalPositionOffset;
 		[SerializeField] private Transform myTransform;
-		[SerializeField] private bool isGreyPortal;
-		
+
 		private static bool _canLink;
 		private readonly Portal[] _adjacentPortals = new Portal[4]; // 4 directions : up, right, down and left
 		private Portal _linkedPortal;
@@ -34,7 +34,7 @@ namespace PuzzleCat.LevelElements
 
 		public override bool CanInteract(RoomElement movable)
 		{
-			if (!Active || !Cat.IsCat(movable) || !catPortal)
+			if (!Active || !Cat.IsCat(movable) || !CatPortal)
 			{
 				print("Can't use");
 				return false;
@@ -53,7 +53,7 @@ namespace PuzzleCat.LevelElements
 		{
 			Room linkedRoom = _linkedPortal.CurrentRoom;
 			
-			if (catPortal)
+			if (CatPortal)
 			{
 				((Cat) movable).MoveTo(myTransform.position, 1);
 				((Cat) movable).onArrival = () => ((Cat) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
@@ -83,7 +83,7 @@ namespace PuzzleCat.LevelElements
 				return false;
 			}
 
-			if (!isGreyPortal)
+			if (!GreyPortal)
 			{
 				return true;
 			}
@@ -117,7 +117,7 @@ namespace PuzzleCat.LevelElements
 			SetRoom(parentRoom);
 			Placed = true;
 
-			if (isGreyPortal)
+			if (GreyPortal)
 			{
 				Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
 				Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
@@ -156,7 +156,7 @@ namespace PuzzleCat.LevelElements
 
 		public void UnsetPortal()
 		{
-			if (catPortal)
+			if (CatPortal)
 				return;
 			
 			CurrentRoom.RemoveRoomElement(this);
@@ -178,7 +178,7 @@ namespace PuzzleCat.LevelElements
 				if (_adjacentPortals[i] != null)
 				{
 					checkedPortals.Clear();
-					if (_adjacentPortals[i].IsConnectedTo(ref checkedPortals, portal => !portal.isGreyPortal))
+					if (_adjacentPortals[i].IsConnectedTo(ref checkedPortals, portal => !portal.GreyPortal))
 					{
 						_adjacentPortals[i].TryLinkingPortals();
 					}
@@ -406,7 +406,7 @@ namespace PuzzleCat.LevelElements
 
 		private void Start()
 		{
-			if (!catPortal) return;
+			if (!CatPortal) return;
 
 			Active = true;
 			Placed = true;
