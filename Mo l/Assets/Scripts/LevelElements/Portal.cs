@@ -52,8 +52,7 @@ namespace PuzzleCat.LevelElements
 		public override void Interact(RoomElement movable)
 		{
 			Room linkedRoom = _linkedPortal.CurrentRoom;
-
-			movable.transform.rotation = ArrivalElementAddedRotation() * movable.transform.rotation;
+			
 			if (catPortal)
 			{
 				((Cat) movable).MoveTo(myTransform.position, 1);
@@ -61,6 +60,7 @@ namespace PuzzleCat.LevelElements
 			}
 			else
 			{
+				movable.transform.rotation = ArrivalElementAddedRotation() * movable.transform.rotation;
 				((MovableElement) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, ImpactedSurface.GetNormal());
 			}
 			CurrentRoom.RemoveRoomElement(movable);
