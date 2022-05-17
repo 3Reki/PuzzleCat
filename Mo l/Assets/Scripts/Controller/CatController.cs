@@ -20,7 +20,7 @@ namespace PuzzleCat.Controller
             if (_hit.normal == GameManager.Instance.Cat.transform.up)
             {
                 GameManager.Instance.Cat.TryMovingTo(gridPoint);
-                
+
                 catDirectionIndicator.position = _hit.point;
                 catDirectionIndicator.gameObject.SetActive(true);
                 StartCoroutine(DisableIndicator());

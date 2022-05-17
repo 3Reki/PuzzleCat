@@ -96,16 +96,14 @@ namespace PuzzleCat.LevelElements
 
         private void MoveTo(Vector3 position)
         {
-            if (position == _agentDestination)
+            if (position != _agentDestination)
             {
-                playerAgent.SetPath(_path);
-            }
-            else
-            {
-                playerAgent.SetDestination(position);
+                _agentDestination = position;
+                playerAgent.CalculatePath(_agentDestination, _path);
+
             }
             
-            _lookAtDirection = position - myTransform.position;
+            playerAgent.SetPath(_path);
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
