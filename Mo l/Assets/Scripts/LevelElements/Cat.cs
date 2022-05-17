@@ -108,7 +108,7 @@ namespace PuzzleCat.LevelElements
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
         {
-            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             catAnimation.StartTeleportAnimation();
             _warpDestination = GetWorldPosition(coordinates);
             _lookAtDirection = exitDirection;
@@ -130,7 +130,7 @@ namespace PuzzleCat.LevelElements
 
         public void JumpInMirror()
         {
-            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             catAnimation.JumpInMirror();
         }
 
@@ -155,7 +155,7 @@ namespace PuzzleCat.LevelElements
                 
                 _lookAtDirection.y = 0;
                 _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
-                myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
+                myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             }
             else if (!_isGrounded)
             {
