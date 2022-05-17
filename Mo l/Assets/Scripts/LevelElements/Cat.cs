@@ -75,6 +75,7 @@ namespace PuzzleCat.LevelElements
             }
 
             Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
+            onArrival = () => { };
 
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
