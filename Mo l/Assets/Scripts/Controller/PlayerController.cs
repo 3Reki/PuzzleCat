@@ -14,6 +14,7 @@ namespace PuzzleCat.Controller
         
         private Vector2 _touchInitialPosition;
         private float _touchStartTime;
+        private bool _touchMoved;
         
 
         private void HandleSingleTouch()
@@ -43,6 +44,7 @@ namespace PuzzleCat.Controller
         {
             _touchInitialPosition = inputManager.FirstTouchPosition;
             _touchStartTime = Time.time;
+            _touchMoved = false;
         }
 
         private void HandleTouchStationary()
@@ -56,7 +58,8 @@ namespace PuzzleCat.Controller
 
         private void HandleTouchMoved()
         {
-            if ((inputManager.FirstTouchPosition - _touchInitialPosition).magnitude < dragDistance) return;
+            if (!_touchMoved && (inputManager.FirstTouchPosition - _touchInitialPosition).magnitude < dragDistance) return;
+            _touchMoved = true;
 
             if (GameManager.Instance.State == GameManager.GameState.FurnitureMovement)
             {
