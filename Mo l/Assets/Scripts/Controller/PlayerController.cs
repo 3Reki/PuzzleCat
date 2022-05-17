@@ -99,6 +99,9 @@ namespace PuzzleCat.Controller
 
         private void Update()
         {
+            if (GameManager.Instance.State is GameManager.GameState.Menu or GameManager.GameState.End) 
+                return;
+
             if (!inputManager.TwoTouchesDone && inputManager.TouchCount == 1)
             {
                 HandleSingleTouch();
