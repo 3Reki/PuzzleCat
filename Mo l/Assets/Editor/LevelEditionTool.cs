@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PuzzleCat.Controller;
@@ -5,8 +6,6 @@ using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.Events;
-using UnityEditor.Rendering;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,7 +24,6 @@ namespace PuzzleCat.Editor
             CreateGameManagerAndControllers();
             CreateUI();
             UpdateRoomAndRoomElements();
-            //UpdateCatPortals();
 
             Scene scene = SceneManager.GetActiveScene();
             EditorSceneManager.MarkSceneDirty(scene);
@@ -96,6 +94,59 @@ namespace PuzzleCat.Editor
                 FindObjectOfType<PortalPlacementController>();
             menuManagerSO.ApplyModifiedProperties();
 
+            Transform[] portalParents = GetPortalsParentList();
+            MenuManager menuManager = FindObjectOfType<MenuManager>();
+            if (portalParents.Length == 0)
+            {
+                menuManager.transform.GetChild(1).gameObject.SetActive(false);
+                menuManager.portalToggles = Array.Empty<Toggle>();
+            } 
+            else
+            {
+                menuManager.transform.GetChild(1).gameObject.SetActive(true);
+
+                menuManager.portalToggles = new Toggle[portalParents.Length];
+                GameObject[] portalTogglesGo = new GameObject[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    portalTogglesGo[i] = menuManager.transform.GetChild(2).GetChild(0).GetChild(i).gameObject;
+                }
+
+                int greyOffset = 0;
+                if (portalParents.Any(parent => parent.GetChild(0).GetComponent<Portal>().GreyPortal))
+                {
+                    portalTogglesGo[0].SetActive(true);
+                    menuManager.portalToggles[^1] = portalTogglesGo[0].GetComponent<Toggle>();
+                    greyOffset = 1;
+                }
+                else
+                {
+                    portalTogglesGo[0].SetActive(false);
+                }
+
+                for (int i = 0; i < portalParents.Length - greyOffset; i++)
+                {
+                    portalTogglesGo[i + 1].SetActive(true);
+                    RectTransform toggleRectTransform = (RectTransform) portalTogglesGo[i + 1].transform;
+                    
+                    toggleRectTransform.anchorMin = new Vector2(
+                        0.046f + 0.225f * (i + greyOffset), toggleRectTransform.anchorMin.y);
+                    
+                    toggleRectTransform.anchorMax = new Vector2(
+                        0.046f + 0.225f * (i + 1 + greyOffset), toggleRectTransform.anchorMax.y);
+                    
+                    toggleRectTransform.anchoredPosition = Vector2.zero;
+                    menuManager.portalToggles[i] = portalTogglesGo[i + 1].GetComponent<Toggle>();
+                }
+
+                for (int i = portalParents.Length + 1 - greyOffset; i < 4; i++)
+                {
+                    portalTogglesGo[i].SetActive(false);
+                }
+                
+            }
+            PrefabUtility.RecordPrefabInstancePropertyModifications(menuManager);
+
             if (FindObjectOfType<EventSystem>() == null)
             {
                 new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
@@ -108,7 +159,7 @@ namespace PuzzleCat.Editor
             
             foreach (Portal portal in Resources.FindObjectsOfTypeAll<Portal>())
             {
-                if (portal.gameObject.scene.name == null || portal.catPortal)
+                if (portal.gameObject.scene.name == null || portal.CatPortal)
                 {
                     continue;
                 }
@@ -191,34 +242,6 @@ namespace PuzzleCat.Editor
                         .SetAsSingleMovableArray(movable.FindProperty("linkedMovables").GetAsSingleMovableArray());
                     serializedObject.ApplyModifiedProperties();
                 }
-            }
-        }
-
-        private static void UpdateCatPortals()
-        {
-            foreach (SerializedObject catPortal in FindObjectsOfType<Portal>()
-                .Select(portal => new SerializedObject(portal))
-                .Where(portal => portal.FindProperty("catPortal").boolValue))
-            {
-                Vector3 rotation = ((Transform) catPortal.FindProperty("myTransform").objectReferenceValue).rotation
-                    .eulerAngles;
-                if (rotation.x % 360 <= 90.1f && rotation.x % 360 > 89.9f)
-                {
-                    catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.Floor);
-                    catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(1, 0, 0);
-                }
-                else if (rotation.y % 360 <= 270.1f && rotation.y % 360 > 269.9f)
-                {
-                    catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.SideWall);
-                    catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(0, 0, 1);
-                }
-                else
-                {
-                    catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.BackWall);
-                    catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(-1, 0, 0);
-                }
-
-                catPortal.ApplyModifiedProperties();
             }
         }
     }
