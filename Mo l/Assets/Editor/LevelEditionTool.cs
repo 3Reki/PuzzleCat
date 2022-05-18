@@ -4,6 +4,7 @@ using System.Linq;
 using PuzzleCat.Controller;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -146,6 +147,15 @@ namespace PuzzleCat.Editor
                 
             }
             PrefabUtility.RecordPrefabInstancePropertyModifications(menuManager);
+
+            PortalPlacementController portalPlacement = FindObjectOfType<PortalPlacementController>();
+
+            portalPlacement.PortalCountTexts = new TextMeshProUGUI[4];
+            for (int i = 0; i < 4; i++)
+            {
+                portalPlacement.PortalCountTexts[i] = menuManager.transform.GetChild(2).GetChild(0).GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+            }
+            PrefabUtility.RecordPrefabInstancePropertyModifications(portalPlacement);
 
             if (FindObjectOfType<EventSystem>() == null)
             {
