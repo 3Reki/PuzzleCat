@@ -10,21 +10,21 @@ namespace PuzzleCat.Controller
         
         private RaycastHit _hit;
         
-        public void HandlePlayerMovement()
+        public bool HandlePlayerMovement()
         {
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit, GameManager.Instance.MainCamera, -5, 100f, true, 2)) 
-                return;
+                return false;
             
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
 
-            if (_hit.normal == GameManager.Instance.Cat.transform.up)
-            {
-                GameManager.Instance.Cat.TryMovingTo(gridPoint);
+            if (_hit.normal != GameManager.Instance.Cat.transform.up)
+                return false;
 
-                catDirectionIndicator.position = _hit.point;
-                catDirectionIndicator.gameObject.SetActive(true);
-                StartCoroutine(DisableIndicator());
-            }
+            catDirectionIndicator.position = _hit.point;
+            catDirectionIndicator.gameObject.SetActive(true);
+            StartCoroutine(DisableIndicator());
+            
+            return GameManager.Instance.Cat.TryMovingTo(gridPoint);
         }
         
         private IEnumerator DisableIndicator()

@@ -61,17 +61,17 @@ namespace PuzzleCat.LevelElements
             catAnimation.SetIdleDown(idleState);
         }
 
-        public void TryMovingTo(Vector3Int worldGridDestination)
+        public bool TryMovingTo(Vector3Int worldGridDestination)
         {
             if (!_canMove)
-                return;
+                return false;
 
             _agentDestination = worldGridDestination + _offset;
             _path = new NavMeshPath();
 
             if (!playerAgent.CalculatePath(_agentDestination, _path) || _path.status != NavMeshPathStatus.PathComplete)
             {
-                return;
+                return false;
             }
 
             Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
@@ -80,7 +80,10 @@ namespace PuzzleCat.LevelElements
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
+                return true;
             }
+
+            return false;
         }
         
         public override void MoveTo(Vector3Int destination)

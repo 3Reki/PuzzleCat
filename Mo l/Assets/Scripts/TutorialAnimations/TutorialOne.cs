@@ -1,50 +1,77 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace PuzzleCat
+namespace PuzzleCat.TutorialAnimations
 {
     public class TutorialOne : MonoBehaviour
     {
-        
         [SerializeField] private RectTransform handTransform;
+        [SerializeField] private Animator handAnimator;
+        [SerializeField] private float secondsToRepeat;
+        [SerializeField] private Vector3Int[] desiredTouchPosition;
+        [SerializeField] private Vector2[] handPositions;
+        [SerializeField] private Quaternion[] handRotations;
 
-        [SerializeField] private Vector2 firstPosition = new Vector2(137,-289);
-        [SerializeField] private Vector2 secondPosition = new Vector2(408, -245);
-        [SerializeField] private Vector2 thirdPosition = new Vector2(13, 74);
+        private int _currentIndex = -1;
+        private WaitForSeconds _waitForSeconds;
+        private IEnumerator _loopEnumerator;
+        private static readonly int _replay = Animator.StringToHash("Replay");
 
-
-
-
-        void Start()
+        public void PlayAnimation()
         {
-            
+            handAnimator.enabled = true;
+            handAnimator.SetTrigger(_replay);
+            handAnimator.gameObject.SetActive(true);
+            StopCoroutine(_loopEnumerator);
+            StartCoroutine(_loopEnumerator = LoopAnimation());
+        }
+        
+        public void StopAnimation()
+        {
+            handAnimator.enabled = false;
+            handAnimator.gameObject.SetActive(false);
+            StopCoroutine(_loopEnumerator);
         }
 
+        public void NextPosition()
+        {
+            _currentIndex++;
+            handTransform.anchoredPosition = handPositions[_currentIndex];
+            handTransform.rotation = handRotations[_currentIndex];
+        }
+
+        public bool HasNextPosition()
+        {
+            return _currentIndex + 1 < handPositions.Length;
+        }
+
+        public bool IsValidTouch(Vector3Int position)
+        {
+            return position == desiredTouchPosition[_currentIndex];
+        }
+
+        private IEnumerator LoopAnimation()
+        {
+            yield return _waitForSeconds;
+            handAnimator.SetTrigger(_replay);
+
+            StartCoroutine(_loopEnumerator = LoopAnimation());
+        }
+
+        private void Awake()
+        {
+            _waitForSeconds = new WaitForSeconds(secondsToRepeat);
+        }
+
+        private void Start()
+        {
+            NextPosition();
+            StartCoroutine(_loopEnumerator = LoopAnimation());
+        }
 
         //Premiere animation de la main (devant le meuble au pied du lit)
-        public void FirstHand()
-        {
-            handTransform.anchoredPosition = firstPosition;
-        }
-
-        
-        //Deuxieme animation de la main (sur le point de teleportaiton du chat)
-        public void SecondHand()
-        {
-            handTransform.anchoredPosition = secondPosition;
-        }
-        
-        
+        //Deuxieme animation de la main (sur le point de teleportation du chat)
         //Troisieme animation de la main (sur le miroir de fin de niveau)
-        public void ThirdHand()
-        {
-            handTransform.anchoredPosition = thirdPosition;
-            handTransform.rotation = Quaternion.Euler(0,0, -125);
-        }
-        
-        
     }
 }

@@ -4,11 +4,11 @@ namespace PuzzleCat.Controller
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private InputManager inputManager;
+        [SerializeField] protected InputManager inputManager;
         [SerializeField] private CameraController cameraController;
         [SerializeField] private MovableElementsController movableElementsController;
-        [SerializeField] private CatController catController;
-        [SerializeField] private PortalPlacementController portalPlacementController;
+        [SerializeField] protected CatController catController;
+        [SerializeField] protected PortalPlacementController portalPlacementController;
         [SerializeField] private float holdTouchThreshold = 0.3f;
         [SerializeField] private float dragDistance = 3;
         
@@ -17,7 +17,7 @@ namespace PuzzleCat.Controller
         private bool _touchMoved;
         
 
-        private void HandleSingleTouch()
+        protected void HandleSingleTouch()
         {
             switch (inputManager.FirstTouchPhase)
             {
@@ -56,7 +56,7 @@ namespace PuzzleCat.Controller
             GameManager.Instance.UpdateGameState(GameManager.GameState.FurnitureMovement);
         }
 
-        private void HandleTouchMoved()
+        protected virtual void HandleTouchMoved()
         {
             if (!_touchMoved && (inputManager.FirstTouchPosition - _touchInitialPosition).magnitude < dragDistance) return;
             _touchMoved = true;
@@ -75,7 +75,7 @@ namespace PuzzleCat.Controller
             }
         }
 
-        private void HandleTouchEnd()
+        protected virtual void HandleTouchEnd()
         {
             switch (GameManager.Instance.State)
             {
