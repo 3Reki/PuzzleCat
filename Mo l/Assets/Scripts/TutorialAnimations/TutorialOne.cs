@@ -1,77 +1,56 @@
-using System;
-using System.Collections;
+using PuzzleCat.Controller;
 using UnityEngine;
 
 namespace PuzzleCat.TutorialAnimations
 {
-    public class TutorialOne : MonoBehaviour
+    public class TutorialOne : Tutorial
     {
+        [SerializeField] private InputManager inputManager;
         [SerializeField] private RectTransform handTransform;
-        [SerializeField] private Animator handAnimator;
-        [SerializeField] private float secondsToRepeat;
+        [SerializeField] private HandAnimation handAnimation;
         [SerializeField] private Vector3Int[] desiredTouchPosition;
         [SerializeField] private Vector2[] handPositions;
         [SerializeField] private Quaternion[] handRotations;
 
         private int _currentIndex = -1;
-        private WaitForSeconds _waitForSeconds;
-        private IEnumerator _loopEnumerator;
-        private static readonly int _replay = Animator.StringToHash("Replay");
 
-        public void PlayAnimation()
+        public override bool CanMovePlayer()
         {
-            handAnimator.enabled = true;
-            handAnimator.SetTrigger(_replay);
-            handAnimator.gameObject.SetActive(true);
-            StopCoroutine(_loopEnumerator);
-            StartCoroutine(_loopEnumerator = LoopAnimation());
+            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, -5, 100f, true, 2))
+                return false;
+
+            return Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point) == desiredTouchPosition[_currentIndex];
+        }
+
+        public override void OnPlayerMovement()
+        {
+            if (HasNextPosition())
+            {
+                NextPosition();
+                handAnimation.PlayAnimation();
+                return;
+            }
+                        
+            handAnimation.StopAnimation();
         }
         
-        public void StopAnimation()
-        {
-            handAnimator.enabled = false;
-            handAnimator.gameObject.SetActive(false);
-            StopCoroutine(_loopEnumerator);
-        }
-
-        public void NextPosition()
+        private void NextPosition()
         {
             _currentIndex++;
             handTransform.anchoredPosition = handPositions[_currentIndex];
             handTransform.rotation = handRotations[_currentIndex];
         }
 
-        public bool HasNextPosition()
+        private bool HasNextPosition()
         {
             return _currentIndex + 1 < handPositions.Length;
         }
-
-        public bool IsValidTouch(Vector3Int position)
-        {
-            return position == desiredTouchPosition[_currentIndex];
-        }
-
-        private IEnumerator LoopAnimation()
-        {
-            yield return _waitForSeconds;
-            handAnimator.SetTrigger(_replay);
-
-            StartCoroutine(_loopEnumerator = LoopAnimation());
-        }
-
-        private void Awake()
-        {
-            _waitForSeconds = new WaitForSeconds(secondsToRepeat);
-        }
-
+        
         private void Start()
         {
             NextPosition();
-            StartCoroutine(_loopEnumerator = LoopAnimation());
+            handAnimation.PlayAnimation();
         }
-
-        //Premiere animation de la main (devant le meuble au pied du lit)
-        //Deuxieme animation de la main (sur le point de teleportation du chat)
-        //Troisieme animation de la main (sur le miroir de fin de niveau)
     }
 }

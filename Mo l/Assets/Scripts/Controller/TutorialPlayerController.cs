@@ -5,7 +5,7 @@ namespace PuzzleCat.Controller
 {
     public class TutorialPlayerController : PlayerController
     {
-        [SerializeField] private TutorialOne firstTutorial;
+        [SerializeField] private Tutorial tutorial;
 
         private RaycastHit _hit;
 
@@ -19,27 +19,22 @@ namespace PuzzleCat.Controller
             switch (GameManager.Instance.State)
             {
                 case GameManager.GameState.PlayerMovement:
-                    if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit, GameManager.Instance.MainCamera, -5, 100f, true, 2)) 
+                    if (!tutorial.CanMovePlayer())
+                    {
                         break;
-
-                    if (!firstTutorial.IsValidTouch(Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point)))
-                        break;
+                    }
                     
                     if (catController.HandlePlayerMovement())
                     {
-                        if (firstTutorial.HasNextPosition())
-                        {
-                            firstTutorial.NextPosition();
-                            firstTutorial.PlayAnimation();
-                            break;
-                        }
-                        
-                        firstTutorial.StopAnimation();
+                        tutorial.OnPlayerMovement();
                     }
                     
                     break;
                 case GameManager.GameState.PortalMode:
-                    portalPlacementController.HandlePortalPlacement();
+                    if (tutorial.CanPlacePortal())
+                    {
+                        portalPlacementController.HandlePortalPlacement();
+                    }
                     break;
                 case GameManager.GameState.CameraMovement:
                 case GameManager.GameState.FurnitureMovement:

@@ -1,27 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
+using PuzzleCat.Controller;
 using UnityEngine;
 
-namespace PuzzleCat
+namespace PuzzleCat.TutorialAnimations
 {
-    public class TutorialTwo : MonoBehaviour
+    public class TutorialTwo : Tutorial
     {
+        [SerializeField] private InputManager inputManager;
         [SerializeField] private RectTransform handTransform;
+        [SerializeField] private HandAnimation handAnimation;
+        [SerializeField] private Vector2 handPosition = new(-140,29);
+        [SerializeField] private Vector3Int[] desiredFirstTouch;
         
-        [SerializeField] private Vector2 firstPosition = new Vector2(-260,35);
+        private bool _movedOnce;
 
-        void Start()
+        public override bool CanMovePlayer()
         {
+            if (_movedOnce)
+                return true;
             
+            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, -5, 100f, true, 2))
+                return false;
+
+            Vector3Int touchGridPosition = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
+            
+            foreach (Vector3Int touchPosition in desiredFirstTouch)
+            {
+                if (touchGridPosition == touchPosition)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
- 
-        
-        
-        //Premiere animation de la main (sur le meuble apres le tabouret)
-        public void FirstHand()
+        public override void OnPlayerMovement()
         {
-            handTransform.anchoredPosition = firstPosition;
+            if (_movedOnce)
+                return;
+
+            _movedOnce = true;
+                        
+            handAnimation.StopAnimation();
+        }
+
+        private void Start()
+        {
+            handTransform.anchoredPosition = handPosition;
+            handAnimation.PlayAnimation();
         }
     }
 }
