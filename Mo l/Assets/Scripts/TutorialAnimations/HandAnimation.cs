@@ -1,46 +1,46 @@
-using System.Collections;
 using UnityEngine;
 
 namespace PuzzleCat.TutorialAnimations
 {
     public class HandAnimation : MonoBehaviour
     {
-        [SerializeField] private Animator handAnimator;
-        [SerializeField] private float secondsToRepeat = 2f;
+        public delegate void HandAnimationCallback();
 
-        private WaitForSeconds _waitForSeconds;
-        private IEnumerator _loopEnumerator;
-        private static readonly int _replay = Animator.StringToHash("Replay");
+        public HandAnimationCallback OnHalfComplete;
+        public HandAnimationCallback OnStart;
+        
+        [SerializeField] private Animator handAnimator;
 
         public void PlayAnimation()
         {
-            handAnimator.enabled = true;
-            handAnimator.SetTrigger(_replay);
             handAnimator.gameObject.SetActive(true);
-            StopCoroutine(_loopEnumerator);
-            StartCoroutine(_loopEnumerator = LoopAnimation());
+            handAnimator.enabled = true;
         }
         
         public void StopAnimation()
         {
             handAnimator.enabled = false;
             handAnimator.gameObject.SetActive(false);
-            StopCoroutine(_loopEnumerator);
         }
 
-        private IEnumerator LoopAnimation()
+        public void PauseAnimation()
         {
-            while (true)
-            {
-                yield return _waitForSeconds;
-                handAnimator.SetTrigger(_replay);
-            }
+            handAnimator.speed = 0;
+        }
+        
+        public void ResumeAnimation()
+        {
+            handAnimator.speed = 1;
         }
 
-        private void Awake()
+        private void HandleHalfAnimation()
         {
-            _waitForSeconds = new WaitForSeconds(secondsToRepeat);
-            _loopEnumerator = LoopAnimation();
+            OnHalfComplete?.Invoke();
+        }
+        
+        private void HandleAnimationStart()
+        {
+            OnStart?.Invoke();
         }
     }
 }
