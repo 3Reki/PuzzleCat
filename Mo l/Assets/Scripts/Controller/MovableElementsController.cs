@@ -21,11 +21,11 @@ namespace PuzzleCat.Controller
         private Vector3Int _currentObjectDirection;
         private RaycastHit _hit;
         
-        public void HandleMovement()
+        public bool HandleMovement()
         {
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit, 
                 GameManager.Instance.MainCamera, invisibleLayerMask, 100f, true, 2)) 
-                return;
+                return false;
             
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
 
@@ -40,6 +40,7 @@ namespace PuzzleCat.Controller
                 if (_forwardMovementFunction())
                 {
                     _currentObjectPosition += _currentObjectDirection;
+                    return true;
                 }
                 
             }
@@ -48,8 +49,11 @@ namespace PuzzleCat.Controller
                 if (_backwardMovementFunction())
                 {
                     _currentObjectPosition -= _currentObjectDirection;
+                    return true;
                 }
             }
+            
+            return false;
         }
         
         private void OnGameStateChanged(GameManager.GameState state)

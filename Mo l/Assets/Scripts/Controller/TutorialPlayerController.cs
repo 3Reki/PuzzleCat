@@ -8,14 +8,45 @@ namespace PuzzleCat.Controller
         [SerializeField] private Tutorial tutorial;
 
         private RaycastHit _hit;
+        private bool _triedSelectingFurniture;
 
+        protected override void HandleTouchStationary()
+        {
+            if (_triedSelectingFurniture)
+                return;
+            if (GameManager.Instance.State is GameManager.GameState.PortalMode 
+                or GameManager.GameState.FurnitureMovement or GameManager.GameState.CameraMovement) 
+                return;
+            if (!(Time.time - TouchStartTime > holdTouchThreshold)) 
+                return;
+
+            _triedSelectingFurniture = true;
+            
+            if (!tutorial.CanSelectElement()) 
+                return;
+            
+            GameManager.Instance.UpdateGameState(GameManager.GameState.FurnitureMovement);
+            tutorial.OnElementSelection();
+        }
+        
         protected override void HandleTouchMoved()
         {
+            if (!TouchMoved && (inputManager.FirstTouchPosition - TouchInitialPosition).magnitude < dragDistance) return;
+            TouchMoved = true;
+
+            if (GameManager.Instance.State != GameManager.GameState.FurnitureMovement ||
+                !tutorial.CanMoveElement()) 
+                return;
             
+            if (movableElementsController.HandleMovement())
+            {
+                tutorial.OnElementMovement();
+            }
         }
 
         protected override void HandleTouchEnd()
         {
+            _triedSelectingFurniture = false;
             switch (GameManager.Instance.State)
             {
                 case GameManager.GameState.PlayerMovement:
@@ -36,8 +67,8 @@ namespace PuzzleCat.Controller
                         portalPlacementController.HandlePortalPlacement();
                     }
                     break;
-                case GameManager.GameState.CameraMovement:
                 case GameManager.GameState.FurnitureMovement:
+                    tutorial.OnElementDeselection();
                     GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
                     break;
             }

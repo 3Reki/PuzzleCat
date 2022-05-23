@@ -1,43 +1,113 @@
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
+using PuzzleCat.Controller;
 using UnityEngine;
 
-namespace PuzzleCat
+namespace PuzzleCat.TutorialAnimations
 {
-    public class TutorialThree : MonoBehaviour
+    public class TutorialThree : Tutorial
     {
+        [SerializeField] private InputManager inputManager;
         [SerializeField] private RectTransform handTransform;
-        [SerializeField] private Animator handAnimator;
-        
-        [SerializeField] private Vector2 firstPosition = new Vector2(115,-63);
+        [SerializeField] private HandAnimation handAnimation;
+        [SerializeField] private LayerMask invisibleLayerMask;
+        [SerializeField] private Vector3Int[] desiredTouchPosition;
+        [SerializeField] private Vector2[] HandPositions;
+        [SerializeField] private Vector2[] HandDestinations;
+        [SerializeField] private float selectionDelay;
 
+        private Vector2 _currentHandDestination;
+        private WaitForSeconds _selectionDelay;
+        private int _currentIndex = -1;
+        private bool _tutorialEnded;
 
-        void Start()
+        public override bool CanMovePlayer()
         {
-            HoldMove();
-        }
-        
-        
-        //Animation de la main qui descend selectionne le meuble deplacable
-        public void DownMove()
-        {
-            handTransform.anchoredPosition = firstPosition;
-            handAnimator.Play("HandDown_Animation");
-        }
-
-        //Animation de la main fixe sur le meuble et le meuble glisse
-        public void HoldMove()
-        {
-            handAnimator.Play("HandHold_Animation");
-            //La main se deplace ici
+            return _tutorialEnded;
         }
 
-        //Animation de la main qui remonte
-        public void UpMove()
+        public override bool CanSelectElement()
         {
-            handAnimator.Play("HandUp_Animation");
+            return true;
+        }
+
+        public override bool CanMoveElement()
+        {
+            if (_tutorialEnded)
+                return true;
+            
+            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, invisibleLayerMask, 100f, true, 2))
+                return false;
+
+            return Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point) == desiredTouchPosition[_currentIndex];
+        }
+
+        public override void OnElementSelection()
+        {
+            handAnimation.StopAnimation();
+        }
+
+        public override void OnElementMovement()
+        {
+            if (HasNextPosition())
+            {
+                NextPosition();
+                return;
+            }
+
+            _tutorialEnded = true;
         }
         
+        public override void OnElementDeselection()
+        {
+            if (!_tutorialEnded)
+            {
+                handAnimation.PlayAnimation();
+            }
+        }
+
+        private void MoveFurniture()
+        {
+            handAnimation.PauseAnimation();
+            StartCoroutine(MoveFurnitureCoroutine());
+        }
+        
+        private IEnumerator MoveFurnitureCoroutine()
+        {
+            yield return _selectionDelay;
+            handTransform.DOAnchorPos(_currentHandDestination, .5f).SetEase(Ease.Linear).onComplete = 
+                handAnimation.ResumeAnimation;
+        }
+
+        private void NextPosition()
+        {
+            _currentIndex++;
+            handTransform.anchoredPosition = HandPositions[_currentIndex];
+            _currentHandDestination = HandDestinations[_currentIndex];
+            handAnimation.OnHalfComplete = MoveFurniture;
+        }
+
+        private void ResetPosition()
+        {
+            handTransform.anchoredPosition = HandPositions[_currentIndex];
+        }
+
+        private bool HasNextPosition()
+        {
+            return _currentIndex + 1 < HandPositions.Length;
+        }
+
+        private void Awake()
+        {
+            _selectionDelay = new WaitForSeconds(selectionDelay);
+        }
+
+        private void Start()
+        {
+            NextPosition();
+            handAnimation.PlayAnimation();
+            handAnimation.OnStart = ResetPosition;
+        }
     }
 }
