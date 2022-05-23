@@ -14,7 +14,7 @@ namespace PuzzleCat
         [SerializeField] private Image portalMenuImage;
         [SerializeField] private Image selectedPortalCheckmark;
         [SerializeField] private ToggleGroup portalSelectionToggleGroup;
-        [SerializeField] private Toggle[] portalToggles;
+        public Toggle[] portalToggles;
         [SerializeField] private Sprite portalBookOpen;
         [SerializeField] private Sprite portalBookClosed;
         
@@ -55,7 +55,9 @@ namespace PuzzleCat
             GameManager.Instance.UpdateGameState(GameManager.GameState.PortalMode);
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
-            portalMenuImage.rectTransform.DOAnchorPosX(-0.422f * Screen.width, .4f);
+            portalMenuImage.rectTransform.DOAnchorPosX(-portalMenuImage.rectTransform.rect.width + 23 +
+                                                       ((RectTransform) portalToggles[0].transform).rect.width *
+                                                       (4 - portalToggles.Length), .4f);
         }
 
         public void UpdateSelectedPortalGroup(int index)
@@ -141,7 +143,7 @@ namespace PuzzleCat
         private void Awake()
         {
             _menuInitialPositionY = pauseMenuTransform.anchoredPosition.y;
-            
+
             SetupPortalToggles();
 
             if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings)

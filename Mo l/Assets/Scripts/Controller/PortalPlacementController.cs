@@ -1,16 +1,20 @@
 using System.Collections.Generic;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
+using TMPro;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
 {
     public class PortalPlacementController : MonoBehaviour
     {
+        public TextMeshProUGUI[] PortalCountTexts;
+        
         [SerializeField] private InputManager inputManager;
         [SerializeField] private Transform[] portalsParentTransform;
-        
+
         private Dictionary<int, List<Portal>> _portals;
+        private int[] _portalCounts;
         private int _portalGroupId;
         private int _portalId;
 
@@ -40,6 +44,8 @@ namespace PuzzleCat.Controller
             if (portal != null)
             {
                 portal.UnsetPortal();
+                _portalCounts[portal.Id - 1]++;
+                PortalCountTexts[portal.Id - 1].text = $"x{_portalCounts[portal.Id - 1]}";
                 
                 if (_portalGroupId == -1)
                 {
@@ -67,6 +73,8 @@ namespace PuzzleCat.Controller
                 _portals[_portalGroupId][_portalId].SetPortal(hit.transform.parent.GetComponent<Room>(), 
                     gridPoint, hit.normal.ToSurface());
                 _portalId = FindCurrentPortalIndex(_portalGroupId);
+                _portalCounts[_portalGroupId - 1]--;
+                PortalCountTexts[_portalGroupId - 1].text = $"x{_portalCounts[_portalGroupId - 1]}";
             }
         }
         
@@ -86,6 +94,7 @@ namespace PuzzleCat.Controller
         private void ConstructPortalsDictionary()
         {
             _portals = new Dictionary<int, List<Portal>>();
+            _portalCounts = new int[4];
             
             foreach (Transform parentTransform in portalsParentTransform)
             {
@@ -99,6 +108,8 @@ namespace PuzzleCat.Controller
                     }
                     
                     _portals[portal.Id].Add(portal);
+                    _portalCounts[portal.Id - 1]++;
+                    PortalCountTexts[portal.Id - 1].text = $"x{_portalCounts[portal.Id - 1]}";
                 }
             }
         }

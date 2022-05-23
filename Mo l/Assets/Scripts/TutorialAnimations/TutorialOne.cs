@@ -1,50 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
+using PuzzleCat.Controller;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace PuzzleCat
+namespace PuzzleCat.TutorialAnimations
 {
-    public class TutorialOne : MonoBehaviour
+    public class TutorialOne : Tutorial
     {
-        
+        [SerializeField] private InputManager inputManager;
         [SerializeField] private RectTransform handTransform;
+        [SerializeField] private HandAnimation handAnimation;
+        [SerializeField] private Vector3Int[] desiredTouchPosition;
+        [SerializeField] private Vector2[] handPositions;
+        [SerializeField] private Quaternion[] handRotations;
 
-        [SerializeField] private Vector2 firstPosition = new Vector2(137,-289);
-        [SerializeField] private Vector2 secondPosition = new Vector2(408, -245);
-        [SerializeField] private Vector2 thirdPosition = new Vector2(13, 74);
+        private int _currentIndex = -1;
 
-
-
-
-        void Start()
+        public override bool CanMovePlayer()
         {
-            
+            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, -5, 100f, true, 2))
+                return false;
+
+            return Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point) == desiredTouchPosition[_currentIndex];
         }
 
-
-        //Premiere animation de la main (devant le meuble au pied du lit)
-        public void FirstHand()
+        public override void OnPlayerMovement()
         {
-            handTransform.anchoredPosition = firstPosition;
+            if (HasNextPosition())
+            {
+                NextPosition();
+                handAnimation.PlayAnimation();
+                return;
+            }
+                        
+            handAnimation.StopAnimation();
+        }
+        
+        private void NextPosition()
+        {
+            _currentIndex++;
+            handTransform.anchoredPosition = handPositions[_currentIndex];
+            handTransform.rotation = handRotations[_currentIndex];
         }
 
-        
-        //Deuxieme animation de la main (sur le point de teleportaiton du chat)
-        public void SecondHand()
+        private bool HasNextPosition()
         {
-            handTransform.anchoredPosition = secondPosition;
+            return _currentIndex + 1 < handPositions.Length;
         }
         
-        
-        //Troisieme animation de la main (sur le miroir de fin de niveau)
-        public void ThirdHand()
+        private void Start()
         {
-            handTransform.anchoredPosition = thirdPosition;
-            handTransform.rotation = Quaternion.Euler(0,0, -125);
+            NextPosition();
+            handAnimation.PlayAnimation();
         }
-        
-        
     }
 }
