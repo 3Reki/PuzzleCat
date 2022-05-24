@@ -24,7 +24,6 @@ namespace PuzzleCat
         {
             if (Instance != null)
             {
-                Instance.unlockedLevelsCount++;
                 Destroy(this);
                 return;
             }

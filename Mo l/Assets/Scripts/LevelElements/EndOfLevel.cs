@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PuzzleCat.LevelElements
 {
@@ -27,7 +28,16 @@ namespace PuzzleCat.LevelElements
                 return;
             }
             cat.MoveTo(transform.position, 1);
-            cat.onArrival = () => cat.JumpInMirror();
+            cat.onArrival = () => FinishLevel(cat);
+        }
+
+        private static void FinishLevel(Cat cat)
+        {
+            cat.JumpInMirror();
+            if (SceneManager.GetActiveScene().buildIndex == GameData.Instance.unlockedLevelsCount)
+            {
+                GameData.Instance.unlockedLevelsCount++;
+            }
         }
     }
 }
