@@ -8,10 +8,14 @@ namespace PuzzleCat
     public class TitleScreenMenuManager : MonoBehaviour
     {
         [SerializeField] private Button[] levelButtons;
+        
         [SerializeField] private GameObject settingsCanvasGameObject;
         [SerializeField] private RectTransform settingsMenuTransform;
+        [SerializeField] private Image settingsBackgroundImage;
         
-        private bool _settingsOpened;
+        [SerializeField] private GameObject creditsCanvasGameObject;
+        [SerializeField] private RectTransform creditsMenuTransform;
+        
         private bool _menuAlreadyClosed;
         
         public static void LoadLevel(int level)
@@ -47,10 +51,10 @@ namespace PuzzleCat
             }
 
             _menuAlreadyClosed = true;
+            settingsBackgroundImage.DOFade(0f, 0.6f);
             settingsMenuTransform.DOAnchorPosY(0, .6f).SetEase(Ease.InBack).onComplete =
                 () =>
                 {
-                    _settingsOpened = false;
                     settingsCanvasGameObject.SetActive(false);
                     _menuAlreadyClosed = false;
                 };
@@ -58,9 +62,33 @@ namespace PuzzleCat
 
         public void OpenSettingsMenu()
         {
-            _settingsOpened = true;
             settingsCanvasGameObject.SetActive(true);
+            settingsBackgroundImage.DOFade(0.733f, 0.45f);
             settingsMenuTransform.DOMoveY(Screen.height * 0.88f, .6f).SetEase(Ease.OutBack);
+        }
+        
+        public void CloseCredits()
+        {
+            if (_menuAlreadyClosed)
+            {
+                return;
+            }
+
+            _menuAlreadyClosed = true;
+            creditsMenuTransform.DOAnchorPosY(0, .9f).SetEase(Ease.InBack).onComplete =
+                () =>
+                {
+                    settingsBackgroundImage.enabled = true;
+                    creditsCanvasGameObject.SetActive(false);
+                    _menuAlreadyClosed = false;
+                };
+        }
+
+        public void OpenCredits()
+        {
+            creditsCanvasGameObject.SetActive(true);
+            settingsBackgroundImage.enabled = false;
+            creditsMenuTransform.DOMoveY(Screen.height * 0.5f, .9f).SetEase(Ease.OutBack);
         }
 
         private void Awake()
