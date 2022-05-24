@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +8,11 @@ namespace PuzzleCat
     public class TitleScreenMenuManager : MonoBehaviour
     {
         [SerializeField] private Button[] levelButtons;
+        [SerializeField] private GameObject settingsCanvasGameObject;
+        [SerializeField] private RectTransform settingsMenuTransform;
+        
+        private bool _settingsOpened;
+        private bool _menuAlreadyClosed;
         
         public static void LoadLevel(int level)
         {
@@ -31,6 +37,30 @@ namespace PuzzleCat
             }
 
             GameData.Instance.unlockedLevelsCount = 1;
+        }
+
+        public void CloseSettingsMenu()
+        {
+            if (_menuAlreadyClosed)
+            {
+                return;
+            }
+
+            _menuAlreadyClosed = true;
+            settingsMenuTransform.DOAnchorPosY(0, .6f).SetEase(Ease.InBack).onComplete =
+                () =>
+                {
+                    _settingsOpened = false;
+                    settingsCanvasGameObject.SetActive(false);
+                    _menuAlreadyClosed = false;
+                };
+        }
+
+        public void OpenSettingsMenu()
+        {
+            _settingsOpened = true;
+            settingsCanvasGameObject.SetActive(true);
+            settingsMenuTransform.DOMoveY(Screen.height * 0.88f, .6f).SetEase(Ease.OutBack);
         }
 
         private void Awake()

@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using PuzzleCat.Controller;
 using UnityEngine;
@@ -29,7 +28,6 @@ namespace PuzzleCat
         private GameManager.GameState _unpausedGameState;
         private float _menuInitialPositionY;
         private float _backgroundInitialAlpha;
-        private bool _gamePaused;
         private bool _menuAlreadyClosed;
         
         public void ResetLevel()
