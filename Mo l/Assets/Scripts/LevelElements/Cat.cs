@@ -107,6 +107,7 @@ namespace PuzzleCat.LevelElements
             }
             
             playerAgent.SetPath(_path);
+            playerAgent.Move(position.normalized * Time.deltaTime);
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
