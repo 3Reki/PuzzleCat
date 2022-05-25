@@ -108,6 +108,7 @@ namespace PuzzleCat.LevelElements
             
             playerAgent.SetPath(_path);
             playerAgent.Move(position.normalized * Time.deltaTime);
+            _isMoving = true;
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
@@ -173,7 +174,6 @@ namespace PuzzleCat.LevelElements
         {
             if (playerAgent.remainingDistance > playerAgent.stoppingDistance)
             {
-                _isMoving = true;
                 return;
             }
             
