@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d7da0e2d8067e54eaeb3236d0889173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImpactedSurface: 2
+  ImpactedSurface: 0
   IsObstacle: 0
 --- !u!198 &5549235830680623730
 ParticleSystem:
