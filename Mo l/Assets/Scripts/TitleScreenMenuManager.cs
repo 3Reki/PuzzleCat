@@ -7,6 +7,9 @@ namespace PuzzleCat
 {
     public class TitleScreenMenuManager : MonoBehaviour
     {
+        [SerializeField] private RectTransform[] levelSelectionTransforms;
+        [SerializeField] private Button leftSelectionArrow;
+        [SerializeField] private Button rightSelectionArrow;
         [SerializeField] private Button[] levelButtons;
         
         [SerializeField] private GameObject settingsCanvasGameObject;
@@ -20,6 +23,7 @@ namespace PuzzleCat
         [SerializeField] private Toggle musicToggle;
         
         private bool _menuAlreadyClosed;
+        private int _currentLevelSelectionIndex;
         
         public static void LoadLevel(int level)
         {
@@ -104,6 +108,19 @@ namespace PuzzleCat
             GameData.Instance.musicOn = state;
         }
 
+        public void ChangeLevelSelectionPanel(int direction)
+        {
+            foreach (RectTransform selectionTransform in levelSelectionTransforms)
+            {
+                selectionTransform.DOAnchorPosX(selectionTransform.anchoredPosition.x - Screen.width * direction, 0.5f);
+            }
+
+            _currentLevelSelectionIndex += direction;
+
+            rightSelectionArrow.interactable = _currentLevelSelectionIndex != levelSelectionTransforms.Length - 1;
+            leftSelectionArrow.interactable = _currentLevelSelectionIndex != 0;
+        }
+
         private void Awake()
         {
             Application.targetFrameRate = Screen.currentResolution.refreshRate;
@@ -118,6 +135,8 @@ namespace PuzzleCat
 
             sfxToggle.isOn = GameData.Instance.sfxOn;
             musicToggle.isOn = GameData.Instance.musicOn;
+
+            leftSelectionArrow.interactable = false;
         }
     }
 }
