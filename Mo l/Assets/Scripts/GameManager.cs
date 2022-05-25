@@ -60,6 +60,9 @@ namespace PuzzleCat
             State = GameState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.onMovement += UpdateNavMeshes;
+#if UNITY_EDITOR
+            new GameObject("Game Data").AddComponent<GameData>();
+#endif
         }
 
         private void OnDestroy()

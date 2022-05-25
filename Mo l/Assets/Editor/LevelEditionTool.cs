@@ -50,9 +50,9 @@ namespace PuzzleCat.Editor
 
         private static void CreateGameManagerAndControllers()
         {
-            foreach (GameManager gameManager in FindObjectsOfType<GameManager>())
+            if (FindObjectOfType<GameManager>())
             {
-                DestroyImmediate(gameManager.gameObject);
+                return;
             }
             
             var manager = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Game Manager.prefab")).GetComponent<GameManager>();
