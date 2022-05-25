@@ -15,6 +15,9 @@ namespace PuzzleCat
         
         [SerializeField] private GameObject creditsCanvasGameObject;
         [SerializeField] private RectTransform creditsMenuTransform;
+
+        [SerializeField] private Toggle sfxToggle;
+        [SerializeField] private Toggle musicToggle;
         
         private bool _menuAlreadyClosed;
         
@@ -91,6 +94,16 @@ namespace PuzzleCat
             creditsMenuTransform.DOMoveY(Screen.height * 0.5f, .9f).SetEase(Ease.OutBack);
         }
 
+        public void SwitchSFX(bool state)
+        {
+            GameData.Instance.sfxOn = state;
+        }
+        
+        public void SwitchMusic(bool state)
+        {
+            GameData.Instance.musicOn = state;
+        }
+
         private void Awake()
         {
             Application.targetFrameRate = Screen.currentResolution.refreshRate;
@@ -102,7 +115,9 @@ namespace PuzzleCat
             {
                 levelButtons[i].interactable = false;
             }
-            
+
+            sfxToggle.isOn = GameData.Instance.sfxOn;
+            musicToggle.isOn = GameData.Instance.musicOn;
         }
     }
 }

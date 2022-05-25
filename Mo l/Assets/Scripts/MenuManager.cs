@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using PuzzleCat.Controller;
 using UnityEngine;
@@ -24,6 +25,9 @@ namespace PuzzleCat
         [SerializeField] private Image endLevelBackground;
         [SerializeField] private RectTransform endLevelFrame;
         [SerializeField] private Button nextLevelButton;
+        
+        [SerializeField] private Toggle sfxToggle;
+        [SerializeField] private Toggle musicToggle;
 
         private GameManager.GameState _unpausedGameState;
         private float _menuInitialPositionY;
@@ -100,6 +104,16 @@ namespace PuzzleCat
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         
+        public void SwitchSFX(bool state)
+        {
+            GameData.Instance.sfxOn = state;
+        }
+        
+        public void SwitchMusic(bool state)
+        {
+            GameData.Instance.musicOn = state;
+        }
+        
         private void ActivateLevelEndMenu()
         {
             endLevelCanvasGameObject.SetActive(true);
@@ -154,6 +168,12 @@ namespace PuzzleCat
             endLevelFrame.localScale = Vector3.zero;
 
             GameManager.OnGameStateChanged += OnGameStateChanged;
+        }
+
+        private void Start()
+        {
+            sfxToggle.isOn = GameData.Instance.sfxOn;
+            musicToggle.isOn = GameData.Instance.musicOn;
         }
 
         private void OnDestroy()

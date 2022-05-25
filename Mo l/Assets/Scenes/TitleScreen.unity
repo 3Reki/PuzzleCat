@@ -1134,7 +1134,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1716557806}
+        m_TargetAssemblyTypeName: PuzzleCat.TitleScreenMenuManager, Assembly-CSharp
+        m_MethodName: SwitchMusic
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &268724126
 GameObject:
@@ -6471,7 +6483,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1716557806}
+        m_TargetAssemblyTypeName: PuzzleCat.TitleScreenMenuManager, Assembly-CSharp
+        m_MethodName: SwitchSFX
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &1600435665
 GameObject:
@@ -6834,6 +6858,8 @@ MonoBehaviour:
   settingsBackgroundImage: {fileID: 404942301}
   creditsCanvasGameObject: {fileID: 745691616}
   creditsMenuTransform: {fileID: 1340773666}
+  sfxToggle: {fileID: 1514106251}
+  musicToggle: {fileID: 195901208}
 --- !u!4 &1716557807
 Transform:
   m_ObjectHideFlags: 0

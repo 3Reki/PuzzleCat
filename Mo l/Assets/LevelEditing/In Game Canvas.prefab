@@ -1305,7 +1305,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419916995308907113}
+        m_TargetAssemblyTypeName: PuzzleCat.MenuManager, Assembly-CSharp
+        m_MethodName: SwitchMusic
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &2552798395838725859
 GameObject:
@@ -1899,6 +1911,8 @@ MonoBehaviour:
   endLevelBackground: {fileID: 5143604921949761119}
   endLevelFrame: {fileID: 5633265217424568902}
   nextLevelButton: {fileID: 7219740624221495381}
+  sfxToggle: {fileID: 9040441723827824393}
+  musicToggle: {fileID: 4318061585058477844}
 --- !u!1 &2939981363649141765
 GameObject:
   m_ObjectHideFlags: 0
@@ -3892,7 +3906,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419916995308907113}
+        m_TargetAssemblyTypeName: PuzzleCat.MenuManager, Assembly-CSharp
+        m_MethodName: SwitchSFX
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &8811679260544522049
 GameObject:
