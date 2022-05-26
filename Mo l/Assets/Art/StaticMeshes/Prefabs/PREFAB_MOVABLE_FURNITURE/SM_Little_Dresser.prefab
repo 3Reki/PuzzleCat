@@ -9974,7 +9974,8 @@ MonoBehaviour:
   IsObstacle: 1
   CurrentSurface: 0
   objectTransform: {fileID: 5209554499004825705}
-  linkedMovables: []
+  linkedMovables:
+  - {fileID: 5748483504342427525}
 --- !u!1 &6063679126929357789
 GameObject:
   m_ObjectHideFlags: 0
