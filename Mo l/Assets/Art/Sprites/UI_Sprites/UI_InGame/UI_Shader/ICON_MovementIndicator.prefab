@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2507062018421480069}
   - component: {fileID: 1541642889177453856}
   - component: {fileID: 3639457446235021802}
+  - component: {fileID: 8185950847544858546}
   m_Layer: 0
-  m_Name: ICON_Moving
+  m_Name: ICON_MovementIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,3 +84,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8185950847544858546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2990688343417847871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 110dfd8dba5eb0c4dbb8b96c76124bc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorTransform: {fileID: 2507062018421480069}
+  indicatorMaterial: {fileID: 2100000, guid: 7fab4361ed71a9e4dabb6658a74210d8, type: 2}
+  animationSpeed: 2
