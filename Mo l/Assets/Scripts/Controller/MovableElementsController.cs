@@ -21,6 +21,12 @@ namespace PuzzleCat.Controller
         private Vector3Int _currentObjectDirection;
         private RaycastHit _hit;
         
+        public bool CanEnterFurnitureMode()
+        {
+            return Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit,
+                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+        }
+        
         public bool HandleMovement()
         {
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit, 
@@ -37,29 +43,50 @@ namespace PuzzleCat.Controller
 
             if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) >= 1)
             {
-                if (_forwardMovementFunction())
-                {
-                    _currentObjectPosition += _currentObjectDirection;
-                    return true;
-                }
+                if (!_forwardMovementFunction()) return false;
                 
-            }
-            else if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) <= -1)
-            {
-                if (_backwardMovementFunction())
+                _currentObjectPosition += _currentObjectDirection;
+                if (_initialObjectPosition == _currentObjectPosition)
                 {
-                    _currentObjectPosition -= _currentObjectDirection;
-                    return true;
+                    _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
                 }
+                return true;
+
+            }
+            
+            if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) <= -1)
+            {
+                if (!_backwardMovementFunction()) return false;
+                
+                _currentObjectPosition -= _currentObjectDirection;
+                if (_initialObjectPosition == _currentObjectPosition)
+                {
+                    _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
+                }
+                return true;
             }
             
             return false;
         }
 
-        public bool CanEnterFurnitureMode()
+        private void HandleJunction(Vector3Int gridPoint)
         {
-            return Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit,
-                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+            if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
+            {
+                _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
+                _forwardMovementFunction = () => _selectedMovableElement.MoveForward();
+                _backwardMovementFunction = () => _selectedMovableElement.MoveBackward();
+                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(true);
+                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(false);
+            }
+            else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
+            {
+                _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
+                _forwardMovementFunction = () => _selectedMovableElement.MoveRight();
+                _backwardMovementFunction = () => _selectedMovableElement.MoveLeft();
+                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(false);
+                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(true);
+            }
         }
 
         private void OnGameStateChanged(GameManager.GameState state)
@@ -86,8 +113,12 @@ namespace PuzzleCat.Controller
         {
             if (selectedGameObject == null)
             {
+                if (_selectedMovableElement == null) return;
+                
+                _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(false);
                 _selectedMovableElement = null;
                 invisibleQuad.SetActive(false);
+
                 return;
             }
 
@@ -97,24 +128,9 @@ namespace PuzzleCat.Controller
             invisibleQuad.SetActive(true);
             invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
+            _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
         }
 
-        private void HandleJunction(Vector3Int gridPoint)
-        {
-            if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
-            {
-                _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
-                _forwardMovementFunction = () => _selectedMovableElement.MoveForward();
-                _backwardMovementFunction = () => _selectedMovableElement.MoveBackward();
-            }
-            else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
-            {
-                _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
-                _forwardMovementFunction = () => _selectedMovableElement.MoveRight();
-                _backwardMovementFunction = () => _selectedMovableElement.MoveLeft();
-            }
-        }
-        
         private void Awake()
         {
             GameManager.OnGameStateChanged += OnGameStateChanged;
