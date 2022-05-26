@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 4971476133305734745}
   - component: {fileID: 1376617743544150014}
   - component: {fileID: 6932247820755307302}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Dresser_High_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -287,6 +287,9 @@ MonoBehaviour:
   objectTransform: {fileID: 4349552963824156938}
   linkedMovables:
   - {fileID: 4971476133305734745}
+  - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734747}
+  - {fileID: 4971476134098184218}
 --- !u!198 &1376617743544150014
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -5164,7 +5167,7 @@ GameObject:
   - component: {fileID: 4971476133305734747}
   - component: {fileID: 7915892443198765033}
   - component: {fileID: 2118610969424511624}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Dresser_High_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5269,6 +5272,9 @@ MonoBehaviour:
   objectTransform: {fileID: 8354230688359758837}
   linkedMovables:
   - {fileID: 4971476133305734747}
+  - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734745}
+  - {fileID: 4971476134098184218}
 --- !u!198 &7915892443198765033
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -20033,7 +20039,7 @@ GameObject:
   - component: {fileID: 4971476133305734757}
   - component: {fileID: 5368600104230988223}
   - component: {fileID: 8595651058981890382}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Dresser_High_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20139,6 +20145,9 @@ MonoBehaviour:
   objectTransform: {fileID: 8266818834234417607}
   linkedMovables:
   - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734747}
+  - {fileID: 4971476133305734745}
+  - {fileID: 4971476134098184218}
 --- !u!198 &5368600104230988223
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -25016,7 +25025,7 @@ GameObject:
   - component: {fileID: 4971476134098184218}
   - component: {fileID: 6165609500565960055}
   - component: {fileID: 5414065517020609566}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Dresser_High_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25120,6 +25129,9 @@ MonoBehaviour:
   objectTransform: {fileID: 7246557088294979366}
   linkedMovables:
   - {fileID: 4971476134098184218}
+  - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734747}
+  - {fileID: 4971476133305734745}
 --- !u!198 &6165609500565960055
 ParticleSystem:
   m_ObjectHideFlags: 0
