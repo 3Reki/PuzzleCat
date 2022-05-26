@@ -55,7 +55,13 @@ namespace PuzzleCat.Controller
             
             return false;
         }
-        
+
+        public bool CanEnterFurnitureMode()
+        {
+            return Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit,
+                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+        }
+
         private void OnGameStateChanged(GameManager.GameState state)
         {
             if (state == GameManager.GameState.FurnitureMovement)

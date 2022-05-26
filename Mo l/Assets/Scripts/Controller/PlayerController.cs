@@ -9,7 +9,8 @@ namespace PuzzleCat.Controller
         [SerializeField] protected MovableElementsController movableElementsController;
         [SerializeField] protected CatController catController;
         [SerializeField] protected PortalPlacementController portalPlacementController;
-        [SerializeField] protected float holdTouchThreshold = 0.2f;
+        [SerializeField] protected FurnitureSelectionIndicator furnitureSelectionIndicator;
+        [SerializeField] protected float holdTouchThreshold = 0.3f;
         [SerializeField] protected float dragDistance = 3;
 
         protected Vector2 TouchInitialPosition;
@@ -45,6 +46,11 @@ namespace PuzzleCat.Controller
             TouchInitialPosition = inputManager.FirstTouchPosition;
             TouchStartTime = Time.time;
             TouchMoved = false;
+            
+            if (movableElementsController.CanEnterFurnitureMode())
+            {
+                furnitureSelectionIndicator.Play(TouchInitialPosition + new Vector2(-0.12f, 0.12f) * Screen.width, holdTouchThreshold);
+            }
         }
 
         protected virtual void HandleTouchStationary()
@@ -58,8 +64,12 @@ namespace PuzzleCat.Controller
 
         protected virtual void HandleTouchMoved()
         {
-            if (!TouchMoved && (inputManager.FirstTouchPosition - TouchInitialPosition).magnitude < dragDistance) return;
-            TouchMoved = true;
+            if (!TouchMoved)
+            {
+                if ((inputManager.FirstTouchPosition - TouchInitialPosition).magnitude < dragDistance) return;
+                TouchMoved = true;
+                furnitureSelectionIndicator.Stop();
+            }
 
             if (GameManager.Instance.State == GameManager.GameState.FurnitureMovement)
             {
@@ -81,6 +91,7 @@ namespace PuzzleCat.Controller
             {
                 case GameManager.GameState.PlayerMovement:
                     catController.HandlePlayerMovement();
+                    furnitureSelectionIndicator.Stop();
                     break;
                 case GameManager.GameState.PortalMode:
                     portalPlacementController.HandlePortalPlacement();
