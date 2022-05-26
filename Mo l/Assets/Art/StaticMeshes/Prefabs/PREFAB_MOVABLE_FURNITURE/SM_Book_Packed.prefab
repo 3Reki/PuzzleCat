@@ -10053,4 +10053,5 @@ MonoBehaviour:
   IsObstacle: 1
   CurrentSurface: 0
   objectTransform: {fileID: 8906443673795104090}
-  linkedMovables: []
+  linkedMovables:
+  - {fileID: 5158587281809963772}
