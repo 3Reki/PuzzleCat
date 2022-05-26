@@ -1,4 +1,4 @@
-using System.Collections;
+using PuzzleCat.Visuals;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
@@ -6,8 +6,8 @@ namespace PuzzleCat.Controller
     public class CatController : MonoBehaviour
     {
         [SerializeField] private InputManager inputManager;
-        [SerializeField] private Transform catDirectionIndicator;
-        
+        [SerializeField] private PlayerMovementIndicator movementIndicator;
+
         private RaycastHit _hit;
         
         public bool HandlePlayerMovement()
@@ -20,17 +20,9 @@ namespace PuzzleCat.Controller
             if (_hit.normal != GameManager.Instance.Cat.transform.up)
                 return false;
 
-            catDirectionIndicator.position = _hit.point;
-            catDirectionIndicator.gameObject.SetActive(true);
-            StartCoroutine(DisableIndicator());
+            movementIndicator.Play(_hit.point + _hit.normal * 0.01f, Quaternion.LookRotation(_hit.normal));
             
             return GameManager.Instance.Cat.TryMovingTo(gridPoint);
-        }
-        
-        private IEnumerator DisableIndicator()
-        {
-            yield return new WaitForSeconds(0.2f);
-            catDirectionIndicator.gameObject.SetActive(false);
         }
         
         private void OnGameStateChanged(GameManager.GameState state)

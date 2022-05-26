@@ -4,6 +4,7 @@ using System.Linq;
 using PuzzleCat.Controller;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
+using PuzzleCat.Visuals;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -24,12 +25,27 @@ namespace PuzzleCat.Editor
             CreateAndBakeNavMeshes();
             CreateGameManagerAndControllers();
             UpdatePlayerController();
+            UpdateCatIndicator();
             CreateUI();
             UpdateRoomAndRoomElements();
 
             Scene scene = SceneManager.GetActiveScene();
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
+        }
+
+        private static void UpdateCatIndicator()
+        {
+            foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
+                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")) && go.CompareTag("Indicator"))
+                .Where(gameObject => gameObject.scene.name != null))
+            {
+                DestroyImmediate(gameObject);
+            }
+
+            var movementIndicatorSO = new SerializedObject(FindObjectOfType<CatController>());
+            movementIndicatorSO.FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
+            movementIndicatorSO.ApplyModifiedProperties();
         }
 
         private static void CreateAndBakeNavMeshes()
@@ -66,7 +82,7 @@ namespace PuzzleCat.Editor
             Transform controllers = manager.transform.GetChild(0);
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
-            serializedObjects[1].FindProperty("catDirectionIndicator").objectReferenceValue = CreateCatIndicator();
+            serializedObjects[1].FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));
             serializedObjects[2].FindProperty("invisibleQuad").objectReferenceValue = CreateInvisibleQuad();
@@ -210,22 +226,21 @@ namespace PuzzleCat.Editor
             return quad;
         }
 
-        private static Transform CreateCatIndicator()
+        private static PlayerMovementIndicator CreateCatIndicator()
         {
-            var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            sphere.layer = LayerMask.NameToLayer("Invisible");
-            sphere.tag = "Indicator";
-            sphere.SetActive(false);
-
-            foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
-                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")) && go.CompareTag("Indicator"))
-                .Where(gameObject => gameObject.scene.name != null && gameObject != sphere))
+            PlayerMovementIndicator indicator = Resources.FindObjectsOfTypeAll<PlayerMovementIndicator>().FirstOrDefault(indicator => indicator.gameObject.scene.name != null);
+            if (indicator != null)
             {
-                DestroyImmediate(gameObject);
+                return indicator;
             }
 
-            return sphere.transform;
+            GameObject indicatorGO = (GameObject) PrefabUtility.InstantiatePrefab(
+                AssetDatabase.LoadAssetAtPath<GameObject>(
+                    "Assets/Art/Sprites/UI_Sprites/UI_InGame/UI_Shader/ICON_MovementIndicator.prefab"));
+            
+            indicatorGO.SetActive(false);
+
+            return indicatorGO.GetComponent<PlayerMovementIndicator>();
         }
 
         private static void UpdateRoomAndRoomElements()
