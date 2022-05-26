@@ -21,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BCAOM_tex:
-        m_Texture: {fileID: 2800000, guid: 725fba95961aed84a9b700effef79569, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0e96f11704c8a9d4c83da26941c194c9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -107,6 +107,7 @@ Material:
     - _Hue: 0
     - _IsActiveCurvature: 1
     - _Lumiance: 1
+    - _Luminosity: 1.2
     - _Metallic: 0
     - _NormalStrength: 0
     - _OcclusionStrength: 1
