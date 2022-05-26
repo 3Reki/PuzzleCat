@@ -42,9 +42,12 @@ EditorBuildSettings:
     path: Assets/Levels/Medium/GB_Level08.unity
     guid: 6b65874b541b44143a26c9a98b158c11
   - enabled: 1
+    path: Assets/Levels/Tutorial/Level_Tutorial_005.unity
+    guid: 9f368f44c0e2d0e408824c357ffb3e55
+  - enabled: 1
     path: Assets/Levels/Hard/GB_Level10.unity
     guid: f331da8d0d9ef2844b85d6f531f427e3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GB_Test/GB_Scenes/GB_Level04.unity
     guid: 4c9da00850c60ac44848f520aaed9693
   - enabled: 0
