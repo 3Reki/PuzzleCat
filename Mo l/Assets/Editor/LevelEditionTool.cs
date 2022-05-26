@@ -23,6 +23,7 @@ namespace PuzzleCat.Editor
         {
             CreateAndBakeNavMeshes();
             CreateGameManagerAndControllers();
+            UpdatePlayerController();
             CreateUI();
             UpdateRoomAndRoomElements();
 
@@ -110,7 +111,7 @@ namespace PuzzleCat.Editor
                 GameObject[] portalTogglesGo = new GameObject[4];
                 for (int i = 0; i < 4; i++)
                 {
-                    portalTogglesGo[i] = menuManager.transform.GetChild(2).GetChild(0).GetChild(i).gameObject;
+                    portalTogglesGo[i] = menuManager.transform.GetChild(3).GetChild(0).GetChild(i).gameObject;
                 }
 
                 int greyOffset = 0;
@@ -153,7 +154,7 @@ namespace PuzzleCat.Editor
             portalPlacement.PortalCountTexts = new TextMeshProUGUI[4];
             for (int i = 0; i < 4; i++)
             {
-                portalPlacement.PortalCountTexts[i] = menuManager.transform.GetChild(2).GetChild(0).GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+                portalPlacement.PortalCountTexts[i] = menuManager.transform.GetChild(3).GetChild(0).GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
             }
             PrefabUtility.RecordPrefabInstancePropertyModifications(portalPlacement);
 
@@ -161,6 +162,16 @@ namespace PuzzleCat.Editor
             {
                 new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
             }
+        }
+        
+        private static void UpdatePlayerController()
+        {
+            SerializedObject playerControllerSO = new SerializedObject(FindObjectOfType<PlayerController>());
+            playerControllerSO.FindProperty("furnitureSelectionIndicator").objectReferenceValue =
+                FindObjectOfType<FurnitureSelectionIndicator>();
+            playerControllerSO.FindProperty("holdTouchThreshold").floatValue = 0.3f;
+
+            playerControllerSO.ApplyModifiedProperties();
         }
 
         private static Transform[] GetPortalsParentList()
