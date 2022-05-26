@@ -1,5 +1,6 @@
 using System;
 using PuzzleCat.Utils;
+using PuzzleCat.Visuals;
 using UnityEngine;
 
 namespace PuzzleCat.LevelElements
@@ -8,6 +9,7 @@ namespace PuzzleCat.LevelElements
     {
         public static OnMovement onMovement;
         public Surface CurrentSurface;
+        public MovableElementDirectionIndicator DirectionIndicator;
 
         [SerializeField] private Transform objectTransform;
         [SerializeField] private MovableElement[] linkedMovables;
