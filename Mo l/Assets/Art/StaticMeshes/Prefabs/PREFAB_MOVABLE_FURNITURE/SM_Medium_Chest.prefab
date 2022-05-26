@@ -5085,7 +5085,7 @@ GameObject:
   - component: {fileID: 1910920981137805823}
   - component: {fileID: 8150124746824882597}
   - component: {fileID: 1442217240626422566}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Medium_Chest_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10068,7 +10068,7 @@ GameObject:
   - component: {fileID: 1654885796313986678}
   - component: {fileID: 9028581672852114611}
   - component: {fileID: 542171027088964333}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Medium_Chest_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

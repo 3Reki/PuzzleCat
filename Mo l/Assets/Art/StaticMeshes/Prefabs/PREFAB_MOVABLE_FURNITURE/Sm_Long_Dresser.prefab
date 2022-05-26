@@ -19625,7 +19625,7 @@ GameObject:
   - component: {fileID: 3237216835423347227}
   - component: {fileID: 6290067316571954353}
   - component: {fileID: 998094878388137592}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Long_Dresser_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24525,7 +24525,7 @@ GameObject:
   - component: {fileID: 3237216835423347231}
   - component: {fileID: 7595535534858981645}
   - component: {fileID: 8346897435919057310}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Long_Dresser_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29425,7 +29425,7 @@ GameObject:
   - component: {fileID: 3237216835423347229}
   - component: {fileID: 3156521982206327881}
   - component: {fileID: 1233340910572329290}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Long_Dresser_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
