@@ -14470,7 +14470,7 @@ GameObject:
   - component: {fileID: 482608072850235413}
   - component: {fileID: 3742206274445511476}
   - component: {fileID: 2588654395019985712}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Table_pt1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14565,6 +14565,7 @@ MonoBehaviour:
   objectTransform: {fileID: 4645550334284733261}
   linkedMovables:
   - {fileID: 482608072850235413}
+  - {fileID: 271897069131690576}
 --- !u!198 &3742206274445511476
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -19939,7 +19940,7 @@ GameObject:
   - component: {fileID: 271897069131690576}
   - component: {fileID: 6256770841384464277}
   - component: {fileID: 4664778292033716251}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Table_pt2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20033,6 +20034,7 @@ MonoBehaviour:
   objectTransform: {fileID: 8462755123310756441}
   linkedMovables:
   - {fileID: 271897069131690576}
+  - {fileID: 482608072850235413}
 --- !u!198 &6256770841384464277
 ParticleSystem:
   m_ObjectHideFlags: 0
