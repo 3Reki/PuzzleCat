@@ -287,6 +287,9 @@ MonoBehaviour:
   objectTransform: {fileID: 4349552963824156938}
   linkedMovables:
   - {fileID: 4971476133305734745}
+  - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734747}
+  - {fileID: 4971476134098184218}
 --- !u!198 &1376617743544150014
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -5269,6 +5272,9 @@ MonoBehaviour:
   objectTransform: {fileID: 8354230688359758837}
   linkedMovables:
   - {fileID: 4971476133305734747}
+  - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734745}
+  - {fileID: 4971476134098184218}
 --- !u!198 &7915892443198765033
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -20139,6 +20145,9 @@ MonoBehaviour:
   objectTransform: {fileID: 8266818834234417607}
   linkedMovables:
   - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734747}
+  - {fileID: 4971476133305734745}
+  - {fileID: 4971476134098184218}
 --- !u!198 &5368600104230988223
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -25120,6 +25129,9 @@ MonoBehaviour:
   objectTransform: {fileID: 7246557088294979366}
   linkedMovables:
   - {fileID: 4971476134098184218}
+  - {fileID: 4971476133305734757}
+  - {fileID: 4971476133305734747}
+  - {fileID: 4971476133305734745}
 --- !u!198 &6165609500565960055
 ParticleSystem:
   m_ObjectHideFlags: 0

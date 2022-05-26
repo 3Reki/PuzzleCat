@@ -24510,6 +24510,8 @@ MonoBehaviour:
   objectTransform: {fileID: 3312357971705628115}
   linkedMovables:
   - {fileID: 998094878388137592}
+  - {fileID: 8346897435919057310}
+  - {fileID: 1233340910572329290}
 --- !u!1 &5377502501323868274
 GameObject:
   m_ObjectHideFlags: 0
@@ -29410,6 +29412,8 @@ MonoBehaviour:
   objectTransform: {fileID: 3073321515095999074}
   linkedMovables:
   - {fileID: 8346897435919057310}
+  - {fileID: 1233340910572329290}
+  - {fileID: 998094878388137592}
 --- !u!1 &5816871715334074497
 GameObject:
   m_ObjectHideFlags: 0
@@ -34309,6 +34313,8 @@ MonoBehaviour:
   objectTransform: {fileID: 5520743853028459755}
   linkedMovables:
   - {fileID: 1233340910572329290}
+  - {fileID: 8346897435919057310}
+  - {fileID: 998094878388137592}
 --- !u!1 &8161885936991973850
 GameObject:
   m_ObjectHideFlags: 0

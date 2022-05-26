@@ -122,6 +122,8 @@ MonoBehaviour:
   objectTransform: {fileID: 604910070955436007}
   linkedMovables:
   - {fileID: 569679360174024161}
+  - {fileID: 9123127726520194297}
+  - {fileID: 5583574488945834383}
 --- !u!198 &4611535812933350646
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -10008,6 +10010,8 @@ MonoBehaviour:
   objectTransform: {fileID: 604910070955436007}
   linkedMovables:
   - {fileID: 5583574488945834383}
+  - {fileID: 9123127726520194297}
+  - {fileID: 569679360174024161}
 --- !u!198 &5178897823209511266
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -14992,6 +14996,8 @@ MonoBehaviour:
   objectTransform: {fileID: 6883627978908569245}
   linkedMovables:
   - {fileID: 9123127726520194297}
+  - {fileID: 5583574488945834383}
+  - {fileID: 569679360174024161}
 --- !u!198 &7141554672333305456
 ParticleSystem:
   m_ObjectHideFlags: 0

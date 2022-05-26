@@ -122,6 +122,7 @@ MonoBehaviour:
   objectTransform: {fileID: 589331118257464652}
   linkedMovables:
   - {fileID: 4621382708061612456}
+  - {fileID: 6816653735602688355}
 --- !u!198 &2353526511487548550
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9789,6 +9790,7 @@ MonoBehaviour:
   objectTransform: {fileID: 1911173896032014844}
   linkedMovables:
   - {fileID: 6816653735602688355}
+  - {fileID: 4621382708061612456}
 --- !u!65 &4739636189857386830
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -9970,6 +9970,7 @@ MonoBehaviour:
   objectTransform: {fileID: 5083740863773681171}
   linkedMovables:
   - {fileID: 1442217240626422566}
+  - {fileID: 542171027088964333}
 --- !u!1 &4881433034839337035
 GameObject:
   m_ObjectHideFlags: 0
@@ -14954,6 +14955,7 @@ MonoBehaviour:
   objectTransform: {fileID: 987614792527864522}
   linkedMovables:
   - {fileID: 542171027088964333}
+  - {fileID: 1442217240626422566}
 --- !u!1 &6092946631630513395
 GameObject:
   m_ObjectHideFlags: 0
