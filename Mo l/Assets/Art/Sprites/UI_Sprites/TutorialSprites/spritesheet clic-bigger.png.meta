@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3bf0d1dc7f6de0f4fa6dfad0e6077cdc
+guid: 052f4214909eafd448d973caf575a145
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -66,10 +66,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 8192
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -102,27 +102,27 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 8192
+    maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 50
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
-    overridden: 1
+    overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spritesheet clic_0
+      name: spritesheet clic-bigger_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,20 +130,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5c03db18908038f47b81bb3955cffce4
-      internalID: -219022842
+      spriteID: ba09b55b0b599634c8ed35c99276543a
+      internalID: 981740346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_1
+      name: spritesheet clic-bigger_1
       rect:
         serializedVersion: 2
-        x: 300
+        x: 400
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,20 +151,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef6ec61837184704e931ba255554a7aa
-      internalID: -1371218282
+      spriteID: f654d56f669ea9d41ab2698930617a60
+      internalID: -35173853
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_2
+      name: spritesheet clic-bigger_2
       rect:
         serializedVersion: 2
-        x: 600
+        x: 800
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -172,41 +172,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9a13bec015140484eb1b6bee20db2d17
-      internalID: 330612288
+      spriteID: 3590b347fb68e004d945c83308977415
+      internalID: 1809006449
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_3
-      rect:
-        serializedVersion: 2
-        x: 900
-        y: 0
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f010eb266122a2641882a0e275ba838a
-      internalID: -2043966905
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: spritesheet clic_4
+      name: spritesheet clic-bigger_3
       rect:
         serializedVersion: 2
         x: 1200
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -214,20 +193,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 499c1c66b61a4c845a49f90a7b0018e8
-      internalID: 861645561
+      spriteID: 916833685510e314bb5c3b243e3788dc
+      internalID: 389320332
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_5
+      name: spritesheet clic-bigger_4
       rect:
         serializedVersion: 2
-        x: 1500
+        x: 1600
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -235,20 +214,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba7aedb9674dcc64685d359653222058
-      internalID: 681176082
+      spriteID: f287bf7350da74f43b4b859c57ebd662
+      internalID: 1542909836
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_6
+      name: spritesheet clic-bigger_5
       rect:
         serializedVersion: 2
-        x: 1800
+        x: 2000
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,41 +235,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12f7d6cc4d8f9094d8315a9c05726a53
-      internalID: 1129809112
+      spriteID: 3e360472386ef7449adab8a586de6f5f
+      internalID: -1003192943
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_7
-      rect:
-        serializedVersion: 2
-        x: 2100
-        y: 0
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 26db3af19a7a8c64f8633c0423680ff6
-      internalID: -1017329174
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: spritesheet clic_8
+      name: spritesheet clic-bigger_6
       rect:
         serializedVersion: 2
         x: 2400
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -298,20 +256,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4da3fc4d2aaca334a83a254a1950aaae
-      internalID: 1645609669
+      spriteID: 0e5d55ab338aa9347b0e0cb8c7e7547f
+      internalID: -1060947332
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_9
+      name: spritesheet clic-bigger_7
       rect:
         serializedVersion: 2
-        x: 2700
+        x: 2800
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -319,20 +277,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 675f91b4583feeb408357a1cc0abe65d
-      internalID: -1574681409
+      spriteID: c4cf11029708ae547a5b1fa99ff85044
+      internalID: 150740599
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_10
+      name: spritesheet clic-bigger_8
       rect:
         serializedVersion: 2
-        x: 3000
+        x: 3200
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -340,41 +298,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8d03fedc844182e48bd0499a98e542f5
-      internalID: 434568225
+      spriteID: dba50bb36099f834cb45266e2a9f0511
+      internalID: 247611585
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_11
-      rect:
-        serializedVersion: 2
-        x: 3300
-        y: 0
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5217b1e0a97c086438fba67aefe5c85b
-      internalID: -171285902
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: spritesheet clic_12
+      name: spritesheet clic-bigger_9
       rect:
         serializedVersion: 2
         x: 3600
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -382,20 +319,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a58cf6cbb85dfa64c857bafd606d582d
-      internalID: 595281971
+      spriteID: 8a1b6a6afe6ebcd4f91f9404ed84055a
+      internalID: -1159188982
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_13
+      name: spritesheet clic-bigger_10
       rect:
         serializedVersion: 2
-        x: 3900
+        x: 4000
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -403,20 +340,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 78c4fff20c5b2ae47bdd1c205501959e
-      internalID: -537376611
+      spriteID: 192499b769e1c1544b2f5c0bb9c40cf1
+      internalID: 1365949348
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_14
+      name: spritesheet clic-bigger_11
       rect:
         serializedVersion: 2
-        x: 4200
+        x: 4400
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -424,41 +361,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 085e1a7010baa7b4bbdd1ad45950a030
-      internalID: -815023445
+      spriteID: da8c9f1188b9dfb4882bc0ff98de2930
+      internalID: -213266424
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet clic_15
-      rect:
-        serializedVersion: 2
-        x: 4500
-        y: 0
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 90e74b141cc1cd74485845138d02ca61
-      internalID: -1495494792
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: spritesheet clic_16
+      name: spritesheet clic-bigger_12
       rect:
         serializedVersion: 2
         x: 4800
         y: 0
-        width: 300
-        height: 300
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -466,8 +382,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8231bc812f9244f4ab743f3df4b120f8
-      internalID: -1289482457
+      spriteID: fcb4d19c2f200e941ae420561ec96719
+      internalID: 1857459341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet clic-bigger_13
+      rect:
+        serializedVersion: 2
+        x: 5200
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7fe83cf0a5183c40b12c2ed56396387
+      internalID: -616286476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet clic-bigger_14
+      rect:
+        serializedVersion: 2
+        x: 5600
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4eb2b2f3250554d44823a22561c26da4
+      internalID: 966496020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet clic-bigger_15
+      rect:
+        serializedVersion: 2
+        x: 6000
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51dc11ccd53a0b54dbb8aae10ace4091
+      internalID: 2105196877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet clic-bigger_16
+      rect:
+        serializedVersion: 2
+        x: 6400
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5061c52448cd5e243a22cfafae160c91
+      internalID: -1287756592
       vertices: []
       indices: 
       edges: []
@@ -475,7 +475,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: ad890735dc06441409b21aa32eafb3cd
+    spriteID: 6bdb1f5cc6c83aa46a3c70015ec6c01c
     internalID: 0
     vertices: []
     indices: 
@@ -483,23 +483,23 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      spritesheet clic_4: 861645561
-      spritesheet clic_8: 1645609669
-      spritesheet clic_11: -171285902
-      spritesheet clic_6: 1129809112
-      spritesheet clic_15: -1495494792
-      spritesheet clic_13: -537376611
-      spritesheet clic_14: -815023445
-      spritesheet clic_16: -1289482457
-      spritesheet clic_5: 681176082
-      spritesheet clic_3: -2043966905
-      spritesheet clic_9: -1574681409
-      spritesheet clic_2: 330612288
-      spritesheet clic_12: 595281971
-      spritesheet clic_1: -1371218282
-      spritesheet clic_10: 434568225
-      spritesheet clic_0: -219022842
-      spritesheet clic_7: -1017329174
+      spritesheet clic-bigger_16: -1287756592
+      spritesheet clic-bigger_5: -1003192943
+      spritesheet clic-bigger_8: 247611585
+      spritesheet clic-bigger_13: -616286476
+      spritesheet clic-bigger_0: 981740346
+      spritesheet clic-bigger_4: 1542909836
+      spritesheet clic-bigger_11: -213266424
+      spritesheet clic-bigger_6: -1060947332
+      spritesheet clic-bigger_1: -35173853
+      spritesheet clic-bigger_9: -1159188982
+      spritesheet clic-bigger_10: 1365949348
+      spritesheet clic-bigger_14: 966496020
+      spritesheet clic-bigger_2: 1809006449
+      spritesheet clic-bigger_3: 389320332
+      spritesheet clic-bigger_15: 2105196877
+      spritesheet clic-bigger_12: 1857459341
+      spritesheet clic-bigger_7: 150740599
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
