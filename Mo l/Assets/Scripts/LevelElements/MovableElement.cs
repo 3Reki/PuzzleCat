@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 using PuzzleCat.Utils;
 using PuzzleCat.Visuals;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 namespace PuzzleCat.LevelElements
 {
@@ -95,8 +100,67 @@ namespace PuzzleCat.LevelElements
             objectTransform.position = GetWorldPosition(coordinates);
             CurrentSurface = newSurface;
         }
-        
-        
+
+        public void PositionIndicator()
+        {
+            var onGround = new List<MovableElement>();
+            foreach (MovableElement linkedMovable in linkedMovables)
+            {
+                if (CurrentRoom == linkedMovable.CurrentRoom && CurrentSurface == linkedMovable.CurrentSurface &&
+                    CurrentRoom.IsInContact(linkedMovable.RoomGridPosition, linkedMovable.CurrentSurface))
+                {
+                    onGround.Add(linkedMovable);
+                }
+            }
+
+            var (movableElement1, movableElement2) = FindFarthestElements(onGround);
+            
+            float distX = (movableElement2.objectTransform.position - movableElement1.objectTransform.position)
+                    .ApplyMask(CurrentSurface.Up());
+            float distY = (movableElement2.objectTransform.position - movableElement1.objectTransform.position)
+                    .ApplyMask(CurrentSurface.Right());
+            
+            distX = Mathf.Abs(Mathf.Round(distX));
+            distY = Mathf.Abs(Mathf.Round(distY));
+
+            DirectionIndicator.SetTransform(
+                (movableElement1.GroundedPosition() + movableElement2.GroundedPosition()) / 2, 
+                Quaternion.LookRotation(CurrentSurface.GetNormal()), 
+                new Vector3(distX + 1, distY + 4, 1), new Vector3(distY + 1, distX + 4, 1));
+        }
+
+
+
+        private static (MovableElement, MovableElement) FindFarthestElements(List<MovableElement> movableElements)
+        {
+            float maxDistance = 0;
+            (MovableElement, MovableElement) elements = (movableElements[0], movableElements[0]);
+            for (var i = 0; i < movableElements.Count; i++)
+            {
+                for (var j = 1; j < movableElements.Count; j++)
+                {
+                    if (!((movableElements[i].objectTransform.position - movableElements[j].objectTransform.position)
+                        .magnitude > maxDistance)) continue;
+                    
+                    elements = (movableElements[i], movableElements[j]);
+                    maxDistance = (movableElements[i].objectTransform.position -
+                                   movableElements[j].objectTransform.position).magnitude;
+                }
+            }
+
+            return elements;
+        }
+
+        private Vector3 GroundedPosition()
+        {
+            return CurrentSurface switch
+            {
+                Surface.Floor => WorldGridPosition + new Vector3(0.5f, 0.01f, 0.5f),
+                Surface.SideWall => WorldGridPosition + new Vector3(0.01f, 0.5f, 0.5f),
+                Surface.BackWall => WorldGridPosition + new Vector3(0.5f, 0.5f, 0.99f),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
 
         private bool CanMove()
         {

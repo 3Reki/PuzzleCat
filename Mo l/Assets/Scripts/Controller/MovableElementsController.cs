@@ -46,6 +46,7 @@ namespace PuzzleCat.Controller
                 if (!_forwardMovementFunction()) return false;
                 
                 _currentObjectPosition += _currentObjectDirection;
+                _selectedMovableElement.PositionIndicator();
                 if (_initialObjectPosition == _currentObjectPosition)
                 {
                     _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
@@ -59,6 +60,7 @@ namespace PuzzleCat.Controller
                 if (!_backwardMovementFunction()) return false;
                 
                 _currentObjectPosition -= _currentObjectDirection;
+                _selectedMovableElement.PositionIndicator();
                 if (_initialObjectPosition == _currentObjectPosition)
                 {
                     _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
@@ -76,16 +78,16 @@ namespace PuzzleCat.Controller
                 _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveForward();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveBackward();
-                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(true);
-                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(false);
+                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(false);
+                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(true);
             }
             else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
             {
                 _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveRight();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveLeft();
-                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(false);
-                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(true);
+                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(true);
+                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(false);
             }
         }
 
@@ -128,6 +130,7 @@ namespace PuzzleCat.Controller
             invisibleQuad.SetActive(true);
             invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
+            _selectedMovableElement.PositionIndicator();
             _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
         }
 
