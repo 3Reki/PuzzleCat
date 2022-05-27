@@ -1,4 +1,3 @@
-using System;
 using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine.AI;
 
 namespace PuzzleCat.LevelElements
 {
-    public class Cat : RoomElement, IMovable
+    public class Cat : RoomElement
     {
         public delegate void OnArrival();
 
@@ -46,6 +45,11 @@ namespace PuzzleCat.LevelElements
 
         public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
+        
+        public static void EndLevel()
+        {
+            GameManager.Instance.UpdateGameState(GameManager.GameState.End);
+        }
 
         public bool IsUnderCat(RoomElement roomElement)
         {
@@ -57,49 +61,59 @@ namespace PuzzleCat.LevelElements
             catAnimation.SetIdleDown(idleState);
         }
 
-        public void TryMovingTo(Vector3Int worldGridDestination)
+        public bool TryMovingTo(Vector3Int worldGridDestination)
         {
             if (!_canMove)
-                return;
+                return false;
 
             _agentDestination = worldGridDestination + _offset;
             _path = new NavMeshPath();
 
             if (!playerAgent.CalculatePath(_agentDestination, _path) || _path.status != NavMeshPathStatus.PathComplete)
             {
-                return;
+                return false;
             }
 
             Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
+            onArrival = () => { };
 
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
+                return true;
             }
+
+            return false;
+        }
+        
+        public override void MoveTo(Vector3Int destination)
+        {
+            MoveTo(destination + _offset, 0);
+        }
+        
+        public void MoveTo(Vector3 destination, float aimedDistance)
+        {
+            playerAgent.stoppingDistance = aimedDistance;
+            MoveTo(destination);
         }
 
-        public void MoveTo(Vector3Int coordinates)
+        private void MoveTo(Vector3 position)
         {
-            MoveTo(coordinates + _offset);
-        }
+            if (position != _agentDestination)
+            {
+                _agentDestination = position;
+                playerAgent.CalculatePath(_agentDestination, _path);
 
-        public void MoveTo(Vector3 position)
-        {
-            if (position == _agentDestination)
-            {
-                playerAgent.SetPath(_path);
-            }
-            else
-            {
-                playerAgent.SetDestination(position);
             }
             
-            _lookAtDirection = position - myTransform.position;
+            playerAgent.SetPath(_path);
+            playerAgent.Move(position.normalized * Time.deltaTime);
+            _isMoving = true;
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
         {
-            transform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             catAnimation.StartTeleportAnimation();
             _warpDestination = GetWorldPosition(coordinates);
             _lookAtDirection = exitDirection;
@@ -111,12 +125,18 @@ namespace PuzzleCat.LevelElements
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
-            transform.rotation = Quaternion.LookRotation(_lookAtDirection);
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, currentSurface.GetNormal());
         }
 
         public void EndTeleport()
         {
             _canMove = true;
+        }
+
+        public void JumpInMirror()
+        {
+            myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
+            catAnimation.JumpInMirror();
         }
 
         private void HandleJump()
@@ -126,10 +146,10 @@ namespace PuzzleCat.LevelElements
                 if (!_isGrounded) return;
 
                 _isGrounded = false;
-                _lookAtDirection = playerAgent.steeringTarget - myTransform.position;
-                myTransform.rotation = Quaternion.LookRotation(_lookAtDirection);
+                _canMove = false;
+                _lookAtDirection = myTransform.InverseTransformDirection(playerAgent.steeringTarget - myTransform.position);
                 
-                if (_lookAtDirection.ApplyMask(currentSurface.GetNormal()) > 0)
+                if (_lookAtDirection.y > 0)
                 {
                     catAnimation.StartJumpingUp();
                 }
@@ -137,26 +157,32 @@ namespace PuzzleCat.LevelElements
                 {
                     catAnimation.StartJumpingDown();
                 }
-
                 
+                _lookAtDirection.y = 0;
+                _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
+                myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             }
             else if (!_isGrounded)
             {
                 _isGrounded = true;
+                _canMove = true;
                 catAnimation.StopJumping();
             }
         }
 
         private void HandleMovementChecking()
         {
-            if (playerAgent.remainingDistance > 0)
+            if (playerAgent.remainingDistance > playerAgent.stoppingDistance)
             {
-                _isMoving = true;
                 return;
             }
             
             if (!_isMoving) return;
-            
+
+            playerAgent.velocity = Vector3.zero;
+            _lookAtDirection = myTransform.InverseTransformDirection(playerAgent.destination - myTransform.position);
+            _lookAtDirection.y = 0;
+            _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
             _isMoving = false;
 
             if (onArrival != null)

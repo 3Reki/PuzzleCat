@@ -4,19 +4,21 @@ namespace PuzzleCat.Controller
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private InputManager inputManager;
-        [SerializeField] private CameraController cameraController;
-        [SerializeField] private MovableElementsController movableElementsController;
-        [SerializeField] private CatController catController;
-        [SerializeField] private PortalPlacementController portalPlacementController;
-        [SerializeField] private float holdTouchThreshold = 0.3f;
-        [SerializeField] private float dragDistance = 3;
-        
-        private Vector2 _touchInitialPosition;
-        private float _touchStartTime;
+        [SerializeField] protected InputManager inputManager;
+        [SerializeField] protected CameraController cameraController;
+        [SerializeField] protected MovableElementsController movableElementsController;
+        [SerializeField] protected CatController catController;
+        [SerializeField] protected PortalPlacementController portalPlacementController;
+        [SerializeField] protected FurnitureSelectionIndicator furnitureSelectionIndicator;
+        [SerializeField] protected float holdTouchThreshold = 0.3f;
+        [SerializeField] protected float dragDistance = 3;
+
+        protected Vector2 TouchInitialPosition;
+        protected float TouchStartTime;
+        protected bool TouchMoved;
         
 
-        private void HandleSingleTouch()
+        protected void HandleSingleTouch()
         {
             switch (inputManager.FirstTouchPhase)
             {
@@ -41,22 +43,33 @@ namespace PuzzleCat.Controller
 
         private void HandleTouchStart()
         {
-            _touchInitialPosition = inputManager.FirstTouchPosition;
-            _touchStartTime = Time.time;
+            TouchInitialPosition = inputManager.FirstTouchPosition;
+            TouchStartTime = Time.time;
+            TouchMoved = false;
+            
+            if (movableElementsController.CanEnterFurnitureMode())
+            {
+                furnitureSelectionIndicator.Play(TouchInitialPosition + new Vector2(-0.12f, 0.12f) * Screen.width, holdTouchThreshold);
+            }
         }
 
-        private void HandleTouchStationary()
+        protected virtual void HandleTouchStationary()
         {
             if (GameManager.Instance.State is GameManager.GameState.PortalMode 
                 or GameManager.GameState.FurnitureMovement or GameManager.GameState.CameraMovement) return;
-            if (!(Time.time - _touchStartTime > holdTouchThreshold)) return;
+            if (!(Time.time - TouchStartTime > holdTouchThreshold)) return;
             
             GameManager.Instance.UpdateGameState(GameManager.GameState.FurnitureMovement);
         }
 
-        private void HandleTouchMoved()
+        protected virtual void HandleTouchMoved()
         {
-            if ((inputManager.FirstTouchPosition - _touchInitialPosition).magnitude < dragDistance) return;
+            if (!TouchMoved)
+            {
+                if ((inputManager.FirstTouchPosition - TouchInitialPosition).magnitude < dragDistance) return;
+                TouchMoved = true;
+                furnitureSelectionIndicator.Stop();
+            }
 
             if (GameManager.Instance.State == GameManager.GameState.FurnitureMovement)
             {
@@ -72,12 +85,13 @@ namespace PuzzleCat.Controller
             }
         }
 
-        private void HandleTouchEnd()
+        protected virtual void HandleTouchEnd()
         {
             switch (GameManager.Instance.State)
             {
                 case GameManager.GameState.PlayerMovement:
                     catController.HandlePlayerMovement();
+                    furnitureSelectionIndicator.Stop();
                     break;
                 case GameManager.GameState.PortalMode:
                     portalPlacementController.HandlePortalPlacement();
@@ -96,6 +110,9 @@ namespace PuzzleCat.Controller
 
         private void Update()
         {
+            if (GameManager.Instance.State is GameManager.GameState.Menu or GameManager.GameState.End) 
+                return;
+
             if (!inputManager.TwoTouchesDone && inputManager.TouchCount == 1)
             {
                 HandleSingleTouch();

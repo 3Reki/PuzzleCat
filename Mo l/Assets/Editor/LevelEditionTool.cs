@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PuzzleCat.Controller;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
+using PuzzleCat.Visuals;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.Events;
-using UnityEditor.Rendering;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
@@ -23,13 +24,28 @@ namespace PuzzleCat.Editor
         {
             CreateAndBakeNavMeshes();
             CreateGameManagerAndControllers();
+            UpdatePlayerController();
+            UpdateCatIndicator();
             CreateUI();
             UpdateRoomAndRoomElements();
-            //UpdateCatPortals();
 
             Scene scene = SceneManager.GetActiveScene();
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
+        }
+
+        private static void UpdateCatIndicator()
+        {
+            foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
+                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")) && go.CompareTag("Indicator"))
+                .Where(gameObject => gameObject.scene.name != null))
+            {
+                DestroyImmediate(gameObject);
+            }
+
+            var movementIndicatorSO = new SerializedObject(FindObjectOfType<CatController>());
+            movementIndicatorSO.FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
+            movementIndicatorSO.ApplyModifiedProperties();
         }
 
         private static void CreateAndBakeNavMeshes()
@@ -51,9 +67,9 @@ namespace PuzzleCat.Editor
 
         private static void CreateGameManagerAndControllers()
         {
-            foreach (GameManager gameManager in FindObjectsOfType<GameManager>())
+            if (FindObjectOfType<GameManager>())
             {
-                DestroyImmediate(gameManager.gameObject);
+                return;
             }
             
             var manager = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Game Manager.prefab")).GetComponent<GameManager>();
@@ -66,7 +82,7 @@ namespace PuzzleCat.Editor
             Transform controllers = manager.transform.GetChild(0);
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
-            serializedObjects[1].FindProperty("catDirectionIndicator").objectReferenceValue = CreateCatIndicator();
+            serializedObjects[1].FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));
             serializedObjects[2].FindProperty("invisibleQuad").objectReferenceValue = CreateInvisibleQuad();
@@ -96,10 +112,82 @@ namespace PuzzleCat.Editor
                 FindObjectOfType<PortalPlacementController>();
             menuManagerSO.ApplyModifiedProperties();
 
+            Transform[] portalParents = GetPortalsParentList();
+            MenuManager menuManager = FindObjectOfType<MenuManager>();
+            if (portalParents.Length == 0)
+            {
+                menuManager.transform.GetChild(1).gameObject.SetActive(false);
+                menuManager.portalToggles = Array.Empty<Toggle>();
+            } 
+            else
+            {
+                menuManager.transform.GetChild(1).gameObject.SetActive(true);
+
+                menuManager.portalToggles = new Toggle[portalParents.Length];
+                GameObject[] portalTogglesGo = new GameObject[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    portalTogglesGo[i] = menuManager.transform.GetChild(3).GetChild(0).GetChild(i).gameObject;
+                }
+
+                int greyOffset = 0;
+                if (portalParents.Any(parent => parent.GetChild(0).GetComponent<Portal>().GreyPortal))
+                {
+                    portalTogglesGo[0].SetActive(true);
+                    menuManager.portalToggles[^1] = portalTogglesGo[0].GetComponent<Toggle>();
+                    greyOffset = 1;
+                }
+                else
+                {
+                    portalTogglesGo[0].SetActive(false);
+                }
+
+                for (int i = 0; i < portalParents.Length - greyOffset; i++)
+                {
+                    portalTogglesGo[i + 1].SetActive(true);
+                    RectTransform toggleRectTransform = (RectTransform) portalTogglesGo[i + 1].transform;
+                    
+                    toggleRectTransform.anchorMin = new Vector2(
+                        0.046f + 0.225f * (i + greyOffset), toggleRectTransform.anchorMin.y);
+                    
+                    toggleRectTransform.anchorMax = new Vector2(
+                        0.046f + 0.225f * (i + 1 + greyOffset), toggleRectTransform.anchorMax.y);
+                    
+                    toggleRectTransform.anchoredPosition = Vector2.zero;
+                    menuManager.portalToggles[i] = portalTogglesGo[i + 1].GetComponent<Toggle>();
+                }
+
+                for (int i = portalParents.Length + 1 - greyOffset; i < 4; i++)
+                {
+                    portalTogglesGo[i].SetActive(false);
+                }
+                
+            }
+            PrefabUtility.RecordPrefabInstancePropertyModifications(menuManager);
+
+            PortalPlacementController portalPlacement = FindObjectOfType<PortalPlacementController>();
+
+            portalPlacement.PortalCountTexts = new TextMeshProUGUI[4];
+            for (int i = 0; i < 4; i++)
+            {
+                portalPlacement.PortalCountTexts[i] = menuManager.transform.GetChild(3).GetChild(0).GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+            }
+            PrefabUtility.RecordPrefabInstancePropertyModifications(portalPlacement);
+
             if (FindObjectOfType<EventSystem>() == null)
             {
                 new GameObject("EventSystem").AddComponent<EventSystem>().AddComponent<StandaloneInputModule>();
             }
+        }
+        
+        private static void UpdatePlayerController()
+        {
+            SerializedObject playerControllerSO = new SerializedObject(FindObjectOfType<PlayerController>());
+            playerControllerSO.FindProperty("furnitureSelectionIndicator").objectReferenceValue =
+                FindObjectOfType<FurnitureSelectionIndicator>();
+            playerControllerSO.FindProperty("holdTouchThreshold").floatValue = 0.3f;
+
+            playerControllerSO.ApplyModifiedProperties();
         }
 
         private static Transform[] GetPortalsParentList()
@@ -108,7 +196,7 @@ namespace PuzzleCat.Editor
             
             foreach (Portal portal in Resources.FindObjectsOfTypeAll<Portal>())
             {
-                if (portal.gameObject.scene.name == null || portal.catPortal)
+                if (portal.gameObject.scene.name == null || portal.CatPortal)
                 {
                     continue;
                 }
@@ -138,22 +226,21 @@ namespace PuzzleCat.Editor
             return quad;
         }
 
-        private static Transform CreateCatIndicator()
+        private static PlayerMovementIndicator CreateCatIndicator()
         {
-            var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            sphere.layer = LayerMask.NameToLayer("Invisible");
-            sphere.tag = "Indicator";
-            sphere.SetActive(false);
-
-            foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll<GameObject>()
-                .Where(go => Utils.Utils.IsInLayerMask(go, 1 << LayerMask.NameToLayer("Invisible")) && go.CompareTag("Indicator"))
-                .Where(gameObject => gameObject.scene.name != null && gameObject != sphere))
+            PlayerMovementIndicator indicator = Resources.FindObjectsOfTypeAll<PlayerMovementIndicator>().FirstOrDefault(indicator => indicator.gameObject.scene.name != null);
+            if (indicator != null)
             {
-                DestroyImmediate(gameObject);
+                return indicator;
             }
 
-            return sphere.transform;
+            GameObject indicatorGO = (GameObject) PrefabUtility.InstantiatePrefab(
+                AssetDatabase.LoadAssetAtPath<GameObject>(
+                    "Assets/Art/Sprites/UI_Sprites/UI_InGame/UI_Shader/ICON_MovementIndicator.prefab"));
+            
+            indicatorGO.SetActive(false);
+
+            return indicatorGO.GetComponent<PlayerMovementIndicator>();
         }
 
         private static void UpdateRoomAndRoomElements()
@@ -191,34 +278,6 @@ namespace PuzzleCat.Editor
                         .SetAsSingleMovableArray(movable.FindProperty("linkedMovables").GetAsSingleMovableArray());
                     serializedObject.ApplyModifiedProperties();
                 }
-            }
-        }
-
-        private static void UpdateCatPortals()
-        {
-            foreach (SerializedObject catPortal in FindObjectsOfType<Portal>()
-                .Select(portal => new SerializedObject(portal))
-                .Where(portal => portal.FindProperty("catPortal").boolValue))
-            {
-                Vector3 rotation = ((Transform) catPortal.FindProperty("myTransform").objectReferenceValue).rotation
-                    .eulerAngles;
-                if (rotation.x % 360 <= 90.1f && rotation.x % 360 > 89.9f)
-                {
-                    catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.Floor);
-                    catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(1, 0, 0);
-                }
-                else if (rotation.y % 360 <= 270.1f && rotation.y % 360 > 269.9f)
-                {
-                    catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.SideWall);
-                    catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(0, 0, 1);
-                }
-                else
-                {
-                    catPortal.FindProperty("ImpactedSurface").SetEnumValue(Surface.BackWall);
-                    catPortal.FindProperty("arrivalPositionOffset").vector3IntValue = new Vector3Int(-1, 0, 0);
-                }
-
-                catPortal.ApplyModifiedProperties();
             }
         }
     }

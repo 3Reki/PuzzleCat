@@ -56,15 +56,18 @@ namespace PuzzleCat
 
         private void Awake()
         {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-            }
-
             Instance = this;
             State = GameState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.onMovement += UpdateNavMeshes;
+#if UNITY_EDITOR
+            new GameObject("Game Data").AddComponent<GameData>();
+#endif
+        }
+
+        private void OnDestroy()
+        {
+            MovableElement.onMovement -= UpdateNavMeshes;
         }
 
         public enum GameState
@@ -73,7 +76,8 @@ namespace PuzzleCat
             FurnitureMovement,
             PlayerMovement,
             CameraMovement,
-            Menu
+            Menu,
+            End
         }
     }
 }

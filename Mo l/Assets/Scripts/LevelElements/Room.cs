@@ -53,7 +53,7 @@ namespace PuzzleCat.LevelElements
 			return null;
 		}
 
-		public bool CanMoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
+		public bool CanMoveOnCell(RoomElement movableElement, Vector3Int coordinates, Surface surface)
 		{
 			if (coordinates.x < 0 || coordinates.x >= gridSize.x ||
 			    coordinates.y < 0 || coordinates.y >= gridSize.y ||
@@ -77,7 +77,7 @@ namespace PuzzleCat.LevelElements
 			return true;
 		}
 
-		public void MoveOnCell(IMovable movableElement, Vector3Int coordinates, Surface surface)
+		public void MoveOnCell(RoomElement movableElement, Vector3Int coordinates, Surface surface)
 		{
 			RoomElement element = GetElementAt(coordinates, surface);
 			if (element == null)
@@ -86,7 +86,10 @@ namespace PuzzleCat.LevelElements
 				return;
 			}
 
-			element.Interact(movableElement);
+			if (element.CanInteract(movableElement))
+			{
+				element.Interact(movableElement);
+			}
 		}
 
 		public void AddRoomElement(RoomElement roomElement)
@@ -114,11 +117,11 @@ namespace PuzzleCat.LevelElements
 			return null;
 		}
 
-		private RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
+		public RoomElement GetElementAt(Vector3Int roomCoordinates, Surface surface)
 		{
 			foreach (RoomElement element in roomElements)
 			{
-				if ((element.ImpactedSurface == surface || element.ImpactedSurface == Surface.All)
+				if ((element.ImpactedSurface == surface)
 				    && element.RoomGridPosition.x == roomCoordinates.x
 				    && element.RoomGridPosition.y == roomCoordinates.y
 				    && element.RoomGridPosition.z == roomCoordinates.z)

@@ -45,11 +45,11 @@ namespace PuzzleCat.Editor
             Vector3Int gridSize = _gridSize.vector3IntValue;
                 
             room.transform.position = _gridWorldPosition.vector3IntValue + new Vector3(gridSize.x * 0.5f, 0, gridSize.z * 0.5f);
-            room.transform.GetChild(1).localPosition = new Vector3(0, gridSize.y * 0.5f, gridSize.z * 0.5f);
-            room.transform.GetChild(2).localPosition = new Vector3(-gridSize.x * 0.5f, gridSize.y * 0.5f, 0);
+            room.transform.GetChild(1).localPosition = new Vector3(-0.1f, gridSize.y * 0.5f - 0.1f, gridSize.z * 0.5f + 0.2f);
+            room.transform.GetChild(2).localPosition = new Vector3(-gridSize.x * 0.5f - 0.2f, gridSize.y * 0.5f - 0.1f, 0.1f);
             room.transform.GetChild(0).localScale = new Vector3(gridSize.x, gridSize.z, 1);
-            room.transform.GetChild(1).localScale = new Vector3(gridSize.x, gridSize.y, 1);
-            room.transform.GetChild(2).localScale = new Vector3(gridSize.z, gridSize.y, 1);
+            room.transform.GetChild(1).localScale = new Vector3(gridSize.x + 0.2f, gridSize.y + 0.2f, 1);
+            room.transform.GetChild(2).localScale = new Vector3(gridSize.z + 0.2f, gridSize.y + 0.2f, 1);
             
             
         }

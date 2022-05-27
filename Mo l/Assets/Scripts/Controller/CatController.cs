@@ -1,4 +1,4 @@
-using System.Collections;
+using PuzzleCat.Visuals;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
@@ -6,31 +6,23 @@ namespace PuzzleCat.Controller
     public class CatController : MonoBehaviour
     {
         [SerializeField] private InputManager inputManager;
-        [SerializeField] private Transform catDirectionIndicator;
-        
+        [SerializeField] private PlayerMovementIndicator movementIndicator;
+
         private RaycastHit _hit;
         
-        public void HandlePlayerMovement()
+        public bool HandlePlayerMovement()
         {
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit, GameManager.Instance.MainCamera, -5, 100f, true, 2)) 
-                return;
+                return false;
             
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
 
-            if (_hit.normal == GameManager.Instance.Cat.transform.up)
-            {
-                GameManager.Instance.Cat.TryMovingTo(gridPoint);
-                
-                catDirectionIndicator.position = _hit.point;
-                catDirectionIndicator.gameObject.SetActive(true);
-                StartCoroutine(DisableIndicator());
-            }
-        }
-        
-        private IEnumerator DisableIndicator()
-        {
-            yield return new WaitForSeconds(0.2f);
-            catDirectionIndicator.gameObject.SetActive(false);
+            if (_hit.normal != GameManager.Instance.Cat.transform.up)
+                return false;
+
+            movementIndicator.Play(_hit.point + _hit.normal * 0.01f, Quaternion.LookRotation(_hit.normal));
+            
+            return GameManager.Instance.Cat.TryMovingTo(gridPoint);
         }
         
         private void OnGameStateChanged(GameManager.GameState state)
