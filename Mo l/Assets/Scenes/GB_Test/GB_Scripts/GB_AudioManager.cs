@@ -5,6 +5,7 @@ namespace PuzzleCat.Scenes.GB_Test.GB_Scripts
 {
     public class GB_AudioManager : MonoBehaviour
     {
+        //using PuzzleCat.Scenes.GB_Test.GB_Scripts;
         //GB_AudioManager.instance.Play("stringName");
 
         public GB_Sound[] sounds;
@@ -35,7 +36,7 @@ namespace PuzzleCat.Scenes.GB_Test.GB_Scripts
 
         private void Update()
         {
-            //à réactiver quand on aura un volumeSlider
+            //à réactiver si on a un volumeSlider
             /*foreach (GB_Sound s in sounds)
             s.source.volume = s.volume * volumeSlider;*/
 
