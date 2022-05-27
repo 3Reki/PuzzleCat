@@ -1,20 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using PuzzleCat.Utils;
 using PuzzleCat.Visuals;
 using UnityEngine;
-using Quaternion = UnityEngine.Quaternion;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 namespace PuzzleCat.LevelElements
 {
     public class MovableElement : RoomElement
     {
         public static OnMovement onMovement;
+        public static MovableElementDirectionIndicator DirectionIndicator;
         public Surface CurrentSurface;
-        public MovableElementDirectionIndicator DirectionIndicator;
 
         [SerializeField] private Transform objectTransform;
         [SerializeField] private MovableElement[] linkedMovables;

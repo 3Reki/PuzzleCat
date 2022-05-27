@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
+using PuzzleCat.Visuals;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
@@ -9,6 +10,7 @@ namespace PuzzleCat.Controller
     public class MovableElementsController : MonoBehaviour
     {
         [SerializeField] private InputManager inputManager;
+        [SerializeField] private MovableElementDirectionIndicator movableElementDirectionIndicator;
         [SerializeField] private GameObject invisibleQuad;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private LayerMask invisibleLayerMask;
@@ -49,7 +51,7 @@ namespace PuzzleCat.Controller
                 _selectedMovableElement.PositionIndicator();
                 if (_initialObjectPosition == _currentObjectPosition)
                 {
-                    _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
+                    movableElementDirectionIndicator.SetAllIndicatorsActive(true);
                 }
                 return true;
 
@@ -63,7 +65,7 @@ namespace PuzzleCat.Controller
                 _selectedMovableElement.PositionIndicator();
                 if (_initialObjectPosition == _currentObjectPosition)
                 {
-                    _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
+                    movableElementDirectionIndicator.SetAllIndicatorsActive(true);
                 }
                 return true;
             }
@@ -78,16 +80,16 @@ namespace PuzzleCat.Controller
                 _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveForward();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveBackward();
-                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(false);
-                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(true);
+                movableElementDirectionIndicator.SetSideIndicatorsActive(false);
+                movableElementDirectionIndicator.SetForwardIndicatorsActive(true);
             }
             else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
             {
                 _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveRight();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveLeft();
-                _selectedMovableElement.DirectionIndicator.SetSideIndicatorsActive(true);
-                _selectedMovableElement.DirectionIndicator.SetForwardIndicatorsActive(false);
+                movableElementDirectionIndicator.SetSideIndicatorsActive(true);
+                movableElementDirectionIndicator.SetForwardIndicatorsActive(false);
             }
         }
 
@@ -117,7 +119,7 @@ namespace PuzzleCat.Controller
             {
                 if (_selectedMovableElement == null) return;
                 
-                _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(false);
+                movableElementDirectionIndicator.SetAllIndicatorsActive(false);
                 _selectedMovableElement = null;
                 invisibleQuad.SetActive(false);
 
@@ -131,12 +133,13 @@ namespace PuzzleCat.Controller
             invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
             _selectedMovableElement.PositionIndicator();
-            _selectedMovableElement.DirectionIndicator.SetAllIndicatorsActive(true);
+            movableElementDirectionIndicator.SetAllIndicatorsActive(true);
         }
 
         private void Awake()
         {
             GameManager.OnGameStateChanged += OnGameStateChanged;
+            MovableElement.DirectionIndicator = movableElementDirectionIndicator;
         }
         
         private void OnDestroy()
