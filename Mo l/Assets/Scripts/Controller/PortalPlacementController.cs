@@ -22,8 +22,7 @@ namespace PuzzleCat.Controller
         {
             if (_portalGroupId == id)
             {
-                _portalGroupId = -1;
-                _portalId = -1;
+                ResetSelectedGroup();
                 return;
             }
             
@@ -77,6 +76,12 @@ namespace PuzzleCat.Controller
                 PortalCountTexts[_portalGroupId - 1].text = $"x{_portalCounts[_portalGroupId - 1]}";
             }
         }
+
+        public void ResetSelectedGroup()
+        {
+            _portalGroupId = -1;
+            _portalId = -1;
+        }
         
         private int FindCurrentPortalIndex(int portalGroupId)
         {
@@ -113,25 +118,10 @@ namespace PuzzleCat.Controller
                 }
             }
         }
-        
-        private void OnGameStateChanged(GameManager.GameState state)
-        {
-            if (state == GameManager.GameState.PortalMode)
-            {
-                _portalGroupId = -1;
-                _portalId = -1;
-            }
-        }
 
         private void Awake()
         {
             ConstructPortalsDictionary();
-            GameManager.OnGameStateChanged += OnGameStateChanged;
-        }
-        
-        private void OnDestroy()
-        {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
 
         private void Start()
