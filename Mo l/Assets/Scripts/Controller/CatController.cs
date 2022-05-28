@@ -24,20 +24,5 @@ namespace PuzzleCat.Controller
             
             return GameManager.Instance.Cat.TryMovingTo(gridPoint);
         }
-        
-        private void OnGameStateChanged(GameManager.GameState state)
-        {
-            GameManager.Instance.Cat.SetIdle(state == GameManager.GameState.PortalMode);
-        }
-        
-        private void Awake()
-        {
-            GameManager.OnGameStateChanged += OnGameStateChanged;
-        }
-        
-        private void OnDestroy()
-        {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
-        }
     }
 }

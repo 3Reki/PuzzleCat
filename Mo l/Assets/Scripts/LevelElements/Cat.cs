@@ -56,11 +56,6 @@ namespace PuzzleCat.LevelElements
             return roomElement.WorldGridPosition == WorldGridPosition - currentSurface.GetNormal();
         }
 
-        public void SetIdle(bool idleState)
-        {
-            catAnimation.SetIdleDown(idleState);
-        }
-
         public bool TryMovingTo(Vector3Int worldGridDestination)
         {
             if (!_canMove)
@@ -80,6 +75,7 @@ namespace PuzzleCat.LevelElements
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
+                catAnimation.GetUp();
                 return true;
             }
 

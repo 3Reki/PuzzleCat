@@ -1,3 +1,4 @@
+using System.Collections;
 using PuzzleCat.LevelElements;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,6 +10,7 @@ namespace PuzzleCat.Controller
         [SerializeField] private Cat catController;
         [SerializeField] private NavMeshAgent playerAgent;
         [SerializeField] private Animator animator;
+        [SerializeField] private float timeBeforeIdleDown;
         [SerializeField] private float jumpSpeed;
 
         private static readonly int _speed = Animator.StringToHash("Speed");
@@ -16,11 +18,19 @@ namespace PuzzleCat.Controller
         private static readonly int _teleport = Animator.StringToHash("Teleport");
         private static readonly int _idleDown = Animator.StringToHash("IdleDown");
         private static readonly int _endMirrorReached = Animator.StringToHash("EndMirrorReached");
+        private WaitForSeconds _idleDownWait;
+        private IEnumerator _idleDownEnumerator;
         private float _defaultSpeed;
 
-        public void SetIdleDown(bool idleState)
+        public void GetUp()
         {
-            animator.SetBool(_idleDown, idleState);
+            animator.SetBool(_idleDown, false);
+            StopAllCoroutines();
+        }
+        
+        public void StartIdleDownTimer()
+        {
+            StartCoroutine(_idleDownEnumerator = IdleDownCoroutine());
         }
 
         public void StartJumpingUp()
@@ -65,9 +75,17 @@ namespace PuzzleCat.Controller
             Cat.EndLevel();
         }
 
+        private IEnumerator IdleDownCoroutine()
+        {
+            yield return _idleDownWait;
+            
+            animator.SetBool(_idleDown, true);
+        }
+
         private void Awake()
         {
             _defaultSpeed = playerAgent.speed;
+            _idleDownWait = new WaitForSeconds(timeBeforeIdleDown);
         }
 
         private void Update()

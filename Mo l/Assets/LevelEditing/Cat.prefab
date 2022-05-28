@@ -1248,6 +1248,7 @@ MonoBehaviour:
   catController: {fileID: 1436702566138972024}
   playerAgent: {fileID: 1436702566138972029}
   animator: {fileID: 5203169396772453177}
+  timeBeforeIdleDown: 10
   jumpSpeed: 1
 --- !u!1 &4864181990570716447
 GameObject:
