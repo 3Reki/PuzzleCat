@@ -125,6 +125,18 @@ namespace PuzzleCat.Utils
 
         #endregion
 
+        public static void CopyValues(this Transform transform, Transform toCopy)
+        {
+            transform.CopyValues(toCopy.position, toCopy.rotation, toCopy.localScale);
+        }
+
+        public static void CopyValues(this Transform transform, Vector3 position, Quaternion rotation, Vector3 localScale)
+        {
+            transform.position = position;
+            transform.rotation = rotation;
+            transform.localScale = localScale;
+        }
+
 #if UNITY_EDITOR
 #region SerializedProperty
 

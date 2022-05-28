@@ -44,6 +44,7 @@ namespace PuzzleCat
             if (GameManager.Instance.State == GameManager.GameState.PortalMode)
             {
                 GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+                portalPlacementController.ResetSelectedGroup();
                 portalSelectionToggleGroup.SetAllTogglesOff();
                 portalMenuImage.rectTransform.DOAnchorPosX(0, .6f).onComplete = () =>
                 {

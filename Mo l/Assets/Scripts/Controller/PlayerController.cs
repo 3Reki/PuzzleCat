@@ -11,11 +11,12 @@ namespace PuzzleCat.Controller
         [SerializeField] protected PortalPlacementController portalPlacementController;
         [SerializeField] protected FurnitureSelectionIndicator furnitureSelectionIndicator;
         [SerializeField] protected float holdTouchThreshold = 0.3f;
-        [SerializeField] protected float dragDistance = 3;
+        [SerializeField] protected float dragDistance = 2.5f;
 
         protected Vector2 TouchInitialPosition;
         protected float TouchStartTime;
         protected bool TouchMoved;
+        private GameManager.GameState _touchStartState;
         
 
         protected void HandleSingleTouch()
@@ -46,8 +47,9 @@ namespace PuzzleCat.Controller
             TouchInitialPosition = inputManager.FirstTouchPosition;
             TouchStartTime = Time.time;
             TouchMoved = false;
+            _touchStartState = GameManager.Instance.State;
             
-            if (movableElementsController.CanEnterFurnitureMode())
+            if (_touchStartState != GameManager.GameState.PortalMode && movableElementsController.CanEnterFurnitureMode())
             {
                 furnitureSelectionIndicator.Play(TouchInitialPosition + new Vector2(-0.12f, 0.12f) * Screen.width, holdTouchThreshold);
             }
@@ -97,6 +99,8 @@ namespace PuzzleCat.Controller
                     portalPlacementController.HandlePortalPlacement();
                     break;
                 case GameManager.GameState.CameraMovement:
+                    GameManager.Instance.UpdateGameState(_touchStartState);
+                    break;
                 case GameManager.GameState.FurnitureMovement:
                     GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
                     break;
