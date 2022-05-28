@@ -12,18 +12,24 @@ namespace PuzzleCat.TutorialAnimations
         [SerializeField] private RectTransform handTransform;
         [SerializeField] private HandAnimation handAnimation;
         [SerializeField] private LayerMask invisibleLayerMask;
-        [SerializeField] private Vector3Int[] desiredTouchPosition;
-        [SerializeField] private Surface[] desiredTouchSurface;
-        [SerializeField] private Vector2 handDestination;
+        [SerializeField] private Action[] authorizedAction;
         [SerializeField] private Vector2[] handPositions;
         [SerializeField] private Quaternion[] handRotations;
+        [SerializeField] private Vector3Int[] desiredTouchPosition;
+        [SerializeField] private int[] desiredPortalGroup;
+        [SerializeField] private Surface[] desiredTouchSurface;
+        [SerializeField] private Vector2[] handDestinations;
         [SerializeField] private float selectionDelay;
+        [SerializeField] private bool horribleBool;
         
         private WaitForSeconds _selectionDelay;
         private IEnumerator _furnitureMovementEnumerator;
         private int _desiredPositionIndex;
+        private int _desiredPortalGroupIndex;
         private int _desiredSurfaceIndex;
         private int _handPositionIndex = -1;
+        private int _handDestinationIndex;
+        private int _elementMovementsLeft;
         private bool _tutorialEnded;
 
         public override bool CanChangePortalMode()
@@ -31,15 +37,16 @@ namespace PuzzleCat.TutorialAnimations
             if (_tutorialEnded)
                 return true;
             
-            return _handPositionIndex is 0 or 4;
+            return authorizedAction[_handPositionIndex] == Action.PortalMode;
         }
 
         public override bool CanSelectPortal(int index)
         {
             if (_tutorialEnded)
                 return true;
-            
-            return _handPositionIndex == 1;
+
+            return authorizedAction[_handPositionIndex] == Action.PortalSelect &&
+                   desiredPortalGroup[_desiredPortalGroupIndex] == index;
         }
 
         public override bool CanPlacePortal()
@@ -47,7 +54,7 @@ namespace PuzzleCat.TutorialAnimations
             if (_tutorialEnded)
                 return true;
 
-            if (_handPositionIndex is not (2 or 3))
+            if (authorizedAction[_handPositionIndex] != Action.PortalPlace)
                 return false;
 
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
@@ -64,13 +71,26 @@ namespace PuzzleCat.TutorialAnimations
             if (_tutorialEnded)
                 return true;
             
-            return _handPositionIndex >= 5;
+            if (authorizedAction[_handPositionIndex] != Action.ElementMove)
+                return false;
+
+            if (!horribleBool)
+                return true;
+            
+            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, -5, 100f, true, 2))
+                return false;
+
+            return hit.point.z < 0;
         }
 
         public override bool CanMoveElement()
         {
             if (_tutorialEnded)
                 return true;
+            
+            if (authorizedAction[_handPositionIndex] != Action.ElementMove)
+                return false;
             
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
                 GameManager.Instance.MainCamera, invisibleLayerMask, 100f, true, 2))
@@ -81,11 +101,17 @@ namespace PuzzleCat.TutorialAnimations
 
         public override bool CanMovePlayer()
         {
-            return _tutorialEnded;
+            if (_tutorialEnded)
+                return true;
+
+            return authorizedAction[_handPositionIndex] == Action.PlayerMove;
         }
 
         public override void OnPortalModeChanged()
         {
+            if (_tutorialEnded)
+                return;
+            
             if (!HasNextPosition())
             {
                 _tutorialEnded = true;
@@ -93,18 +119,23 @@ namespace PuzzleCat.TutorialAnimations
             }
             
             NextPosition();
-            if (_handPositionIndex == 5)
+            handAnimation.PlayAnimation();
+            if (authorizedAction[_handPositionIndex] == Action.ElementMove)
             {
-                handAnimation.OnHalfComplete = MoveFurniture;
-                handAnimation.OnStart = ResetPosition;
+                OnElementMovementStart();
             }
         }
 
         public override void OnPortalSelected()
         {
+            if (_tutorialEnded)
+                return;
+            
             if (HasNextPosition())
             {
                 NextPosition();
+                handAnimation.PlayAnimation();
+                _desiredPortalGroupIndex++;
                 return;
             }
             _tutorialEnded = true;
@@ -112,18 +143,25 @@ namespace PuzzleCat.TutorialAnimations
 
         public override void OnPortalPlaced()
         {
+            if (_tutorialEnded)
+                return;
+            
             if (!HasNextPosition())
             {
                 _tutorialEnded = true;
                 return;
             }
             NextPosition();
+            handAnimation.PlayAnimation();
             _desiredPositionIndex++;
             _desiredSurfaceIndex++;
         }
 
         public override void OnElementMovement()
         {
+            if (_tutorialEnded)
+                return;
+            
             if (!HasNextPosition())
             {
                 _tutorialEnded = true;
@@ -133,10 +171,22 @@ namespace PuzzleCat.TutorialAnimations
             NextPosition();
             handAnimation.OnHalfComplete = MoveFurniture;
             _desiredPositionIndex++;
+            _elementMovementsLeft--;
+            
+            if (authorizedAction[_handPositionIndex] != Action.ElementMove)
+            {
+                handAnimation.OnHalfComplete = null;
+                handAnimation.OnStart = null;
+                _handDestinationIndex++;
+            }
+            
         }
 
         public override void OnElementSelection()
         {
+            if (_tutorialEnded)
+                return;
+            
             handAnimation.StopAnimation();
             handTransform.DOComplete();
             if (_furnitureMovementEnumerator != null)
@@ -147,11 +197,25 @@ namespace PuzzleCat.TutorialAnimations
 
         public override void OnElementDeselection()
         {
-            if (!_tutorialEnded)
+            if (_tutorialEnded) 
+                return;
+            
+            ResetPosition();
+            handAnimation.PlayAnimation();
+        }
+
+        private void OnElementMovementStart()
+        {
+            for (_elementMovementsLeft = 1; _elementMovementsLeft < authorizedAction.Length - _handPositionIndex; _elementMovementsLeft++)
             {
-                ResetPosition();
-                handAnimation.PlayAnimation();
+                if (authorizedAction[_handPositionIndex + _elementMovementsLeft - 1] != Action.ElementMove)
+                {
+                    break;
+                }
             }
+                
+            handAnimation.OnHalfComplete = MoveFurniture;
+            handAnimation.OnStart = ResetPosition;
         }
         
         private void MoveFurniture()
@@ -163,7 +227,7 @@ namespace PuzzleCat.TutorialAnimations
         private IEnumerator MoveFurnitureCoroutine()
         {
             yield return _selectionDelay;
-            handTransform.DOAnchorPos(handDestination, .5f * (desiredTouchPosition.Length - _desiredPositionIndex)).SetEase(Ease.Linear).onComplete = 
+            handTransform.DOAnchorPos(handDestinations[_handDestinationIndex], .5f * _elementMovementsLeft).SetEase(Ease.Linear).onComplete = 
                 handAnimation.ResumeAnimation;
         }
         
