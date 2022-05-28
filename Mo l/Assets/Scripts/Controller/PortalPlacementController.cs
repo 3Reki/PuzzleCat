@@ -30,12 +30,12 @@ namespace PuzzleCat.Controller
             _portalId = FindCurrentPortalIndex(id);
         }
         
-        public void HandlePortalPlacement()
+        public bool HandlePortalPlacement()
         {
             if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
                 GameManager.Instance.MainCamera, -5, 100f, true, 2))
             {
-                return;
+                return false;
             }
                 
             var portal = hit.collider.GetComponent<Portal>();
@@ -48,7 +48,7 @@ namespace PuzzleCat.Controller
                 
                 if (_portalGroupId == -1)
                 {
-                    return;
+                    return false;
                 }
                 
                 _portalId = FindCurrentPortalIndex(_portalGroupId);
@@ -56,25 +56,28 @@ namespace PuzzleCat.Controller
 
             if (_portalGroupId == -1)
             {
-                return;
+                return false;
             }
 
             if (_portalId == -1)
             {
                 Debug.LogWarning("Attempt to place portal when none is available");
-                return;
+                return false;
             }
 
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
             
-            if (_portals[_portalGroupId][_portalId].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
+            if (!_portals[_portalGroupId][_portalId].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
             {
-                _portals[_portalGroupId][_portalId].SetPortal(hit.transform.parent.GetComponent<Room>(), 
-                    gridPoint, hit.normal.ToSurface());
-                _portalId = FindCurrentPortalIndex(_portalGroupId);
-                _portalCounts[_portalGroupId - 1]--;
-                PortalCountTexts[_portalGroupId - 1].text = $"x{_portalCounts[_portalGroupId - 1]}";
+                return false;
             }
+
+            _portals[_portalGroupId][_portalId].SetPortal(hit.transform.parent.GetComponent<Room>(), 
+                gridPoint, hit.normal.ToSurface());
+            _portalId = FindCurrentPortalIndex(_portalGroupId);
+            _portalCounts[_portalGroupId - 1]--;
+            PortalCountTexts[_portalGroupId - 1].text = $"x{_portalCounts[_portalGroupId - 1]}";
+            return true;
         }
 
         public void ResetSelectedGroup()
