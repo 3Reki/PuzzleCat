@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PuzzleCat.Utils;
 using UnityEngine;
@@ -22,6 +23,17 @@ namespace PuzzleCat.LevelElements
 			return coordinates.x >= 0 && coordinates.x < gridSize.x && 
 			       coordinates.y >= 0 && coordinates.y < gridSize.y && 
 			       coordinates.z >= 0 && coordinates.z < gridSize.z;
+		}
+
+		public bool IsInContact(Vector3Int position, Surface elementSurface)
+		{
+			return elementSurface switch
+			{
+				Surface.Floor => position.y == 0,
+				Surface.SideWall => position.x == 0,
+				Surface.BackWall => position.z == gridSize.z - 1,
+				_ => throw new ArgumentOutOfRangeException(nameof(elementSurface), elementSurface, null)
+			};
 		}
 
 		public Vector3Int WorldToRoomCoordinates(Vector3Int worldGridCoordinates)

@@ -178,7 +178,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.21
+  orthographic size: 8.14
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -414,37 +414,37 @@ PrefabInstance:
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70662427
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7075871
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0016592942
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000043298587
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90.149
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 59.142998
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 7078954532310104845, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -59.281006
+      value: -60
       objectReference: {fileID: 0}
     - target: {fileID: 7599453873313178039, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
         type: 3}

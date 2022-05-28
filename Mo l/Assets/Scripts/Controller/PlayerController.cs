@@ -11,7 +11,7 @@ namespace PuzzleCat.Controller
         [SerializeField] protected PortalPlacementController portalPlacementController;
         [SerializeField] protected FurnitureSelectionIndicator furnitureSelectionIndicator;
         [SerializeField] protected float holdTouchThreshold = 0.3f;
-        [SerializeField] protected float dragDistance = 3;
+        [SerializeField] protected float dragDistance = 2.5f;
 
         protected Vector2 TouchInitialPosition;
         protected float TouchStartTime;
