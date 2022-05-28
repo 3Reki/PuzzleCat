@@ -17,5 +17,14 @@ namespace PuzzleCat.TutorialAnimations
         public virtual void OnElementSelection() {}
         public virtual void OnElementDeselection() {}
         public virtual void OnPlayerMovement() {}
+        
+        public enum Action
+        {
+            PortalMode,
+            PortalSelect,
+            PortalPlace,
+            ElementMove,
+            PlayerMove
+        }
     }
 }
