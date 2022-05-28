@@ -62,10 +62,16 @@ namespace PuzzleCat.Controller
                     
                     break;
                 case GameManager.GameState.PortalMode:
-                    if (tutorial.CanPlacePortal())
+                    if (!tutorial.CanPlacePortal())
                     {
-                        portalPlacementController.HandlePortalPlacement();
+                        break;
                     }
+
+                    if (portalPlacementController.HandlePortalPlacement())
+                    {
+                        tutorial.OnPortalPlaced();
+                    }
+                    
                     break;
                 case GameManager.GameState.FurnitureMovement:
                     tutorial.OnElementDeselection();
