@@ -53,8 +53,9 @@ MonoBehaviour:
   movableElementsController: {fileID: 816794181756018610}
   catController: {fileID: 816794181756018609}
   portalPlacementController: {fileID: 816794181756018604}
+  furnitureSelectionIndicator: {fileID: 0}
   holdTouchThreshold: 0.2
-  dragDistance: 3
+  dragDistance: 2.5
 --- !u!114 &816794181756018609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,7 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 816794182855563764}
-  catDirectionIndicator: {fileID: 0}
+  movementIndicator: {fileID: 0}
 --- !u!114 &816794181756018610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +83,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 816794182855563764}
+  movableElementDirectionIndicator: {fileID: 0}
   invisibleQuad: {fileID: 0}
   selectableLayerMask:
     serializedVersion: 2
@@ -101,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da0449f5b727864e9f40ac4c91e8ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PortalCountTexts: []
   inputManager: {fileID: 816794182855563764}
   portalsParentTransform: []
 --- !u!114 &816794181756018611

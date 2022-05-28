@@ -15,6 +15,7 @@ namespace PuzzleCat.TutorialAnimations
         {
             handAnimator.gameObject.SetActive(true);
             handAnimator.enabled = true;
+            handAnimator.speed = 1;
         }
         
         public void StopAnimation()

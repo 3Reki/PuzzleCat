@@ -53,7 +53,7 @@ namespace PuzzleCat.Editor
             if (FindObjectOfType<NavMeshSurface>() == null)
             {
                 PrefabUtility.InstantiatePrefab(
-                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Navigation Meshes.prefab"));
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Navigation Meshes.prefab"));
             }
 
             var navMeshSurfaces = FindObjectsOfType<NavMeshSurface>();
@@ -67,15 +67,15 @@ namespace PuzzleCat.Editor
 
         private static void CreateGameManagerAndControllers()
         {
-            if (FindObjectOfType<GameManager>())
+            var manager = FindObjectOfType<GameManager>();
+            
+            if (manager == null)
             {
-                return;
+                manager = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Game Manager.prefab")).GetComponent<GameManager>();
             }
-            
-            var manager = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/Game Manager.prefab")).GetComponent<GameManager>();
-            var serializedObjects = new List<SerializedObject>();
-            
-            serializedObjects.Add(new SerializedObject(manager));
+
+            var serializedObjects = new List<SerializedObject> {new SerializedObject(manager)};
+
             serializedObjects[0].FindProperty("cat").objectReferenceValue = FindObjectOfType<Cat>();
             serializedObjects[0].FindProperty("mainCamera").objectReferenceValue = Camera.main;
             
@@ -83,9 +83,10 @@ namespace PuzzleCat.Editor
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
             serializedObjects[1].FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
-            
+
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));
             serializedObjects[2].FindProperty("invisibleQuad").objectReferenceValue = CreateInvisibleQuad();
+            serializedObjects[2].FindProperty("movableElementDirectionIndicator").objectReferenceValue = CreateMovementIndicator();
             
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<PortalPlacementController>()));
             serializedObjects[3].FindProperty("portalsParentTransform").SetAsTransformArray(GetPortalsParentList());
@@ -104,7 +105,7 @@ namespace PuzzleCat.Editor
         {
             if (FindObjectOfType<Canvas>() == null)
             {
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LevelEditing/In Game Canvas.prefab"));
+                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/In Game Canvas.prefab"));
             }
 
             var menuManagerSO = new SerializedObject(FindObjectOfType<MenuManager>());
@@ -226,9 +227,21 @@ namespace PuzzleCat.Editor
             return quad;
         }
 
+        private static MovableElementDirectionIndicator CreateMovementIndicator()
+        {
+            if (FindObjectOfType<MovableElementDirectionIndicator>())
+            {
+                return FindObjectOfType<MovableElementDirectionIndicator>();
+            }
+
+            return PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/Prefabs/Movable Furnitures Indicator.prefab")).GetComponent<MovableElementDirectionIndicator>();
+        }
+
         private static PlayerMovementIndicator CreateCatIndicator()
         {
-            PlayerMovementIndicator indicator = Resources.FindObjectsOfTypeAll<PlayerMovementIndicator>().FirstOrDefault(indicator => indicator.gameObject.scene.name != null);
+            PlayerMovementIndicator indicator = Resources.FindObjectsOfTypeAll<PlayerMovementIndicator>()
+                .FirstOrDefault(indicator => indicator.gameObject.scene.name != null);
             if (indicator != null)
             {
                 return indicator;
