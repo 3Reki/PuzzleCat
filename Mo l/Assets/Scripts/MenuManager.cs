@@ -46,6 +46,7 @@ namespace PuzzleCat
                 GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
                 portalSelectionToggleGroup.SetAllTogglesOff();
                 portalPlacementController.ResetSelectedGroup();
+                portalMenuImage.rectTransform.DOComplete();
                 portalMenuImage.rectTransform.DOAnchorPosX(0, .6f).onComplete = () =>
                 {
                     portalMenuImage.enabled = false;
@@ -56,6 +57,7 @@ namespace PuzzleCat
             }
 
             GameManager.Instance.UpdateGameState(GameManager.GameState.PortalMode);
+            portalMenuImage.rectTransform.DOComplete();
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
             portalMenuImage.rectTransform.DOAnchorPosX(-portalMenuImage.rectTransform.rect.width + 23 +
