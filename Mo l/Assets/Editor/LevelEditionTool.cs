@@ -117,18 +117,18 @@ namespace PuzzleCat.Editor
             MenuManager menuManager = FindObjectOfType<MenuManager>();
             if (portalParents.Length == 0)
             {
-                menuManager.transform.GetChild(1).gameObject.SetActive(false);
+                menuManager.transform.Cast<Transform>().First(child => child.CompareTag("PortalBook")).gameObject.SetActive(false);
                 menuManager.portalToggles = Array.Empty<Toggle>();
             } 
             else
             {
-                menuManager.transform.GetChild(1).gameObject.SetActive(true);
-
+                menuManager.transform.Cast<Transform>().First(child => child.CompareTag("PortalBook")).gameObject.SetActive(true);
                 menuManager.portalToggles = new Toggle[portalParents.Length];
                 GameObject[] portalTogglesGo = new GameObject[4];
                 for (int i = 0; i < 4; i++)
                 {
-                    portalTogglesGo[i] = menuManager.transform.GetChild(3).GetChild(0).GetChild(i).gameObject;
+                    portalTogglesGo[i] = GameObject.FindGameObjectWithTag("PortalTogglesParent").transform.GetChild(i)
+                        .gameObject;
                 }
 
                 int greyOffset = 0;
@@ -171,7 +171,8 @@ namespace PuzzleCat.Editor
             portalPlacement.PortalCountTexts = new TextMeshProUGUI[4];
             for (int i = 0; i < 4; i++)
             {
-                portalPlacement.PortalCountTexts[i] = menuManager.transform.GetChild(3).GetChild(0).GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+                portalPlacement.PortalCountTexts[i] = GameObject.FindGameObjectWithTag("PortalTogglesParent").transform
+                    .GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
             }
             PrefabUtility.RecordPrefabInstancePropertyModifications(portalPlacement);
 
