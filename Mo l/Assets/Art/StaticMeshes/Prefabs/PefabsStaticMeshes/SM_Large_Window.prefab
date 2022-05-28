@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2843125117638838390}
   - component: {fileID: 40594462326029500}
   - component: {fileID: 3896819956049129283}
+  - component: {fileID: 5210663535113113554}
   m_Layer: 0
   m_Name: SM_Large_Window
   m_TagString: Untagged
@@ -98,3 +99,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 1
+--- !u!65 &5210663535113113554
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986302952773901673}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.19, y: 0.5715612, z: 2.5259898}
+  m_Center: {x: 0, y: 0.3, z: 1}
