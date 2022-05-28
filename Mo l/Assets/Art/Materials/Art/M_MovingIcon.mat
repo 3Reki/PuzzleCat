@@ -10,7 +10,7 @@ Material:
   m_Name: M_MovingIcon
   m_Shader: {fileID: -6465566751694194690, guid: 96cae557de8bb0548ac6a46ff4a2e11f,
     type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -95,7 +95,7 @@ Material:
     - _Grow: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _Offset: 1.0119553
+    - _Offset: 1.0074463
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -123,6 +123,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   version: 5
