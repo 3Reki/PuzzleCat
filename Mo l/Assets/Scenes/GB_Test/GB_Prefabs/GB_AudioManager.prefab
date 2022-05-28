@@ -157,7 +157,7 @@ MonoBehaviour:
   - audioType: 1
     name: LevelMusic
     clip: {fileID: 8300000, guid: 43ed61d26635b7d4cb03bec9c4b58931, type: 3}
-    volume: 0.7
+    volume: 0.4
     pitch: 1
     loop: 1
     source: {fileID: 0}
