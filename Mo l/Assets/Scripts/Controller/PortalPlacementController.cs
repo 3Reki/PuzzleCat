@@ -42,7 +42,9 @@ namespace PuzzleCat.Controller
 
             if (portal != null)
             {
-                portal.UnsetPortal();
+                int unsetGreyPortals = portal.UnsetPortal() - 1;
+                _portalCounts[0] += unsetGreyPortals;
+                PortalCountTexts[0].text = $"x{_portalCounts[0]}";
                 _portalCounts[portal.Id - 1]++;
                 PortalCountTexts[portal.Id - 1].text = $"x{_portalCounts[portal.Id - 1]}";
                 
