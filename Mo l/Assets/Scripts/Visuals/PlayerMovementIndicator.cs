@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -41,6 +42,11 @@ namespace PuzzleCat.Visuals
             
             indicatorTransform.gameObject.SetActive(false);
             _isPlaying = false;
+        }
+
+        private void OnDestroy()
+        {
+            indicatorMaterial.SetFloat(_offsetProperty, 0);
         }
     }
 }

@@ -154,10 +154,10 @@ namespace PuzzleCat.LevelElements
 			_linkedPortal._rotationOffset = 0;
 		}
 
-		public void UnsetPortal()
+		public int UnsetPortal()
 		{
 			if (CatPortal)
-				return;
+				return 0;
 			
 			CurrentRoom.RemoveRoomElement(this);
 			gameObject.SetActive(false);
@@ -172,6 +172,7 @@ namespace PuzzleCat.LevelElements
 				}
 			}
 
+			int unsetPortalCount = 1;
 			var checkedPortals = new HashSet<Portal>();
 			for (var i = 0; i < _adjacentPortals.Length; i++)
 			{
@@ -184,16 +185,18 @@ namespace PuzzleCat.LevelElements
 					}
 					else
 					{
-						_adjacentPortals[i].UnsetWithoutVerification();
+						unsetPortalCount += _adjacentPortals[i].UnsetWithoutVerification();
 					}
 					_adjacentPortals[i] = null;
 				}
 			}
+
+			return unsetPortalCount;
 		}
 
 
 
-		private void UnsetWithoutVerification()
+		private int UnsetWithoutVerification()
 		{
 			CurrentRoom.RemoveRoomElement(this);
 			gameObject.SetActive(false);
@@ -207,15 +210,19 @@ namespace PuzzleCat.LevelElements
 					_adjacentPortals[i]._adjacentPortals[(i + 2) % 4] = null;
 				}
 			}
+
+			int unsetCount = 1;
 			
 			for (var i = 0; i < _adjacentPortals.Length; i++)
 			{
 				if (_adjacentPortals[i] != null)
 				{
-					_adjacentPortals[i].UnsetWithoutVerification();
+					unsetCount += _adjacentPortals[i].UnsetWithoutVerification();
 					_adjacentPortals[i] = null;
 				}
 			}
+
+			return unsetCount;
 		}
 		
 		private void TryLinkingPortals()
