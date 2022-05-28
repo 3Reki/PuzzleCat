@@ -20,7 +20,7 @@ namespace PuzzleCat.Controller
 
         public void UpdateSelectedPortalGroup(int id)
         {
-            if (_portalGroupId == id)
+            if (_portalGroupId == id) // TODO : change toggles or check if false
             {
                 ResetSelectedGroup();
                 return;
@@ -125,14 +125,6 @@ namespace PuzzleCat.Controller
         private void Awake()
         {
             ConstructPortalsDictionary();
-        }
-
-        private void Start()
-        {
-            if (portalsParentTransform.Length == 0)
-            {
-                // TODO
-            }
         }
     }
 }
