@@ -133,8 +133,7 @@ namespace PuzzleCat
                         var toggleTransform = (RectTransform) portalToggle.transform;
                         toggleTransform.DOScale(1.2f, 0.2f).onComplete =
                             () => portalToggle.transform.DOScale(1f, 0.2f);
-                        selectedPortalCheckmark.rectTransform.anchoredPosition = new Vector2(
-                            toggleTransform.anchoredPosition.x - toggleTransform.sizeDelta.x * 0.5f, 0);
+                        selectedPortalCheckmark.rectTransform.position = toggleTransform.position;
                         selectedPortalCheckmark.DOFade(1, .3f);
                     }
                     else
