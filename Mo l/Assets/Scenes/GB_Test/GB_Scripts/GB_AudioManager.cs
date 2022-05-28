@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace PuzzleCat.Scenes.GB_Test.GB_Scripts
 {
@@ -8,9 +9,12 @@ namespace PuzzleCat.Scenes.GB_Test.GB_Scripts
         //using PuzzleCat.Scenes.GB_Test.GB_Scripts;
         //GB_AudioManager.instance.Play("stringName");
 
+        public AudioMixerGroup musicMixerGroup;
+        public AudioMixerGroup sfxMixerGroup;
+
         public GB_Sound[] sounds;
 
-        public static float volumeSlider;
+        //public static float volumeSlider;
 
         public static GB_AudioManager instance;
 
@@ -31,9 +35,18 @@ namespace PuzzleCat.Scenes.GB_Test.GB_Scripts
                 s.source.volume = s.volume;
                 s.source.pitch = s.pitch;
                 s.source.loop = s.loop;
+
+                switch (s.audioType)
+                {
+                    case GB_Sound.AudioTypes.sfx:
+                        s.source.outputAudioMixerGroup = sfxMixerGroup;
+                        break;
+                    case GB_Sound.AudioTypes.music:
+                        s.source.outputAudioMixerGroup = musicMixerGroup;
+                        break;
+                }
             }
         }
-
         private void Update()
         {
             //à réactiver si on a un volumeSlider
@@ -61,6 +74,21 @@ namespace PuzzleCat.Scenes.GB_Test.GB_Scripts
 
             s.source.Stop();
         }
+        public void SfxMixerVolumeOn()
+        {
+            sfxMixerGroup.audioMixer.SetFloat("Exposed Sfx Volume", 0f);
+        }
+        public void SfxMixerVolumeOff()
+        {
+            sfxMixerGroup.audioMixer.SetFloat("Exposed Sfx Volume", -80f);
+        }
+        public void MusicMixerVolumeOn()
+        {
+            musicMixerGroup.audioMixer.SetFloat("Exposed Music Volume", 0f);
+        }
+        public void MusicMixerVolumeOff()
+        {
+            musicMixerGroup.audioMixer.SetFloat("Exposed Music Volume", -80f);
+        }
     }
 }
-

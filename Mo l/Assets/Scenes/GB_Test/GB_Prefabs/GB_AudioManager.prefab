@@ -44,88 +44,120 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523daca44ec0c1640bbea4ebea6bd755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicMixerGroup: {fileID: -6025719688855963409, guid: f9aceaf8a1d35fd4cafceaff7273304c,
+    type: 2}
+  sfxMixerGroup: {fileID: 5850366230576110463, guid: f9aceaf8a1d35fd4cafceaff7273304c,
+    type: 2}
   sounds:
-  - name: Ok
+  - audioType: 0
+    name: Ok
     clip: {fileID: 8300000, guid: bbdd7c279af3c754c95b5ce6be96f4d6, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: Back
+  - audioType: 0
+    name: Back
     clip: {fileID: 8300000, guid: eff9a4a4e7e5137458ddbf5a32e41ca8, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: Pause
+  - audioType: 0
+    name: Pause
     clip: {fileID: 8300000, guid: a10a3ecb464f4ee40990e5c888ce4ca1, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: PortalBookIn
+  - audioType: 0
+    name: PortalBookIn
     clip: {fileID: 8300000, guid: 9a08c7b18ff545b4382c0037601a4a89, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: PortalBookOut
+  - audioType: 0
+    name: PortalBookOut
     clip: {fileID: 8300000, guid: cfba0aff12ca44c4890e9f228df44d31, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: Click
-    clip: {fileID: 8300000, guid: b903fff9d8a395e47ad2ad4c3384f9dc, type: 3}
+  - audioType: 0
+    name: Click
+    clip: {fileID: 8300000, guid: d5777c7d3461e4e4d80877548b85b837, type: 3}
     volume: 0.5
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: JumpUp
-    clip: {fileID: 8300000, guid: 91ebe249fad84ed4b8411ce80d755087, type: 3}
+  - audioType: 0
+    name: JumpUp
+    clip: {fileID: 8300000, guid: f3f56bb1c116b0f4b8e397a0b981a282, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: TP
-    clip: {fileID: 8300000, guid: 2cbd7c3678823954ebc08f38c47385b0, type: 3}
+  - audioType: 0
+    name: JumpDown
+    clip: {fileID: 8300000, guid: f3f56bb1c116b0f4b8e397a0b981a282, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: Mirror
+  - audioType: 0
+    name: TPIn
+    clip: {fileID: 8300000, guid: 1528bc8d57f92fa45aa3e4e43bb8292a, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - audioType: 0
+    name: TPOut
+    clip: {fileID: 8300000, guid: d039bca73e6c56c47bdea16867ae25c4, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - audioType: 0
+    name: Mirror
     clip: {fileID: 8300000, guid: bfc45e0bce9938d429a6c71ddafaa32a, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: MoveFurniture
+  - audioType: 0
+    name: MoveFurniture
     clip: {fileID: 8300000, guid: ad40940c14c3f8f4f88d6ead8e1f9c7c, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: PortalFurniture
+  - audioType: 0
+    name: PortalFurniture
     clip: {fileID: 8300000, guid: 29b050fdadce74c4e96b190a66f85970, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: LevelWin
+  - audioType: 0
+    name: LevelWin
     clip: {fileID: 8300000, guid: 9d9528c770e439247a6bda3900ef49e7, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: MenuMusic
+  - audioType: 1
+    name: MenuMusic
     clip: {fileID: 8300000, guid: a9105343247fca346ba177ae1cdbeeb6, type: 3}
     volume: 0.2
     pitch: 1
     loop: 1
     source: {fileID: 0}
-  - name: LevelMusic
+  - audioType: 1
+    name: LevelMusic
     clip: {fileID: 8300000, guid: 43ed61d26635b7d4cb03bec9c4b58931, type: 3}
-    volume: 0.2
+    volume: 0.7
     pitch: 1
     loop: 1
     source: {fileID: 0}
