@@ -51,6 +51,11 @@ namespace PuzzleCat.LevelElements
             GameManager.Instance.UpdateGameState(GameManager.GameState.End);
         }
 
+        public void HeadPat()
+        {
+            catAnimation.HeadPat();
+        }
+
         public bool IsUnderCat(RoomElement roomElement)
         {
             return roomElement.WorldGridPosition == WorldGridPosition - currentSurface.GetNormal();

@@ -16,6 +16,12 @@ namespace PuzzleCat.Controller
                 return false;
             
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
+            
+            if (_hit.transform == GameManager.Instance.Cat.transform)
+            {
+                GameManager.Instance.Cat.HeadPat();
+                return false;
+            }
 
             if (_hit.normal != GameManager.Instance.Cat.transform.up)
                 return false;

@@ -19,18 +19,20 @@ namespace PuzzleCat.Controller
         private static readonly int _idleDown = Animator.StringToHash("IdleDown");
         private static readonly int _endMirrorReached = Animator.StringToHash("EndMirrorReached");
         private WaitForSeconds _idleDownWait;
-        private IEnumerator _idleDownEnumerator;
         private float _defaultSpeed;
+        private static readonly int _headPat = Animator.StringToHash("HeadPat");
 
         public void GetUp()
         {
             animator.SetBool(_idleDown, false);
             StopAllCoroutines();
         }
-        
-        public void StartIdleDownTimer()
+
+        public void HeadPat()
         {
-            StartCoroutine(_idleDownEnumerator = IdleDownCoroutine());
+            animator.SetTrigger(_headPat);
+            animator.SetBool(_idleDown, true);
+            StopAllCoroutines();
         }
 
         public void StartJumpingUp()
@@ -58,6 +60,11 @@ namespace PuzzleCat.Controller
         public void JumpInMirror()
         {
             animator.SetTrigger(_endMirrorReached);
+        }
+        
+        public void StartIdleDownTimer()
+        {
+            StartCoroutine(IdleDownCoroutine());
         }
 
         public void Warp()
