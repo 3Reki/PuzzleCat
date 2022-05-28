@@ -16,6 +16,12 @@ namespace PuzzleCat.Controller
                 return false;
             
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
+            
+            if (_hit.transform == GameManager.Instance.Cat.transform)
+            {
+                GameManager.Instance.Cat.HeadPat();
+                return false;
+            }
 
             if (_hit.normal != GameManager.Instance.Cat.transform.up)
                 return false;
@@ -23,21 +29,6 @@ namespace PuzzleCat.Controller
             movementIndicator.Play(_hit.point + _hit.normal * 0.01f, Quaternion.LookRotation(_hit.normal));
             
             return GameManager.Instance.Cat.TryMovingTo(gridPoint);
-        }
-        
-        private void OnGameStateChanged(GameManager.GameState state)
-        {
-            GameManager.Instance.Cat.SetIdle(state == GameManager.GameState.PortalMode);
-        }
-        
-        private void Awake()
-        {
-            GameManager.OnGameStateChanged += OnGameStateChanged;
-        }
-        
-        private void OnDestroy()
-        {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
     }
 }

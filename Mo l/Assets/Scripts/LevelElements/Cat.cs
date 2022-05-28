@@ -51,14 +51,14 @@ namespace PuzzleCat.LevelElements
             GameManager.Instance.UpdateGameState(GameManager.GameState.End);
         }
 
+        public void HeadPat()
+        {
+            catAnimation.HeadPat();
+        }
+
         public bool IsUnderCat(RoomElement roomElement)
         {
             return roomElement.WorldGridPosition == WorldGridPosition - currentSurface.GetNormal();
-        }
-
-        public void SetIdle(bool idleState)
-        {
-            catAnimation.SetIdleDown(idleState);
         }
 
         public bool TryMovingTo(Vector3Int worldGridDestination)
@@ -80,6 +80,7 @@ namespace PuzzleCat.LevelElements
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
+                catAnimation.GetUp();
                 return true;
             }
 
