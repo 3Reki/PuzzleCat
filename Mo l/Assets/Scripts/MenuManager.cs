@@ -18,15 +18,15 @@ namespace PuzzleCat
         public Toggle[] portalToggles;
         [SerializeField] private Sprite portalBookOpen;
         [SerializeField] private Sprite portalBookClosed;
-        
+
         [SerializeField] private GameObject pauseCanvasGameObject;
         [SerializeField] private RectTransform pauseMenuTransform;
-        
+
         [SerializeField] private GameObject endLevelCanvasGameObject;
         [SerializeField] private Image endLevelBackground;
         [SerializeField] private RectTransform endLevelFrame;
         [SerializeField] private Button nextLevelButton;
-        
+
         [SerializeField] private Toggle sfxToggle;
         [SerializeField] private Toggle musicToggle;
 
@@ -34,7 +34,7 @@ namespace PuzzleCat
         private float _menuInitialPositionY;
         private float _backgroundInitialAlpha;
         private bool _menuAlreadyClosed;
-        
+
         public void ResetLevel()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -47,19 +47,21 @@ namespace PuzzleCat
             if (GameManager.Instance.State == GameManager.GameState.PortalMode)
             {
                 GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
-                portalPlacementController.ResetSelectedGroup();
                 GB_AudioManager.instance.Play("PortalBookOut");
                 portalSelectionToggleGroup.SetAllTogglesOff();
+                portalPlacementController.ResetSelectedGroup();
+                portalMenuImage.rectTransform.DOComplete();
                 portalMenuImage.rectTransform.DOAnchorPosX(0, .6f).onComplete = () =>
                 {
                     portalMenuImage.enabled = false;
                     portalButtonImage.sprite = portalBookClosed;
                 };
-                
+
                 return;
             }
 
             GameManager.Instance.UpdateGameState(GameManager.GameState.PortalMode);
+            portalMenuImage.rectTransform.DOComplete();
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
             GB_AudioManager.instance.Play("PortalBookIn");
@@ -115,7 +117,7 @@ namespace PuzzleCat
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             GB_AudioManager.instance.Play("Ok");
         }
-        
+
         public void SwitchSFX(bool state)
         {
             GameData.Instance.sfxOn = state;
@@ -130,7 +132,7 @@ namespace PuzzleCat
                 GB_AudioManager.instance.SfxMixerVolumeOff();
             }
         }
-        
+
         public void SwitchMusic(bool state)
         {
             GameData.Instance.musicOn = state;
@@ -145,7 +147,7 @@ namespace PuzzleCat
                 GB_AudioManager.instance.MusicMixerVolumeOff();
             }
         }
-        
+
         private void ActivateLevelEndMenu()
         {
             endLevelCanvasGameObject.SetActive(true);
@@ -164,8 +166,7 @@ namespace PuzzleCat
                         var toggleTransform = (RectTransform) portalToggle.transform;
                         toggleTransform.DOScale(1.2f, 0.2f).onComplete =
                             () => portalToggle.transform.DOScale(1f, 0.2f);
-                        selectedPortalCheckmark.rectTransform.anchoredPosition = new Vector2(
-                            toggleTransform.anchoredPosition.x - toggleTransform.sizeDelta.x * 0.5f, 0);
+                        selectedPortalCheckmark.rectTransform.position = toggleTransform.position;
                         selectedPortalCheckmark.DOFade(1, .3f);
                     }
                     else

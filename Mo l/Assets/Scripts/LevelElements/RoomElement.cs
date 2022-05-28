@@ -16,9 +16,9 @@ namespace PuzzleCat.LevelElements
 			{
 				Vector3 worldPosition = transform.position;
 				return new Vector3Int(
-					Mathf.RoundToInt(worldPosition.x - 0.5f),
-					Mathf.RoundToInt(worldPosition.y - 0.5f),
-					Mathf.RoundToInt(worldPosition.z - 0.5f));
+					Mathf.FloorToInt(worldPosition.x),
+					Mathf.FloorToInt(worldPosition.y),
+					Mathf.FloorToInt(worldPosition.z));
 			}
 		}
 
