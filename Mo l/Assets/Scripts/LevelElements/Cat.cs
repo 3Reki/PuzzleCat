@@ -2,7 +2,7 @@ using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
-using PuzzleCat.Scenes.GB_Test.GB_Scripts;
+using PuzzleCat.Sound;
 
 namespace PuzzleCat.LevelElements
 {
@@ -50,8 +50,8 @@ namespace PuzzleCat.LevelElements
         public static void EndLevel()
         {
             GameManager.Instance.UpdateGameState(GameManager.GameState.End);
-            GB_AudioManager.instance.StopPlaying("LevelMusic");
-            GB_AudioManager.instance.Play("LevelWin");
+            AudioManager.Instance.StopPlaying("LevelMusic");
+            AudioManager.Instance.Play("LevelWin");
         }
 
         public void HeadPat()
@@ -83,7 +83,7 @@ namespace PuzzleCat.LevelElements
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
-                GB_AudioManager.instance.Play("Click");
+                AudioManager.Instance.Play("Click");
                 catAnimation.GetUp();
                 return true;
             }
@@ -124,7 +124,7 @@ namespace PuzzleCat.LevelElements
             _lookAtDirection = exitDirection;
             _canMove = false;
             currentSurface = newSurface;
-            GB_AudioManager.instance.Play("TPIn");
+            AudioManager.Instance.Play("TPIn");
 
         }
 
@@ -132,7 +132,7 @@ namespace PuzzleCat.LevelElements
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
-            GB_AudioManager.instance.Play("TPOut");
+            AudioManager.Instance.Play("TPOut");
             myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, currentSurface.GetNormal());
         }
 
@@ -145,7 +145,7 @@ namespace PuzzleCat.LevelElements
         {
             myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             catAnimation.JumpInMirror();
-            GB_AudioManager.instance.Play("Mirror");
+            AudioManager.Instance.Play("Mirror");
 
         }
 
@@ -162,13 +162,13 @@ namespace PuzzleCat.LevelElements
                 if (_lookAtDirection.y > 0)
                 {
                     catAnimation.StartJumpingUp();
-                    GB_AudioManager.instance.Play("JumpUp");
+                    AudioManager.Instance.Play("JumpUp");
 
                 }
                 else
                 {
                     catAnimation.StartJumpingDown();
-                    GB_AudioManager.instance.Play("JumpDown");
+                    AudioManager.Instance.Play("JumpDown");
 
                 }
 
@@ -210,9 +210,9 @@ namespace PuzzleCat.LevelElements
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.enabled = true;
-            GB_AudioManager.instance.StopPlaying("MenuMusic");
-            GB_AudioManager.instance.StopPlaying("LevelWin");
-            GB_AudioManager.instance.Play("LevelMusic");
+            AudioManager.Instance.StopPlaying("MenuMusic");
+            AudioManager.Instance.StopPlaying("LevelWin");
+            AudioManager.Instance.Play("LevelMusic");
 
         }
 

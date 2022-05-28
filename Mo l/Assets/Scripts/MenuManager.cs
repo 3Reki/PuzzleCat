@@ -4,7 +4,7 @@ using PuzzleCat.Controller;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using PuzzleCat.Scenes.GB_Test.GB_Scripts;
+using PuzzleCat.Sound;
 
 namespace PuzzleCat
 {
@@ -38,8 +38,8 @@ namespace PuzzleCat
         public void ResetLevel()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            GB_AudioManager.instance.StopPlaying("LevelWin");
-            GB_AudioManager.instance.Play("Ok");
+            AudioManager.Instance.StopPlaying("LevelWin");
+            AudioManager.Instance.Play("Ok");
         }
 
         public void SwitchPortalMode()
@@ -47,7 +47,7 @@ namespace PuzzleCat
             if (GameManager.Instance.State == GameManager.GameState.PortalMode)
             {
                 GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
-                GB_AudioManager.instance.Play("PortalBookOut");
+                AudioManager.Instance.Play("PortalBookOut");
                 portalSelectionToggleGroup.SetAllTogglesOff();
                 portalPlacementController.ResetSelectedGroup();
                 portalMenuImage.rectTransform.DOComplete();
@@ -64,7 +64,7 @@ namespace PuzzleCat
             portalMenuImage.rectTransform.DOComplete();
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
-            GB_AudioManager.instance.Play("PortalBookIn");
+            AudioManager.Instance.Play("PortalBookIn");
             portalMenuImage.rectTransform.DOAnchorPosX(-portalMenuImage.rectTransform.rect.width + 23 +
                                                        ((RectTransform) portalToggles[0].transform).rect.width *
                                                        (4 - portalToggles.Length), .4f);
@@ -73,7 +73,7 @@ namespace PuzzleCat
         public void UpdateSelectedPortalGroup(int index)
         {
             portalPlacementController.UpdateSelectedPortalGroup(index);
-            GB_AudioManager.instance.Play("Ok");
+            AudioManager.Instance.Play("Ok");
         }
 
         public void SwitchPauseMenuState()
@@ -85,7 +85,7 @@ namespace PuzzleCat
                 pauseCanvasGameObject.SetActive(true);
                 pauseMenuTransform.DOMoveY(Screen.height * 0.6f, .6f).SetEase(Ease.OutBack);
 
-                GB_AudioManager.instance.Play("Pause");
+                AudioManager.Instance.Play("Pause");
             }
             else
             {
@@ -95,7 +95,7 @@ namespace PuzzleCat
                 }
 
                 _menuAlreadyClosed = true;
-                GB_AudioManager.instance.Play("Pause");
+                AudioManager.Instance.Play("Pause");
                 pauseMenuTransform.DOMoveY(Screen.height + _menuInitialPositionY, .6f).SetEase(Ease.InBack).onComplete =
                     () =>
                     {
@@ -109,42 +109,42 @@ namespace PuzzleCat
         public void LoadMainMenu()
         {
             SceneManager.LoadScene(0);
-            GB_AudioManager.instance.Play("Ok");
+            AudioManager.Instance.Play("Ok");
         }
 
         public void LoadNextLevel()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            GB_AudioManager.instance.Play("Ok");
+            AudioManager.Instance.Play("Ok");
         }
 
         public void SwitchSFX(bool state)
         {
             GameData.Instance.sfxOn = state;
-            GB_AudioManager.instance.Play("Ok");
+            AudioManager.Instance.Play("Ok");
 
             if (sfxToggle.isOn)
             {
-                GB_AudioManager.instance.SfxMixerVolumeOn();
+                AudioManager.Instance.SfxMixerVolumeOn();
             }
             else
             {
-                GB_AudioManager.instance.SfxMixerVolumeOff();
+                AudioManager.Instance.SfxMixerVolumeOff();
             }
         }
 
         public void SwitchMusic(bool state)
         {
             GameData.Instance.musicOn = state;
-            GB_AudioManager.instance.Play("Ok");
+            AudioManager.Instance.Play("Ok");
 
             if (musicToggle.isOn)
             {
-                GB_AudioManager.instance.MusicMixerVolumeOn();
+                AudioManager.Instance.MusicMixerVolumeOn();
             }
             else
             {
-                GB_AudioManager.instance.MusicMixerVolumeOff();
+                AudioManager.Instance.MusicMixerVolumeOff();
             }
         }
 
