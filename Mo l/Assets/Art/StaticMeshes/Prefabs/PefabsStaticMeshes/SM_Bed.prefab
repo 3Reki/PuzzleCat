@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1542586325482036308}
   - component: {fileID: 4967102592336894172}
   - component: {fileID: 893213629985652932}
+  - component: {fileID: 3375151139678701661}
   m_Layer: 0
   m_Name: SM_Bed
   m_TagString: Untagged
@@ -110,5 +111,18 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.0839438, y: 1.12848, z: 1.153882}
-  m_Center: {x: 0.000000059604645, y: -0.00000002980233, z: 0.576941}
+  m_Size: {x: 1, y: 1.1, z: 1}
+  m_Center: {x: 0.5, y: 0, z: 0.5}
+--- !u!65 &3375151139678701661
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038258278365461889}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.1, z: 1}
+  m_Center: {x: -0.5, y: 0, z: 0.5}

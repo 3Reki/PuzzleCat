@@ -5507,7 +5507,8 @@ MonoBehaviour:
   IsObstacle: 1
   CurrentSurface: 1
   objectTransform: {fileID: 7429427674414648740}
-  linkedMovables: []
+  linkedMovables:
+  - {fileID: 4846242845400534800}
 --- !u!65 &3217901079961048289
 BoxCollider:
   m_ObjectHideFlags: 0
