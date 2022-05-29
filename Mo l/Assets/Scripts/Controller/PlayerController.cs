@@ -53,7 +53,7 @@ namespace PuzzleCat.Controller
             
             if (_touchStartState != GameManager.GameState.PortalMode && CanSelectElement)
             {
-                furnitureSelectionIndicator.Play(TouchInitialPosition + new Vector2(-0.12f, 0.12f) * Screen.width, holdTouchThreshold);
+                furnitureSelectionIndicator.Play(TouchInitialPosition, holdTouchThreshold);
             }
         }
 

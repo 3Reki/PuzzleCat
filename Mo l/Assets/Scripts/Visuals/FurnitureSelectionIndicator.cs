@@ -14,7 +14,7 @@ namespace PuzzleCat
         public void Play(Vector2 position, float desiredDuration)
         {
             indicatorRectTransform.localScale = Vector3.one;
-            indicatorRectTransform.anchoredPosition = position;
+            indicatorRectTransform.anchoredPosition = FindCorrectPosition(position);
             indicatorImage.fillAmount = 0;
             indicatorImage.color = initialColor;
             
@@ -31,6 +31,13 @@ namespace PuzzleCat
             indicatorRectTransform.DOKill();
             indicatorImage.DOKill();
             indicatorImage.color = new Color(0, 0, 0, 0);
+        }
+
+        private static Vector2 FindCorrectPosition(Vector2 position)
+        {
+            position.x += Screen.width * (position.x < Screen.width * .15f ? .12f : -.12f);
+            position.y += Screen.height * (position.y > Screen.height * .85f ? -.10f : .12f);
+            return position;
         }
     }
 }
