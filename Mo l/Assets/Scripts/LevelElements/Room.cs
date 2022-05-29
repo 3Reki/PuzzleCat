@@ -148,6 +148,22 @@ namespace PuzzleCat.LevelElements
 
 			return null;
 		}
+
+		public bool ExistsElementAt(Vector3Int roomCoordinates, Surface surface)
+		{
+			foreach (RoomElement element in roomElements)
+			{
+				if ((element.ImpactedSurface == surface)
+				    && element.RoomGridPosition.x == roomCoordinates.x
+				    && element.RoomGridPosition.y == roomCoordinates.y
+				    && element.RoomGridPosition.z == roomCoordinates.z)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 		
 		public void SetSurfaceIndicatorActive(Surface portalArrivalSurface, bool state)
 		{

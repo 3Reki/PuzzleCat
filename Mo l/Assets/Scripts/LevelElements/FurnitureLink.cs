@@ -42,7 +42,7 @@ namespace PuzzleCat.LevelElements
                     return false;
                 }
 
-                _roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal(), Surface.All);
+                _roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal(), Surface.All); 
 
                 if (_roomElement == null)
                 {
@@ -52,7 +52,7 @@ namespace PuzzleCat.LevelElements
                     }
                         
                 }
-                else if (_roomElement.ImpactedSurface != Surface.All)
+                else if (_roomElement.ImpactedSurface != Surface.All) // TODO check if useful or not
                 {
                     return false;
                 }

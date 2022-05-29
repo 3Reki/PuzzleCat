@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2962748198456422052}
   - component: {fileID: 2962748198456422053}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,6 +130,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Ground_Wall_1
       objectReference: {fileID: 0}
+    - target: {fileID: 1745089476942097308, guid: cafe5ba449325e045925de62ac06733b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cafe5ba449325e045925de62ac06733b, type: 3}
 --- !u!23 &1139262434666797374 stripped
@@ -221,6 +226,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Ground_Wall
       objectReference: {fileID: 0}
+    - target: {fileID: 7599453873313178039, guid: 4aa47c34c4aaeb8439db8e60d4b47226,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4aa47c34c4aaeb8439db8e60d4b47226, type: 3}
 --- !u!23 &5278295675242022840 stripped
@@ -311,6 +321,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SM_Ground_Wall_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1745089476942097308, guid: cafe5ba449325e045925de62ac06733b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cafe5ba449325e045925de62ac06733b, type: 3}

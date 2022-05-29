@@ -79,7 +79,21 @@ namespace PuzzleCat.LevelElements
 
 		public bool CanSetPortal(Transform hit, Vector3Int worldGridPosition, Surface surfaceType)
 		{
-			if (hit.GetComponent<RoomElement>() != null)
+			if (!Utils.Utils.IsInLayerMask(hit.transform.gameObject, 1 << LayerMask.NameToLayer("Room")))
+			{
+				return false;
+			}
+
+			var parentRoom = hit.parent.GetComponent<Room>();
+			Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
+			
+			if (!parentRoom.AreCoordinatesValid(roomGridPosition))
+			{
+				return false;
+			}
+			
+			if (parentRoom.ExistsElementAt(roomGridPosition, Surface.All) || 
+			    parentRoom.ExistsElementAt(roomGridPosition, surfaceType))
 			{
 				return false;
 			}
@@ -88,9 +102,6 @@ namespace PuzzleCat.LevelElements
 			{
 				return true;
 			}
-
-			Room parentRoom = hit.parent.GetComponent<Room>();
-			Vector3Int roomGridPosition = parentRoom.WorldToRoomCoordinates(worldGridPosition);
 
 			Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
 

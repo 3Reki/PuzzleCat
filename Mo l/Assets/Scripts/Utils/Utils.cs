@@ -87,7 +87,7 @@ namespace PuzzleCat.Utils
 
 		public static bool IsInLayerMask(GameObject obj, LayerMask layerMask)
 		{
-			return ((layerMask.value & (1 << obj.layer)) > 0);
+			return (layerMask.value & (1 << obj.layer)) > 0;
 		}
 
 		public static Vector3Int WorldPointAsGridPoint(Vector3 upDirection, Vector3 point)
