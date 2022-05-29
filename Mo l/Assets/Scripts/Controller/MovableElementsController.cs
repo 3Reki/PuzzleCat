@@ -102,6 +102,7 @@ namespace PuzzleCat.Controller
                     GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2))
                 {
                     SetSelectedMovableObject(_hit.transform.gameObject);
+                    _selectedMovableElement.Select();
                 }
                 else
                 {

@@ -97,12 +97,22 @@ namespace PuzzleCat.LevelElements
                 new Vector3(distX + 1, distY + 4, 1), new Vector3(distY + 1, distX + 4, 1));
         }
         
+        public void Select()
+        {
+            if (IsInPortal())
+            {
+                CurrentRoom.SetSurfaceIndicatorActive(_outPortalDirection.ToSurface(), true);
+            }
+        }
+        
         public void Deselect()
         {
             if (IsOutOfPortal())
             {
                 ExitPortal();
             }
+            
+            CurrentRoom.SetAllSurfaceIndicatorActive(false);
         }
         
 
@@ -259,12 +269,17 @@ namespace PuzzleCat.LevelElements
                     _inPortal = false;
                     _onPortal = false;
                     CurrentSurface = _surfaceBeforePortal;
+                    if (!IsInPortal())
+                    {
+                        CurrentRoom.SetSurfaceIndicatorActive(portal.ImpactedSurface, false);
+                    }
                     return;
                 }
 
                 _inPortal = true;
                 _onPortal = true;
                 _steppedOnPortal = CurrentRoom.FindPortal(RoomGridPosition, CurrentSurface);
+                CurrentRoom.SetSurfaceIndicatorActive(portal.ArrivalSurface, true);
                 foreach (MovableElement linkedMovable in linkedMovables)
                 {
                     linkedMovable._inPortalDirection = -portal.ImpactedSurface.GetNormal();

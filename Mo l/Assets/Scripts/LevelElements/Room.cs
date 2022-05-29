@@ -10,6 +10,10 @@ namespace PuzzleCat.LevelElements
 		[SerializeField] private Vector3Int gridWorldPosition;
 		[SerializeField] private Vector3Int gridSize;
 		[SerializeField] private List<RoomElement> roomElements;
+		[SerializeField] private MeshRenderer floorRenderer;
+		[SerializeField] private MeshRenderer sideWallRenderer; // TODO show in editor
+		[SerializeField] private MeshRenderer backWallRenderer;
+		private static readonly int _onOff = Shader.PropertyToID("_OnOff");
 
 #if UNITY_EDITOR
 		public void Init()
@@ -143,6 +147,32 @@ namespace PuzzleCat.LevelElements
 			}
 
 			return null;
+		}
+		
+		public void SetSurfaceIndicatorActive(Surface portalArrivalSurface, bool state)
+		{
+			(portalArrivalSurface switch
+			{
+				Surface.Floor => floorRenderer,
+				Surface.SideWall => sideWallRenderer,
+				Surface.BackWall => backWallRenderer,
+				_ => throw new ArgumentOutOfRangeException(nameof(portalArrivalSurface), portalArrivalSurface, null)
+			}).material.SetFloat(_onOff, state ? 1: 0);
+		}
+		
+		public void SetAllSurfaceIndicatorActive(bool state)
+		{
+			if (state)
+			{
+				floorRenderer.material.SetFloat(_onOff, 1f);
+				sideWallRenderer.material.SetFloat(_onOff, 1f);
+				backWallRenderer.material.SetFloat(_onOff, 1f);
+				return;
+			}
+			
+			floorRenderer.material.SetFloat(_onOff, 0f);
+			sideWallRenderer.material.SetFloat(_onOff, 0f);
+			backWallRenderer.material.SetFloat(_onOff, 0f);
 		}
 
 		private void SetRoomElements()
