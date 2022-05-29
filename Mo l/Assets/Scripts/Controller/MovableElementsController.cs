@@ -38,10 +38,12 @@ namespace PuzzleCat.Controller
             
             Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
 
-            if (_initialObjectPosition == _currentObjectPosition)
-            {
-                HandleJunction(gridPoint);
-            }
+            // if (_initialObjectPosition == _currentObjectPosition)
+            // {
+            //     HandleJunction(gridPoint);
+            // }
+            
+            HandleJunction(gridPoint);
 
 
             if ((gridPoint - _currentObjectPosition).ApplyMask(_currentObjectDirection) >= 1)
@@ -50,10 +52,10 @@ namespace PuzzleCat.Controller
                 
                 _currentObjectPosition += _currentObjectDirection;
                 _selectedMovableElement.PositionIndicator();
-                if (_initialObjectPosition == _currentObjectPosition)
-                {
-                    movableElementDirectionIndicator.SetAllIndicatorsActive(true);
-                }
+                // if (_initialObjectPosition == _currentObjectPosition)
+                // {
+                //     movableElementDirectionIndicator.SetAllIndicatorsActive(true);
+                // }
                 return true;
 
             }
@@ -64,10 +66,10 @@ namespace PuzzleCat.Controller
                 
                 _currentObjectPosition -= _currentObjectDirection;
                 _selectedMovableElement.PositionIndicator();
-                if (_initialObjectPosition == _currentObjectPosition)
-                {
-                    movableElementDirectionIndicator.SetAllIndicatorsActive(true);
-                }
+                // if (_initialObjectPosition == _currentObjectPosition)
+                // {
+                //     movableElementDirectionIndicator.SetAllIndicatorsActive(true);
+                // }
                 return true;
             }
             
@@ -81,16 +83,16 @@ namespace PuzzleCat.Controller
                 _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveForward();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveBackward();
-                movableElementDirectionIndicator.SetSideIndicatorsActive(false);
-                movableElementDirectionIndicator.SetForwardIndicatorsActive(true);
+                // movableElementDirectionIndicator.SetSideIndicatorsActive(false);
+                // movableElementDirectionIndicator.SetForwardIndicatorsActive(true);
             }
             else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
             {
                 _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveRight();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveLeft();
-                movableElementDirectionIndicator.SetSideIndicatorsActive(true);
-                movableElementDirectionIndicator.SetForwardIndicatorsActive(false);
+                // movableElementDirectionIndicator.SetSideIndicatorsActive(true);
+                // movableElementDirectionIndicator.SetForwardIndicatorsActive(false);
             }
         }
 
