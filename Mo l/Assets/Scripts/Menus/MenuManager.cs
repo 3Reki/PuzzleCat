@@ -192,7 +192,13 @@ namespace PuzzleCat.Menus
 
             if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings)
             {
-                nextLevelButton.interactable = false;
+                nextLevelButton.onClick.RemoveAllListeners();
+                nextLevelButton.onClick.AddListener(() =>
+                {
+                    GameData.Instance.gameFinished = true;
+                    SceneManager.LoadScene(0);
+                    AudioManager.Instance.Play("Ok");
+                });
             }
 
             _backgroundInitialAlpha = endLevelBackground.color.a;
