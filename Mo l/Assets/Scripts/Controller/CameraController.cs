@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
@@ -19,6 +20,9 @@ namespace PuzzleCat.Controller
         private float _minZoom;
         private float _previousTouchesDistance;
         private bool _zoomInitialized;
+        private Vector3 _centerPosition;
+        private float _initialSize;
+        private bool _inLerp;
         
         public void HandleZoom()
         {
@@ -57,11 +61,24 @@ namespace PuzzleCat.Controller
 
         public void HandleCameraMovement()
         {
-            if (inputManager.FirstTouchPosition == _lastTouchPosition) return;
+            if (_inLerp)
+            {
+                _lastTouchPosition = inputManager.FirstTouchPosition;
+                return;
+            }
+                
+            if (inputManager.FirstTouchPosition == _lastTouchPosition) 
+                return;
             
             cameraTransform.position -=
                 cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) / Screen.dpi * movementSpeed;
             _lastTouchPosition = inputManager.FirstTouchPosition;
+
+            if ((cameraTransform.position - _centerPosition).magnitude > _initialSize * 1.15f)
+            {
+                _inLerp = true;
+                cameraTransform.DOMove(_centerPosition, _initialSize / 10).onComplete = () => _inLerp = false;
+            }
         }
         
         private void OnGameStateChanged(GameManager.GameState state)
@@ -75,15 +92,12 @@ namespace PuzzleCat.Controller
         private void Awake()
         {
             GameManager.OnGameStateChanged += OnGameStateChanged;
+            _initialSize = camera.orthographicSize;
+            _maxZoom = _initialSize * maxZoomPercentage * 0.01f;
+            _minZoom = _initialSize * minZoomPercentage * 0.01f;
+            _centerPosition = cameraTransform.position;
         }
 
-        private void Start()
-        {
-            var orthographicSize = camera.orthographicSize;
-            _maxZoom = orthographicSize * maxZoomPercentage * 0.01f;
-            _minZoom = orthographicSize * minZoomPercentage * 0.01f;
-        }
-        
         private void OnDestroy()
         {
             GameManager.OnGameStateChanged -= OnGameStateChanged;
