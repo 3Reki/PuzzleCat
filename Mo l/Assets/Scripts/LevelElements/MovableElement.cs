@@ -163,17 +163,14 @@ namespace PuzzleCat.LevelElements
 
                 if (movable._direction == _inPortalDirection)
                 {
-                    Debug.Log("same");
                     movable._direction = _outPortalDirection;
                 }
                 else if (movable._direction == -_inPortalDirection)
                 {
-                    Debug.Log("inverse");
                     movable._direction = -_outPortalDirection;
                 }
                 else
                 {
-                    Debug.Log("diff");
                     movable._direction = Vector3Int.zero;
                 }
             }
@@ -233,7 +230,6 @@ namespace PuzzleCat.LevelElements
         {
             if (!CanMove())
             {
-                Debug.Log("nop");
                 return false;
             }
 
