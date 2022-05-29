@@ -12,6 +12,7 @@ namespace PuzzleCat
         public bool sfxOn;
         public bool musicOn;
         public bool firstTime;
+        public bool gameFinished;
 
         public void ResetGameData()
         {
