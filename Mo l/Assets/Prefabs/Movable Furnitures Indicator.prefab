@@ -48,6 +48,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sideAxisIndicator: {fileID: 680175083682869468}
   forwardAxisIndicator: {fileID: 4827253517422782249}
+  indicatorMaterial: {fileID: 2100000, guid: a3d0cc4104b5bf84d901933535a13655, type: 2}
+  defaultColor: {r: 0.25490198, g: 0.6784314, b: 0.9647059, a: 1}
+  incorrectColor: {r: 0.9647059, g: 0.3263622, b: 0.25490195, a: 1}
 --- !u!1001 &462922295086130878
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -34,7 +34,7 @@ namespace PuzzleCat.LevelElements
         private static void FinishLevel(Cat cat)
         {
             cat.JumpInMirror();
-            if (SceneManager.GetActiveScene().buildIndex == GameData.Instance.unlockedLevelsCount)
+            if (SceneManager.GetActiveScene().buildIndex - 1 == GameData.Instance.unlockedLevelsCount)
             {
                 GameData.Instance.unlockedLevelsCount++;
             }
