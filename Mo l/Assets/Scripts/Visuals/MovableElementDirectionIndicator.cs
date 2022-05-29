@@ -1,3 +1,5 @@
+using System;
+using DG.Tweening;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -7,6 +9,9 @@ namespace PuzzleCat.Visuals
     {
         [SerializeField] private GameObject sideAxisIndicator;
         [SerializeField] private GameObject forwardAxisIndicator;
+        [SerializeField] private Material indicatorMaterial;
+        [SerializeField] private Color defaultColor;
+        [SerializeField] private Color incorrectColor;
 
         public void SetTransform(
             Vector3 position, Quaternion rotation, Vector3 sideIndicatorScale, Vector3 forwardIndicatorScale)
@@ -31,6 +36,19 @@ namespace PuzzleCat.Visuals
         {
             SetSideIndicatorsActive(state);
             SetForwardIndicatorsActive(state);
+        }
+
+        public void SetIncorrectColor()
+        {
+            indicatorMaterial.DOComplete();
+            indicatorMaterial.color = incorrectColor;
+            indicatorMaterial.DOColor(defaultColor, 1.5f);
+        }
+
+        private void OnDestroy()
+        {
+            indicatorMaterial.DOKill();
+            indicatorMaterial.color = defaultColor;
         }
     }
 }

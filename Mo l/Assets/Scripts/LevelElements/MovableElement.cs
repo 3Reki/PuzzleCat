@@ -230,6 +230,7 @@ namespace PuzzleCat.LevelElements
         {
             if (!CanMove())
             {
+                DirectionIndicator.SetIncorrectColor();
                 return false;
             }
 
