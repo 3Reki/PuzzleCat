@@ -25,7 +25,6 @@ namespace PuzzleCat
             if (Instance != null)
             {
                 Destroy(gameObject);
-                print("yes");
                 return;
             }
             

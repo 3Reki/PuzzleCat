@@ -4,6 +4,7 @@ using PuzzleCat.Controller;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PuzzleCat.Sound;
 
 namespace PuzzleCat
 {
@@ -17,15 +18,15 @@ namespace PuzzleCat
         public Toggle[] portalToggles;
         [SerializeField] private Sprite portalBookOpen;
         [SerializeField] private Sprite portalBookClosed;
-        
+
         [SerializeField] private GameObject pauseCanvasGameObject;
         [SerializeField] private RectTransform pauseMenuTransform;
-        
+
         [SerializeField] private GameObject endLevelCanvasGameObject;
         [SerializeField] private Image endLevelBackground;
         [SerializeField] private RectTransform endLevelFrame;
         [SerializeField] private Button nextLevelButton;
-        
+
         [SerializeField] private Toggle sfxToggle;
         [SerializeField] private Toggle musicToggle;
 
@@ -33,17 +34,20 @@ namespace PuzzleCat
         private float _menuInitialPositionY;
         private float _backgroundInitialAlpha;
         private bool _menuAlreadyClosed;
-        
+
         public void ResetLevel()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            AudioManager.Instance.StopPlaying("LevelWin");
+            AudioManager.Instance.Play("Ok");
         }
-        
+
         public void SwitchPortalMode()
         {
             if (GameManager.Instance.State == GameManager.GameState.PortalMode)
             {
                 GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+                AudioManager.Instance.Play("PortalBookOut");
                 portalSelectionToggleGroup.SetAllTogglesOff();
                 portalPlacementController.ResetSelectedGroup();
                 portalMenuImage.rectTransform.DOComplete();
@@ -52,7 +56,7 @@ namespace PuzzleCat
                     portalMenuImage.enabled = false;
                     portalButtonImage.sprite = portalBookClosed;
                 };
-                
+
                 return;
             }
 
@@ -60,6 +64,7 @@ namespace PuzzleCat
             portalMenuImage.rectTransform.DOComplete();
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
+            AudioManager.Instance.Play("PortalBookIn");
             portalMenuImage.rectTransform.DOAnchorPosX(-portalMenuImage.rectTransform.rect.width + 23 +
                                                        ((RectTransform) portalToggles[0].transform).rect.width *
                                                        (4 - portalToggles.Length), .4f);
@@ -68,6 +73,7 @@ namespace PuzzleCat
         public void UpdateSelectedPortalGroup(int index)
         {
             portalPlacementController.UpdateSelectedPortalGroup(index);
+            AudioManager.Instance.Play("Ok");
         }
 
         public void SwitchPauseMenuState()
@@ -78,6 +84,8 @@ namespace PuzzleCat
                 GameManager.Instance.UpdateGameState(GameManager.GameState.Menu);
                 pauseCanvasGameObject.SetActive(true);
                 pauseMenuTransform.DOMoveY(Screen.height * 0.6f, .6f).SetEase(Ease.OutBack);
+
+                AudioManager.Instance.Play("Pause");
             }
             else
             {
@@ -87,6 +95,7 @@ namespace PuzzleCat
                 }
 
                 _menuAlreadyClosed = true;
+                AudioManager.Instance.Play("Pause");
                 pauseMenuTransform.DOMoveY(Screen.height + _menuInitialPositionY, .6f).SetEase(Ease.InBack).onComplete =
                     () =>
                     {
@@ -100,23 +109,45 @@ namespace PuzzleCat
         public void LoadMainMenu()
         {
             SceneManager.LoadScene(0);
+            AudioManager.Instance.Play("Ok");
         }
 
         public void LoadNextLevel()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            AudioManager.Instance.Play("Ok");
         }
-        
+
         public void SwitchSFX(bool state)
         {
             GameData.Instance.sfxOn = state;
+            AudioManager.Instance.Play("Ok");
+
+            if (sfxToggle.isOn)
+            {
+                AudioManager.Instance.SfxMixerVolumeOn();
+            }
+            else
+            {
+                AudioManager.Instance.SfxMixerVolumeOff();
+            }
         }
-        
+
         public void SwitchMusic(bool state)
         {
             GameData.Instance.musicOn = state;
+            AudioManager.Instance.Play("Ok");
+
+            if (musicToggle.isOn)
+            {
+                AudioManager.Instance.MusicMixerVolumeOn();
+            }
+            else
+            {
+                AudioManager.Instance.MusicMixerVolumeOff();
+            }
         }
-        
+
         private void ActivateLevelEndMenu()
         {
             endLevelCanvasGameObject.SetActive(true);

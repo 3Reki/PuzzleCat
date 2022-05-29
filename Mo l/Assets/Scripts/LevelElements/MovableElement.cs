@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PuzzleCat.Utils;
 using PuzzleCat.Visuals;
 using UnityEngine;
+using PuzzleCat.Sound;
 
 namespace PuzzleCat.LevelElements
 {
@@ -89,6 +90,7 @@ namespace PuzzleCat.LevelElements
         public override void MoveTo(Vector3Int destination)
         {
             objectTransform.position = GetWorldPosition(destination);
+            AudioManager.Instance.Play("MoveFurniture");
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)

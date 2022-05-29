@@ -2,6 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PuzzleCat.Sound;
 
 namespace PuzzleCat
 {
@@ -28,6 +29,7 @@ namespace PuzzleCat
         public static void LoadLevel(int level)
         {
             SceneManager.LoadScene(level);
+            AudioManager.Instance.Play("Ok");
         }
 
         public void UnlockAllLevels()
@@ -38,8 +40,9 @@ namespace PuzzleCat
             }
 
             GameData.Instance.unlockedLevelsCount = levelButtons.Length;
+            AudioManager.Instance.Play("Ok");
         }
-        
+
         public void ResetSave()
         {
             for (var i = 1; i < levelButtons.Length; i++)
@@ -48,6 +51,7 @@ namespace PuzzleCat
             }
 
             GameData.Instance.unlockedLevelsCount = 1;
+            AudioManager.Instance.Play("Back");
         }
 
         public void CloseSettingsMenu()
@@ -58,6 +62,7 @@ namespace PuzzleCat
             }
 
             _menuAlreadyClosed = true;
+            AudioManager.Instance.Play("Back");
             settingsBackgroundImage.DOFade(0f, 0.6f);
             settingsMenuTransform.DOAnchorPosY(0, .6f).SetEase(Ease.InBack).onComplete =
                 () =>
@@ -72,8 +77,9 @@ namespace PuzzleCat
             settingsCanvasGameObject.SetActive(true);
             settingsBackgroundImage.DOFade(0.733f, 0.45f);
             settingsMenuTransform.DOMoveY(Screen.height * 0.88f, .6f).SetEase(Ease.OutBack);
+            AudioManager.Instance.Play("Back");
         }
-        
+
         public void CloseCredits()
         {
             if (_menuAlreadyClosed)
@@ -82,6 +88,7 @@ namespace PuzzleCat
             }
 
             _menuAlreadyClosed = true;
+            AudioManager.Instance.Play("Ok");
             creditsMenuTransform.DOAnchorPosY(0, .9f).SetEase(Ease.InBack).onComplete =
                 () =>
                 {
@@ -96,16 +103,36 @@ namespace PuzzleCat
             creditsCanvasGameObject.SetActive(true);
             settingsBackgroundImage.enabled = false;
             creditsMenuTransform.DOMoveY(Screen.height * 0.5f, .9f).SetEase(Ease.OutBack);
+            AudioManager.Instance.Play("Ok");
         }
 
         public void SwitchSFX(bool state)
         {
             GameData.Instance.sfxOn = state;
+            AudioManager.Instance.Play("Ok");
+
+            if (sfxToggle.isOn)
+            {
+                AudioManager.Instance.SfxMixerVolumeOn();
+            }   
+            else
+            {
+                AudioManager.Instance.SfxMixerVolumeOff();
+            }
         }
-        
         public void SwitchMusic(bool state)
         {
             GameData.Instance.musicOn = state;
+            AudioManager.Instance.Play("Ok");
+
+            if (musicToggle.isOn)
+            {
+                AudioManager.Instance.MusicMixerVolumeOn();
+            }
+            else
+            {
+                AudioManager.Instance.MusicMixerVolumeOff();
+            }
         }
 
         public void ChangeLevelSelectionPanel(int direction)
@@ -113,6 +140,7 @@ namespace PuzzleCat
             foreach (RectTransform selectionTransform in levelSelectionTransforms)
             {
                 selectionTransform.DOAnchorPosX(selectionTransform.anchoredPosition.x - Screen.width * direction, 0.5f);
+                AudioManager.Instance.Play("Ok");
             }
 
             _currentLevelSelectionIndex += direction;
@@ -124,6 +152,10 @@ namespace PuzzleCat
         private void Awake()
         {
             Application.targetFrameRate = Screen.currentResolution.refreshRate;
+
+            AudioManager.Instance.StopPlaying("LevelMusic");
+            AudioManager.Instance.StopPlaying("LevelWin");
+            AudioManager.Instance.Play("MenuMusic");
         }
 
         private void Start()

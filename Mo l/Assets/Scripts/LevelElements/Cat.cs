@@ -2,6 +2,7 @@ using PuzzleCat.Controller;
 using PuzzleCat.Utils;
 using UnityEngine;
 using UnityEngine.AI;
+using PuzzleCat.Sound;
 
 namespace PuzzleCat.LevelElements
 {
@@ -45,10 +46,12 @@ namespace PuzzleCat.LevelElements
 
         public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
-        
+
         public static void EndLevel()
         {
             GameManager.Instance.UpdateGameState(GameManager.GameState.End);
+            AudioManager.Instance.StopPlaying("LevelMusic");
+            AudioManager.Instance.Play("LevelWin");
         }
 
         public void HeadPat()
@@ -80,18 +83,19 @@ namespace PuzzleCat.LevelElements
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
                 CurrentRoom.MoveOnCell(this, destination, myTransform.up.ToSurface());
+                AudioManager.Instance.Play("Click");
                 catAnimation.GetUp();
                 return true;
             }
 
             return false;
         }
-        
+
         public override void MoveTo(Vector3Int destination)
         {
             MoveTo(destination + _offset, 0);
         }
-        
+
         public void MoveTo(Vector3 destination, float aimedDistance)
         {
             playerAgent.stoppingDistance = aimedDistance;
@@ -106,7 +110,7 @@ namespace PuzzleCat.LevelElements
                 playerAgent.CalculatePath(_agentDestination, _path);
 
             }
-            
+
             playerAgent.SetPath(_path);
             playerAgent.Move(position.normalized * Time.deltaTime);
             _isMoving = true;
@@ -120,12 +124,15 @@ namespace PuzzleCat.LevelElements
             _lookAtDirection = exitDirection;
             _canMove = false;
             currentSurface = newSurface;
+            AudioManager.Instance.Play("TPIn");
+
         }
 
         public void CastTeleport()
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.Warp(_warpDestination);
+            AudioManager.Instance.Play("TPOut");
             myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, currentSurface.GetNormal());
         }
 
@@ -138,6 +145,8 @@ namespace PuzzleCat.LevelElements
         {
             myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
             catAnimation.JumpInMirror();
+            AudioManager.Instance.Play("Mirror");
+
         }
 
         private void HandleJump()
@@ -149,16 +158,20 @@ namespace PuzzleCat.LevelElements
                 _isGrounded = false;
                 _canMove = false;
                 _lookAtDirection = myTransform.InverseTransformDirection(playerAgent.steeringTarget - myTransform.position);
-                
+
                 if (_lookAtDirection.y > 0)
                 {
                     catAnimation.StartJumpingUp();
+                    AudioManager.Instance.Play("JumpUp");
+
                 }
                 else
                 {
                     catAnimation.StartJumpingDown();
+                    AudioManager.Instance.Play("JumpDown");
+
                 }
-                
+
                 _lookAtDirection.y = 0;
                 _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
                 myTransform.rotation = Quaternion.LookRotation(_lookAtDirection, myTransform.up);
@@ -177,7 +190,7 @@ namespace PuzzleCat.LevelElements
             {
                 return;
             }
-            
+
             if (!_isMoving) return;
 
             playerAgent.velocity = Vector3.zero;
