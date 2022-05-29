@@ -27,7 +27,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                movable._direction = CurrentSurface switch
+                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
                 {
                     Surface.Floor => Vector3Int.left,
                     Surface.SideWall => Vector3Int.back,
@@ -43,7 +43,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                movable._direction = CurrentSurface switch
+                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
                 {
                     Surface.Floor => Vector3Int.right,
                     Surface.SideWall => Vector3Int.forward,
@@ -59,7 +59,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                movable._direction = CurrentSurface switch
+                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
                 {
                     Surface.Floor => Vector3Int.forward,
                     Surface.SideWall => Vector3Int.up,
@@ -75,7 +75,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                movable._direction = CurrentSurface switch
+                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
                 {
                     Surface.Floor => Vector3Int.back,
                     Surface.SideWall => Vector3Int.down,
