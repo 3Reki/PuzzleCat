@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,9 @@ namespace PuzzleCat
 
         [SerializeField] private Toggle sfxToggle;
         [SerializeField] private Toggle musicToggle;
+
+        [SerializeField] private GameObject levelSelectionCanvas;
+        [SerializeField] private GameObject introductionCanvas;
         
         private bool _menuAlreadyClosed;
         private int _currentLevelSelectionIndex;
@@ -50,8 +54,9 @@ namespace PuzzleCat
                 levelButtons[i].interactable = false;
             }
 
-            GameData.Instance.unlockedLevelsCount = 1;
+            GameData.Instance.ResetGameData();
             AudioManager.Instance.Play("Back");
+            PlayIntroduction();
         }
 
         public void CloseSettingsMenu()
@@ -120,6 +125,7 @@ namespace PuzzleCat
                 AudioManager.Instance.SfxMixerVolumeOff();
             }
         }
+        
         public void SwitchMusic(bool state)
         {
             GameData.Instance.musicOn = state;
@@ -149,17 +155,41 @@ namespace PuzzleCat
             leftSelectionArrow.interactable = _currentLevelSelectionIndex != 0;
         }
 
+        private void PlayIntroduction()
+        {
+            levelSelectionCanvas.SetActive(false);
+            introductionCanvas.SetActive(true);
+            StartCoroutine(IntroductionCoroutine());
+        }
+
+        private IEnumerator IntroductionCoroutine()
+        {
+            yield return new WaitForSeconds(10);
+            levelSelectionCanvas.SetActive(true);
+            introductionCanvas.SetActive(false);
+            AudioManager.Instance.Play("MenuMusic");
+            GameData.Instance.firstTime = false;
+        }
+
         private void Awake()
         {
             Application.targetFrameRate = Screen.currentResolution.refreshRate;
-
-            AudioManager.Instance.StopPlaying("LevelMusic");
-            AudioManager.Instance.StopPlaying("LevelWin");
-            AudioManager.Instance.Play("MenuMusic");
         }
 
         private void Start()
         {
+            if (GameData.Instance.firstTime)
+            {
+                PlayIntroduction();
+            }
+            else
+            {
+                AudioManager.Instance.StopPlaying("LevelMusic");
+                AudioManager.Instance.StopPlaying("LevelWin");
+                AudioManager.Instance.Play("MenuMusic");
+            }
+            
+            
             for (int i = GameData.Instance.unlockedLevelsCount; i < levelButtons.Length; i++)
             {
                 levelButtons[i].interactable = false;
