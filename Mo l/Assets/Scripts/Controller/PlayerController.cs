@@ -113,6 +113,22 @@ namespace PuzzleCat.Controller
             }
         }
 
+        private void StopSingleTouchEvents()
+        {
+            switch (GameManager.Instance.State)
+            {
+                case GameManager.GameState.PlayerMovement:
+                    furnitureSelectionIndicator.Stop();
+                    break;
+                case GameManager.GameState.CameraMovement:
+                    GameManager.Instance.UpdateGameState(_touchStartState);
+                    break;
+                case GameManager.GameState.FurnitureMovement:
+                    GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+                    break;
+            }
+        }
+
         private void Start()
         {
             dragDistance = Screen.height * dragDistance * 0.01f;
@@ -129,6 +145,7 @@ namespace PuzzleCat.Controller
             }
             else if (inputManager.TouchCount == 2)
             {
+                StopSingleTouchEvents();
                 cameraController.HandleZoom();
             }
 
