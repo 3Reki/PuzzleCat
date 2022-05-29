@@ -114,6 +114,19 @@ namespace PuzzleCat.LevelElements
             
             CurrentRoom.SetAllSurfaceIndicatorActive(false);
         }
+
+        public bool IsUnderCat()
+        {
+            foreach (MovableElement movable in linkedMovables)
+            {
+                if (GameManager.Instance.Cat.IsUnderCat(movable))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         
 
         private static (MovableElement, MovableElement) FindFarthestElements(List<MovableElement> movableElements)
@@ -205,10 +218,15 @@ namespace PuzzleCat.LevelElements
 
             Array.Sort(linkedMovables,
                 (movable1, movable2) =>
-                    ((movable2.RoomGridPosition - movable1.RoomGridPosition) * _direction).Sum());
+                    ((movable2.RoomGridPosition - movable1.RoomGridPosition) * _direction).Sum()); // todo remove ?
 
             foreach (MovableElement movable in linkedMovables)
             {
+                if (GameManager.Instance.Cat.IsUnderCat(movable))
+                {
+                    return false;
+                }
+                
                 if (AnyLinkedElementAt(movable.RoomGridPosition + movable._direction))
                 {
                     continue;
@@ -226,11 +244,6 @@ namespace PuzzleCat.LevelElements
                 {
                     return false;
                 }
-
-                if (GameManager.Instance.Cat.IsUnderCat(movable))
-                {
-                    return false;
-                }
             }
 
             return true;
@@ -240,7 +253,7 @@ namespace PuzzleCat.LevelElements
         {
             if (!CanMove())
             {
-                DirectionIndicator.SetIncorrectColor();
+                DirectionIndicator.SetIncorrectColorFade();
                 return false;
             }
 
