@@ -1,8 +1,13 @@
 using System;
 using System.Collections;
 using PuzzleCat.LevelElements;
+using PuzzleCat.Sound;
 using UnityEngine;
 using UnityEngine.AI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace PuzzleCat
 {
@@ -60,9 +65,18 @@ namespace PuzzleCat
             State = GameState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.onMovement += UpdateNavMeshes;
+            
 #if UNITY_EDITOR
             new GameObject("Game Data").AddComponent<GameData>();
+            PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AudioManager.prefab"));
 #endif
+        }
+
+        private void Start()
+        {
+            AudioManager.Instance.StopPlaying("MenuMusic");
+            AudioManager.Instance.StopPlaying("LevelWin");
+            AudioManager.Instance.Play("LevelMusic");
         }
 
         private void OnDestroy()

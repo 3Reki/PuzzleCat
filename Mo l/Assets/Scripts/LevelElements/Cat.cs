@@ -210,10 +210,6 @@ namespace PuzzleCat.LevelElements
         {
             playerAgent.areaMask = 1 + currentSurface.GetNavMeshAreaMask();
             playerAgent.enabled = true;
-            AudioManager.Instance.StopPlaying("MenuMusic");
-            AudioManager.Instance.StopPlaying("LevelWin");
-            AudioManager.Instance.Play("LevelMusic");
-
         }
 
         private void Update()
