@@ -122,7 +122,7 @@ MonoBehaviour:
   - audioType: 0
     name: Mirror
     clip: {fileID: 8300000, guid: bfc45e0bce9938d429a6c71ddafaa32a, type: 3}
-    volume: 1
+    volume: 0.8
     pitch: 1
     loop: 0
     source: {fileID: 0}
