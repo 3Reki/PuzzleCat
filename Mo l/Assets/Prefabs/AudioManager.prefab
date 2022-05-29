@@ -164,7 +164,7 @@ MonoBehaviour:
   - audioType: 1
     name: Important
     clip: {fileID: 8300000, guid: ed6d31f125fe47f4fa8baa755054f746, type: 3}
-    volume: 0.6
+    volume: 0.35
     pitch: 1
-    loop: 0
+    loop: 1
     source: {fileID: 0}

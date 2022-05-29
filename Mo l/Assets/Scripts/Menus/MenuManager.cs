@@ -147,6 +147,11 @@ namespace PuzzleCat.Menus
             }
         }
 
+        public void OpenAdd()
+        {
+            Application.OpenURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        }
+
         private void ActivateLevelEndMenu()
         {
             endLevelCanvasGameObject.SetActive(true);

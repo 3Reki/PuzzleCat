@@ -57,6 +57,11 @@ namespace PuzzleCat.Menus
             }
         }
 
+        private void OnDestroy()
+        {
+            AudioManager.Instance.StopPlaying("Important");
+        }
+
         private delegate bool KonamiCode(Vector2 position);
     }
 }
