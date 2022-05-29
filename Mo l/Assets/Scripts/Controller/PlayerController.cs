@@ -16,6 +16,7 @@ namespace PuzzleCat.Controller
         protected Vector2 TouchInitialPosition;
         protected float TouchStartTime;
         protected bool TouchMoved;
+        protected bool CanSelectElement;
         private GameManager.GameState _touchStartState;
         
 
@@ -48,8 +49,9 @@ namespace PuzzleCat.Controller
             TouchStartTime = Time.time;
             TouchMoved = false;
             _touchStartState = GameManager.Instance.State;
+            CanSelectElement = movableElementsController.CanEnterFurnitureMode();
             
-            if (_touchStartState != GameManager.GameState.PortalMode && movableElementsController.CanEnterFurnitureMode())
+            if (_touchStartState != GameManager.GameState.PortalMode && CanSelectElement)
             {
                 furnitureSelectionIndicator.Play(TouchInitialPosition + new Vector2(-0.12f, 0.12f) * Screen.width, holdTouchThreshold);
             }
@@ -57,9 +59,13 @@ namespace PuzzleCat.Controller
 
         protected virtual void HandleTouchStationary()
         {
+            if (!CanSelectElement)
+                return;
             if (GameManager.Instance.State is GameManager.GameState.PortalMode 
-                or GameManager.GameState.FurnitureMovement or GameManager.GameState.CameraMovement) return;
-            if (!(Time.time - TouchStartTime > holdTouchThreshold)) return;
+                or GameManager.GameState.FurnitureMovement or GameManager.GameState.CameraMovement) 
+                return;
+            if (!(Time.time - TouchStartTime > holdTouchThreshold)) 
+                return;
             
             GameManager.Instance.UpdateGameState(GameManager.GameState.FurnitureMovement);
         }

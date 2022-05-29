@@ -12,6 +12,7 @@ namespace PuzzleCat.LevelElements
 		public bool CatPortal;
 		public bool Active { get; private set; }
 		public bool GreyPortal;
+		public Surface ArrivalSurface => _linkedPortal.ImpactedSurface;
 
 		[SerializeField] private Portal defaultLinkedPortal;
 		[SerializeField] private Vector3Int arrivalPositionOffset;

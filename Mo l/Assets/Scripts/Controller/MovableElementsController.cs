@@ -26,7 +26,8 @@ namespace PuzzleCat.Controller
         public bool CanEnterFurnitureMode()
         {
             return Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit,
-                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2) && 
+                   !GameManager.Instance.Cat.IsUnderCat(_hit.transform.gameObject.GetComponent<MovableElement>());
         }
         
         public bool HandleMovement()
@@ -109,6 +110,10 @@ namespace PuzzleCat.Controller
             }
             else
             {
+                if (_selectedMovableElement != null)
+                {
+                    _selectedMovableElement.Deselect();
+                }
                 SetSelectedMovableObject(null);
             }
         }
