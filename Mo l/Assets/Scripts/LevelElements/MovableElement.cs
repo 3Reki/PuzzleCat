@@ -209,7 +209,7 @@ namespace PuzzleCat.LevelElements
                 Portal sameSurfacePortal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction,
                     movable.CurrentSurface);
 
-                if ((portal == null || !portal.Active) && 
+                if ((portal == null || !portal.Active || portal.CatPortal) && 
                     !(onPortal && sameSurfacePortal != null && sameSurfacePortal.IsConnectedTo(movable._steppedOnPortal)) &&
                     !movable.CurrentRoom.CanMoveOnCell(movable, 
                         movable.RoomGridPosition + movable._direction, movable.CurrentSurface))
@@ -249,7 +249,7 @@ namespace PuzzleCat.LevelElements
 
         private void PrepareMovement(Surface currentSurface, bool onPortal, Portal portal, Portal sameSurfacePortal)
         {
-            if (portal != null && portal.Active)
+            if (portal != null && portal.Active && !portal.CatPortal)
             {
                 portal.Interact(this);
 
