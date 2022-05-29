@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace PuzzleCat.Menus
 {
     public class LevelSelectionMenuManager : MonoBehaviour
@@ -81,6 +85,10 @@ namespace PuzzleCat.Menus
         private void Awake()
         {
             Application.targetFrameRate = Screen.currentResolution.refreshRate;
+#if UNITY_EDITOR
+            new GameObject("Game Data").AddComponent<GameData>();
+            PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AudioManager.prefab"));
+#endif
         }
 
         private void Start()
