@@ -1,7 +1,7 @@
 using PuzzleCat.TutorialAnimations;
 using UnityEngine;
 
-namespace PuzzleCat
+namespace PuzzleCat.Menus
 {
     public class TutorialMenuManager : MenuManager
     {

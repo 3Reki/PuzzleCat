@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 087b034684a2e3f4e9308c3007ec2813
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - portalPlacementController: {instanceID: 0}
+  - portalButtonImage: {instanceID: 0}
+  - portalMenuImage: {instanceID: 0}
+  - selectedPortalCheckmark: {instanceID: 0}
+  - portalSelectionToggleGroup: {instanceID: 0}
+  - portalBookOpen: {fileID: 21300000, guid: a13c9eac152138744a07a115e052ed2d, type: 3}
+  - portalBookClosed: {fileID: 21300000, guid: 716c27600edffbe419b997bdb9040df8, type: 3}
+  - pauseCanvasGameObject: {instanceID: 0}
+  - pauseMenuTransform: {instanceID: 0}
+  - endLevelCanvasGameObject: {instanceID: 0}
+  - endLevelBackground: {instanceID: 0}
+  - endLevelFrame: {instanceID: 0}
+  - nextLevelButton: {instanceID: 0}
+  - sfxToggle: {instanceID: 0}
+  - musicToggle: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
