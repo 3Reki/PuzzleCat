@@ -11,12 +11,23 @@ namespace PuzzleCat
         public int unlockedLevelsCount;
         public bool sfxOn;
         public bool musicOn;
+        public bool firstTime;
 
-        private void UpdatePlayerPrefs()
+        public void ResetGameData()
+        {
+            PlayerPrefs.DeleteAll();
+            unlockedLevelsCount = 1;
+            sfxOn = true;
+            musicOn = true;
+            firstTime = true;
+        }
+        
+        public void SaveGameData()
         {
             PlayerPrefs.SetInt("Unlocked Levels Count", unlockedLevelsCount);
             PlayerPrefs.SetInt("SFX On", Convert.ToInt32(sfxOn));
             PlayerPrefs.SetInt("Music On", Convert.ToInt32(musicOn));
+            PlayerPrefs.SetInt("First time", Convert.ToInt32(firstTime));
             PlayerPrefs.Save();
         }
         
@@ -35,16 +46,18 @@ namespace PuzzleCat
             unlockedLevelsCount = PlayerPrefs.GetInt("Unlocked Levels Count", 1);
             sfxOn = Convert.ToBoolean(PlayerPrefs.GetInt("SFX On", 1));
             musicOn = Convert.ToBoolean(PlayerPrefs.GetInt("Music On", 1));
+            firstTime = Convert.ToBoolean(PlayerPrefs.GetInt("First time", 1));
 #else
             unlockedLevelsCount = SceneManager.sceneCountInBuildSettings - 1;
             sfxOn = true;
             musicOn = true;
+            firstTime = false;
 #endif
         }
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            UpdatePlayerPrefs();
+            SaveGameData();
         }
     }
 }
