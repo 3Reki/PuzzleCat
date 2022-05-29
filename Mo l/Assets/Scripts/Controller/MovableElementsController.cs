@@ -110,6 +110,10 @@ namespace PuzzleCat.Controller
             }
             else
             {
+                if (_selectedMovableElement != null)
+                {
+                    _selectedMovableElement.Deselect();
+                }
                 SetSelectedMovableObject(null);
             }
         }

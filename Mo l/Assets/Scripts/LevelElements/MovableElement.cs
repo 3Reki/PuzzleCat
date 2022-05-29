@@ -19,70 +19,35 @@ namespace PuzzleCat.LevelElements
         private bool _inPortal;
         private bool _onPortal;
         private Portal _steppedOnPortal;
-        private Vector3Int _portalDirection;
+        private Vector3Int _inPortalDirection;
+        private Vector3Int _outPortalDirection;
         private Surface _surfaceBeforePortal;
         private Vector3Int _direction;
 
         public bool MoveLeft()
         {
-            foreach (MovableElement movable in linkedMovables)
-            {
-                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
-                {
-                    Surface.Floor => Vector3Int.left,
-                    Surface.SideWall => Vector3Int.back,
-                    Surface.BackWall => Vector3Int.left,
-                    _ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
-                };
-            }
+            SetMovableDirections(Vector3Int.left, Vector3Int.back, Vector3Int.left);
 
             return TryMoving();
         }
 
         public bool MoveRight()
         {
-            foreach (MovableElement movable in linkedMovables)
-            {
-                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
-                {
-                    Surface.Floor => Vector3Int.right,
-                    Surface.SideWall => Vector3Int.forward,
-                    Surface.BackWall => Vector3Int.right,
-                    _ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
-                };
-            }
+            SetMovableDirections(Vector3Int.right, Vector3Int.forward, Vector3Int.right);
 
             return TryMoving();
         }
 
         public bool MoveForward()
         {
-            foreach (MovableElement movable in linkedMovables)
-            {
-                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
-                {
-                    Surface.Floor => Vector3Int.forward,
-                    Surface.SideWall => Vector3Int.up,
-                    Surface.BackWall => Vector3Int.up,
-                    _ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
-                };
-            }
+            SetMovableDirections(Vector3Int.forward, Vector3Int.up, Vector3Int.up);
 
             return TryMoving();
         }
 
         public bool MoveBackward()
         {
-            foreach (MovableElement movable in linkedMovables)
-            {
-                movable._direction = (_inPortal ? _surfaceBeforePortal : CurrentSurface) switch
-                {
-                    Surface.Floor => Vector3Int.back,
-                    Surface.SideWall => Vector3Int.down,
-                    Surface.BackWall => Vector3Int.down,
-                    _ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
-                };
-            }
+            SetMovableDirections(Vector3Int.back, Vector3Int.down, Vector3Int.down);
 
             return TryMoving();
         }
@@ -111,6 +76,11 @@ namespace PuzzleCat.LevelElements
                 }
             }
 
+            if (onGround.Count == 0)
+            {
+                return;
+            }
+
             var (movableElement1, movableElement2) = FindFarthestElements(onGround);
             
             float distX = (movableElement2.objectTransform.position - movableElement1.objectTransform.position)
@@ -126,8 +96,15 @@ namespace PuzzleCat.LevelElements
                 Quaternion.LookRotation(CurrentSurface.GetNormal()), 
                 new Vector3(distX + 1, distY + 4, 1), new Vector3(distY + 1, distX + 4, 1));
         }
-
-
+        
+        public void Deselect()
+        {
+            if (IsOutOfPortal())
+            {
+                ExitPortal();
+            }
+        }
+        
 
         private static (MovableElement, MovableElement) FindFarthestElements(List<MovableElement> movableElements)
         {
@@ -160,33 +137,62 @@ namespace PuzzleCat.LevelElements
             };
         }
 
+        private void SetMovableDirections(Vector3Int floorDefault, Vector3Int sideDefault, Vector3Int backDefault)
+        {
+            foreach (MovableElement movable in linkedMovables)
+            {
+                if (!movable._inPortal)
+                {
+                    movable._direction = movable.CurrentSurface switch
+                    {
+                        Surface.Floor => floorDefault,
+                        Surface.SideWall => sideDefault,
+                        Surface.BackWall => backDefault,
+                        _ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
+                    };
+                    continue;
+                }
+                
+                movable._direction = _surfaceBeforePortal switch
+                {
+                    Surface.Floor => floorDefault,
+                    Surface.SideWall => sideDefault,
+                    Surface.BackWall => backDefault,
+                    _ => throw new ArgumentOutOfRangeException(nameof(CurrentSurface), CurrentSurface, null)
+                };
+
+                if (movable._direction == _inPortalDirection)
+                {
+                    Debug.Log("same");
+                    movable._direction = _outPortalDirection;
+                }
+                else if (movable._direction == -_inPortalDirection)
+                {
+                    Debug.Log("inverse");
+                    movable._direction = -_outPortalDirection;
+                }
+                else
+                {
+                    Debug.Log("diff");
+                    movable._direction = Vector3Int.zero;
+                }
+            }
+        }
+
         private bool CanMove()
         {
-            bool linkedThroughPortal = IsInPortal();
             bool onPortal = IsOnPortal();
 
-            if (!linkedThroughPortal)
+            if (IsOutOfPortal()) // TODO return to previous surface
             {
-                ExitPortal();
-            }
-            else
-            {
-                if (_direction != _portalDirection && _direction != -_portalDirection)
-                {
-                    return false;
-                }
+                return false;
             }
 
             foreach (MovableElement movable in linkedMovables)
             {
-                if (movable._inPortal)
+                if (movable._inPortal && movable._direction != _outPortalDirection && movable._direction != -_outPortalDirection)
                 {
-                    movable._direction = movable.CurrentSurface.GetNormal();
-
-                    if (_direction == -_portalDirection)
-                    {
-                        movable._direction *= -1;
-                    }
+                    return false;
                 }
             }
 
@@ -227,6 +233,7 @@ namespace PuzzleCat.LevelElements
         {
             if (!CanMove())
             {
+                Debug.Log("nop");
                 return false;
             }
 
@@ -263,8 +270,9 @@ namespace PuzzleCat.LevelElements
                 _steppedOnPortal = CurrentRoom.FindPortal(RoomGridPosition, CurrentSurface);
                 foreach (MovableElement linkedMovable in linkedMovables)
                 {
-                    linkedMovable._portalDirection = _direction;
-                    _surfaceBeforePortal = currentSurface;
+                    linkedMovable._inPortalDirection = -portal.ImpactedSurface.GetNormal();
+                    linkedMovable._outPortalDirection = portal.ArrivalSurface.GetNormal();
+                    linkedMovable._surfaceBeforePortal = currentSurface;
                 }
 
                 return;
@@ -300,17 +308,28 @@ namespace PuzzleCat.LevelElements
 
         private bool IsInPortal()
         {
-            int inPortalCount = 0;
-
             foreach (MovableElement movable in linkedMovables)
             {
                 if (movable._inPortal)
                 {
-                    inPortalCount++;
+                    return true;
                 }
             }
 
-            return inPortalCount != 0 && inPortalCount != linkedMovables.Length;
+            return false;
+        }
+        
+        private bool IsOutOfPortal()
+        {
+            foreach (MovableElement movable in linkedMovables)
+            {
+                if (!movable._inPortal)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void ExitPortal()
