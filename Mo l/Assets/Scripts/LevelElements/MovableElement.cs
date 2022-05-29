@@ -220,6 +220,8 @@ namespace PuzzleCat.LevelElements
                 (movable1, movable2) =>
                     ((movable2.RoomGridPosition - movable1.RoomGridPosition) * _direction).Sum()); // todo remove ?
 
+            Portal currentPortal = null;
+
             foreach (MovableElement movable in linkedMovables)
             {
                 if (GameManager.Instance.Cat.IsUnderCat(movable))
@@ -237,13 +239,24 @@ namespace PuzzleCat.LevelElements
                 Portal sameSurfacePortal = movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction,
                     movable.CurrentSurface);
 
-                if ((portal == null || !portal.Active || portal.CatPortal) && 
-                    !(onPortal && sameSurfacePortal != null && sameSurfacePortal.IsConnectedTo(movable._steppedOnPortal)) &&
-                    !movable.CurrentRoom.CanMoveOnCell(movable, 
-                        movable.RoomGridPosition + movable._direction, movable.CurrentSurface))
+                if (portal != null && portal.Active && !portal.CatPortal)
+                {
+                    if (currentPortal != null && !portal.IsConnectedTo(currentPortal))
+                    {
+                        return false;
+                    }
+                    currentPortal = portal;
+                    continue;
+                }
+
+                if (onPortal && sameSurfacePortal != null && sameSurfacePortal.IsConnectedTo(movable._steppedOnPortal)) 
+                    continue;
+                
+                if (!movable.CurrentRoom.CanMoveOnCell(movable, movable.RoomGridPosition + movable._direction, movable.CurrentSurface))
                 {
                     return false;
                 }
+
             }
 
             return true;
