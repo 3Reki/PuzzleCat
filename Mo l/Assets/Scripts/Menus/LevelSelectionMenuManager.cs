@@ -52,6 +52,7 @@ namespace PuzzleCat.Menus
         {
             foreach (RectTransform selectionTransform in levelSelectionTransforms)
             {
+                selectionTransform.DOComplete();
                 selectionTransform.DOAnchorPosX(selectionTransform.anchoredPosition.x - Screen.width * direction, 0.5f);
                 AudioManager.Instance.Play("Ok");
             }
