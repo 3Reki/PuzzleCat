@@ -740,54 +740,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432578482}
   m_CullTransparentMesh: 1
---- !u!1 &455472575
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 455472577}
-  - component: {fileID: 455472576}
-  m_Layer: 0
-  m_Name: Game Data
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &455472576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455472575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffbd62dd6b6f1e14bbe09d7c30a8e6de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unlockedLevelsCount: 0
-  sfxOn: 0
-  musicOn: 0
-  firstTime: 0
---- !u!4 &455472577
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455472575}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &533982582
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,7 +893,7 @@ PrefabInstance:
     - target: {fileID: 2370042369567087850, guid: 2ec3a7c31a400a444888e128f43bd41a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2370042369567087850, guid: 2ec3a7c31a400a444888e128f43bd41a,
         type: 3}
@@ -2097,75 +2049,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 931430416}
   m_CullTransparentMesh: 1
---- !u!1001 &939725079
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5933601697178340823, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6125056821173311546, guid: febe7952d9016034db3921e4ae34b7a9,
-        type: 3}
-      propertyPath: m_Name
-      value: GB_AudioManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: febe7952d9016034db3921e4ae34b7a9, type: 3}
 --- !u!1 &994376657
 GameObject:
   m_ObjectHideFlags: 0
@@ -4036,8 +3919,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1716557806}
-        m_TargetAssemblyTypeName: PuzzleCat.TitleScreenMenuManager, Assembly-CSharp
+      - m_Target: {fileID: 1716557808}
+        m_TargetAssemblyTypeName: PuzzleCat.Menus.TitleScreenMenuManager, Assembly-CSharp
         m_MethodName: OpenSettingsMenu
         m_Mode: 1
         m_Arguments:
@@ -4199,6 +4082,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1716557807}
   - component: {fileID: 1716557806}
+  - component: {fileID: 1716557808}
   m_Layer: 0
   m_Name: Menu Manager
   m_TagString: Untagged
@@ -4239,13 +4123,6 @@ MonoBehaviour:
   - {fileID: 1876565706}
   - {fileID: 34657671}
   - {fileID: 1265184024}
-  settingsCanvasGameObject: {fileID: 374754698}
-  settingsMenuTransform: {fileID: 117801382}
-  settingsBackgroundImage: {fileID: 404942301}
-  creditsCanvasGameObject: {fileID: 745691616}
-  creditsMenuTransform: {fileID: 1340773666}
-  sfxToggle: {fileID: 1514106251}
-  musicToggle: {fileID: 195901208}
   levelSelectionCanvas: {fileID: 1936758577}
   introductionCanvas: {fileID: 699932864}
 --- !u!4 &1716557807
@@ -4263,6 +4140,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1716557808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716557805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bee13ec4a490b14993d81c2fc7f7096, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingsCanvasGameObject: {fileID: 374754698}
+  settingsMenuTransform: {fileID: 117801382}
+  settingsBackgroundImage: {fileID: 404942301}
+  creditsCanvasGameObject: {fileID: 745691616}
+  creditsMenuTransform: {fileID: 1340773666}
+  sfxToggle: {fileID: 1514106251}
+  musicToggle: {fileID: 195901208}
 --- !u!1 &1788032346
 GameObject:
   m_ObjectHideFlags: 0
@@ -5499,7 +5395,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1716557806}
+      objectReference: {fileID: 1716557808}
+    - target: {fileID: 3444816587787637303, guid: 5daa5992acc94bf4997438d9fd519ea0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PuzzleCat.Menus.TitleScreenMenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5daa5992acc94bf4997438d9fd519ea0, type: 3}
 --- !u!1001 &5940496913400405625
@@ -5513,17 +5414,37 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1716557806}
+      objectReference: {fileID: 1716557808}
+    - target: {fileID: 5940496911960536050, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PuzzleCat.Menus.TitleScreenMenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5940496912911611803, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1716557806}
+      objectReference: {fileID: 1716557808}
+    - target: {fileID: 5940496912911611803, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PuzzleCat.Menus.TitleScreenMenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5940496913000035237, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1716557806}
+      objectReference: {fileID: 1716557808}
+    - target: {fileID: 5940496913000035237, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseSettingsMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5940496913000035237, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PuzzleCat.Menus.TitleScreenMenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5940496913238283250, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
         type: 3}
       propertyPath: m_Pivot.x
@@ -5638,6 +5559,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1716557806}
+      objectReference: {fileID: 1716557808}
+    - target: {fileID: 5940496913309903201, guid: a589bc21aa3a1ff4c8079c35b5589a4f,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PuzzleCat.Menus.TitleScreenMenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a589bc21aa3a1ff4c8079c35b5589a4f, type: 3}
