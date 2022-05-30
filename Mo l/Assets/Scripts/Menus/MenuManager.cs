@@ -64,7 +64,7 @@ namespace PuzzleCat.Menus
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
             AudioManager.Instance.Play("PortalBookIn");
-            portalMenuImage.rectTransform.DOAnchorPosX(-portalMenuImage.rectTransform.rect.width + 23 +
+            portalMenuImage.rectTransform.DOAnchorPosX(-portalMenuImage.rectTransform.rect.width +
                                                        ((RectTransform) portalToggles[0].transform).rect.width *
                                                        (4 - portalToggles.Length), .4f);
         }
