@@ -24,6 +24,8 @@ namespace PuzzleCat.Controller
             if (_portalGroupId == id) // TODO : change toggles or check if false
             {
                 ResetSelectedGroup();
+                
+
                 return;
             }
             
@@ -47,6 +49,7 @@ namespace PuzzleCat.Controller
                 _portalCounts[0] += unsetGreyPortals;
                 PortalCountTexts[0].text = $"x{_portalCounts[0]}";
                 _portalCounts[portal.Id - 1]++;
+                AudioManager.Instance.Play("PortalRemoved");
                 PortalCountTexts[portal.Id - 1].text = $"x{_portalCounts[portal.Id - 1]}";
                 
                 if (_portalGroupId == -1)
@@ -81,6 +84,7 @@ namespace PuzzleCat.Controller
             _portals[_portalGroupId][_portalId].SetPortal(hit.transform.parent.GetComponent<Room>(), 
                 gridPoint, hit.normal.ToSurface());
             _portalId = FindCurrentPortalIndex(_portalGroupId);
+            AudioManager.Instance.Play("PortalPlaced");
             _portalCounts[_portalGroupId - 1]--;
             PortalCountTexts[_portalGroupId - 1].text = $"x{_portalCounts[_portalGroupId - 1]}";
             return true;

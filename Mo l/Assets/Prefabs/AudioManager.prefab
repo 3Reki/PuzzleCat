@@ -143,21 +143,21 @@ MonoBehaviour:
   - audioType: 0
     name: PortalPlaced
     clip: {fileID: 8300000, guid: f47e4e69372ade946adc2f24b13a4818, type: 3}
-    volume: 1
+    volume: 0.65
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - audioType: 0
     name: PortalRemoved
     clip: {fileID: 8300000, guid: 2153b611586590947a8496c2b10c8970, type: 3}
-    volume: 1
+    volume: 0.65
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - audioType: 0
     name: InvalidPortal
     clip: {fileID: 8300000, guid: 7ff12726e8021c64fbb2822d59f657ff, type: 3}
-    volume: 1
+    volume: 0.35
     pitch: 1
     loop: 0
     source: {fileID: 0}
