@@ -114,9 +114,11 @@ namespace PuzzleCat.LevelElements
 
 			Vector3Int[] directionVectors = Utils.Utils.GetDirectionVectors(surfaceType);
 
+			Portal portal;
 			for (var i = 0; i < directionVectors.Length; i++)
 			{
-				if (parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType) != null)
+				portal = parentRoom.FindPortal(roomGridPosition + directionVectors[i], surfaceType);
+				if (portal != null && !portal.CatPortal)
 				{
 					return true;
 				}
