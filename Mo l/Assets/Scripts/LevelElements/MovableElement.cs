@@ -78,8 +78,11 @@ namespace PuzzleCat.LevelElements
 
             if (onGround.Count == 0)
             {
+                DirectionIndicator.SetAllIndicatorsActive(false);
                 return;
             }
+            
+            DirectionIndicator.SetAllIndicatorsActive(true);
 
             var (movableElement1, movableElement2) = FindFarthestElements(onGround);
             
@@ -287,7 +290,7 @@ namespace PuzzleCat.LevelElements
             bool onPortal = IsOnPortal();
 
             Surface beforePortal = _surfaceBeforePortal != Surface.None ? _surfaceBeforePortal : CurrentSurface;
-            Debug.Log("ye " + CurrentSurface);
+
             foreach (MovableElement movable in linkedMovables)
             {
                 movable.PrepareMovement(beforePortal, onPortal,
@@ -295,7 +298,6 @@ namespace PuzzleCat.LevelElements
                     movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction, movable.CurrentSurface));
             }
 
-            Debug.Log(_surfaceBeforePortal);
             onMovement?.Invoke();
 
             return true;
