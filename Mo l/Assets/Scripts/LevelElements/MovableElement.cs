@@ -69,7 +69,7 @@ namespace PuzzleCat.LevelElements
             var onGround = new List<MovableElement>();
             foreach (MovableElement linkedMovable in linkedMovables)
             {
-                if (CurrentRoom == linkedMovable.CurrentRoom && CurrentSurface == linkedMovable.CurrentSurface &&
+                if (!linkedMovable._inPortal &&
                     CurrentRoom.IsInContact(linkedMovable.RoomGridPosition, linkedMovable.CurrentSurface))
                 {
                     onGround.Add(linkedMovable);
@@ -84,16 +84,16 @@ namespace PuzzleCat.LevelElements
             var (movableElement1, movableElement2) = FindFarthestElements(onGround);
             
             float distX = (movableElement2.objectTransform.position - movableElement1.objectTransform.position)
-                    .ApplyMask(CurrentSurface.Up());
+                    .ApplyMask(movableElement1.CurrentSurface.Up());
             float distY = (movableElement2.objectTransform.position - movableElement1.objectTransform.position)
-                    .ApplyMask(CurrentSurface.Right());
+                    .ApplyMask(movableElement1.CurrentSurface.Right());
             
             distX = Mathf.Abs(Mathf.Round(distX));
             distY = Mathf.Abs(Mathf.Round(distY));
 
             DirectionIndicator.SetTransform(
                 (movableElement1.GroundedPosition() + movableElement2.GroundedPosition()) / 2, 
-                Quaternion.LookRotation(CurrentSurface.GetNormal()), 
+                Quaternion.LookRotation(movableElement1.CurrentSurface.GetNormal()), 
                 new Vector3(distX + 1, distY + 4, 1), new Vector3(distY + 1, distX + 4, 1));
         }
         
