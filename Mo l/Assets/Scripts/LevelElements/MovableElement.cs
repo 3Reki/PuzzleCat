@@ -12,11 +12,11 @@ namespace PuzzleCat.LevelElements
         public static OnMovement onMovement;
         public static MovableElementDirectionIndicator DirectionIndicator;
         public Surface CurrentSurface;
+        public bool InPortal { get; private set; }
 
         [SerializeField] private Transform objectTransform;
         [SerializeField] private MovableElement[] linkedMovables;
-
-        private bool _inPortal;
+        
         private bool _onPortal;
         private Portal _steppedOnPortal;
         private Vector3Int _inPortalDirection;
@@ -69,7 +69,7 @@ namespace PuzzleCat.LevelElements
             var onGround = new List<MovableElement>();
             foreach (MovableElement linkedMovable in linkedMovables)
             {
-                if (!linkedMovable._inPortal &&
+                if (!linkedMovable.InPortal &&
                     CurrentRoom.IsInContact(linkedMovable.RoomGridPosition, linkedMovable.CurrentSurface))
                 {
                     onGround.Add(linkedMovable);
@@ -177,7 +177,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                if (!movable._inPortal)
+                if (!movable.InPortal)
                 {
                     movable._direction = movable.CurrentSurface switch
                     {
@@ -216,14 +216,14 @@ namespace PuzzleCat.LevelElements
         {
             bool onPortal = IsOnPortal();
 
-            if (IsOutOfPortal()) // TODO return to previous surface
+            if (IsOutOfPortal() && _direction != -_outPortalDirection) // TODO return to previous surface
             {
                 return false;
             }
 
             foreach (MovableElement movable in linkedMovables)
             {
-                if (movable._inPortal && movable._direction != _outPortalDirection && movable._direction != -_outPortalDirection)
+                if (movable.InPortal && movable._direction != _outPortalDirection && movable._direction != -_outPortalDirection)
                 {
                     return false;
                 }
@@ -304,9 +304,9 @@ namespace PuzzleCat.LevelElements
             {
                 portal.Interact(this);
 
-                if (_inPortal)
+                if (InPortal)
                 {
-                    _inPortal = false;
+                    InPortal = false;
                     _onPortal = false;
                     CurrentSurface = _surfaceBeforePortal;
                     if (!IsInPortal())
@@ -316,7 +316,7 @@ namespace PuzzleCat.LevelElements
                     return;
                 }
 
-                _inPortal = true;
+                InPortal = true;
                 _onPortal = true;
                 _steppedOnPortal = CurrentRoom.FindPortal(RoomGridPosition, CurrentSurface);
                 CurrentRoom.SetSurfaceIndicatorActive(portal.ArrivalSurface, true);
@@ -362,7 +362,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                if (movable._inPortal)
+                if (movable.InPortal)
                 {
                     return true;
                 }
@@ -375,7 +375,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                if (!movable._inPortal)
+                if (!movable.InPortal)
                 {
                     return false;
                 }
@@ -388,7 +388,7 @@ namespace PuzzleCat.LevelElements
         {
             foreach (MovableElement movable in linkedMovables)
             {
-                movable._inPortal = false;
+                movable.InPortal = false;
             }
         }
 

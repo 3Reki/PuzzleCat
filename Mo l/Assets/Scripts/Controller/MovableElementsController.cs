@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using PuzzleCat.Visuals;
@@ -26,7 +25,8 @@ namespace PuzzleCat.Controller
         public bool CanEnterFurnitureMode()
         {
             return Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit,
-                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2)
+                && !_hit.transform.GetComponent<MovableElement>().InPortal;
         }
         
         public bool HandleMovement()
