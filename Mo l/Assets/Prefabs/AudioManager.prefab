@@ -147,6 +147,13 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - audioType: 0
+    name: Invalid
+    clip: {fileID: 8300000, guid: 7153b08bb8fff094baffc199267d2650, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - audioType: 1
     name: MenuMusic
     clip: {fileID: 8300000, guid: a9105343247fca346ba177ae1cdbeeb6, type: 3}

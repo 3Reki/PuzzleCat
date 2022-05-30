@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PuzzleCat.LevelElements;
+using PuzzleCat.Sound;
 using PuzzleCat.Utils;
 using TMPro;
 using UnityEngine;
@@ -15,8 +16,8 @@ namespace PuzzleCat.Controller
 
         private Dictionary<int, List<Portal>> _portals;
         private int[] _portalCounts;
-        private int _portalGroupId;
-        private int _portalId;
+        private int _portalGroupId = -1;
+        private int _portalId = -1;
 
         public void UpdateSelectedPortalGroup(int id)
         {
@@ -54,6 +55,7 @@ namespace PuzzleCat.Controller
                 }
                 
                 _portalId = FindCurrentPortalIndex(_portalGroupId);
+                return false;
             }
 
             if (_portalGroupId == -1)
@@ -64,6 +66,7 @@ namespace PuzzleCat.Controller
             if (_portalId == -1)
             {
                 Debug.LogWarning("Attempt to place portal when none is available");
+                AudioManager.Instance.Play("Invalid");
                 return false;
             }
 
@@ -71,6 +74,7 @@ namespace PuzzleCat.Controller
             
             if (!_portals[_portalGroupId][_portalId].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
             {
+                AudioManager.Instance.Play("Invalid");
                 return false;
             }
 
