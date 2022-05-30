@@ -66,7 +66,7 @@ namespace PuzzleCat.Controller
             if (_portalId == -1)
             {
                 Debug.LogWarning("Attempt to place portal when none is available");
-                AudioManager.Instance.Play("Invalid");
+                AudioManager.Instance.Play("InvalidPortal");
                 return false;
             }
 
@@ -74,7 +74,7 @@ namespace PuzzleCat.Controller
             
             if (!_portals[_portalGroupId][_portalId].CanSetPortal(hit.transform, gridPoint, hit.normal.ToSurface()))
             {
-                AudioManager.Instance.Play("Invalid");
+                AudioManager.Instance.Play("InvalidPortal");
                 return false;
             }
 
