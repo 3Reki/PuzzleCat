@@ -1,6 +1,7 @@
 using System.Collections;
 using DG.Tweening;
 using PuzzleCat.Controller;
+using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -12,19 +13,22 @@ namespace PuzzleCat.TutorialAnimations
         [SerializeField] private RectTransform handTransform;
         [SerializeField] private HandAnimation handAnimation;
         [SerializeField] private LayerMask invisibleLayerMask;
+        [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private Action[] authorizedAction;
         [SerializeField] private Vector2[] handPositions;
         [SerializeField] private Quaternion[] handRotations;
         [SerializeField] private Vector3Int[] desiredTouchPosition;
+        [SerializeField] private Vector3Int[] desiredTouchMovement;
         [SerializeField] private int[] desiredPortalGroup;
         [SerializeField] private Surface[] desiredTouchSurface;
         [SerializeField] private Vector2[] handDestinations;
         [SerializeField] private float selectionDelay;
-        [SerializeField] private bool horribleBool;
         
         private WaitForSeconds _selectionDelay;
         private IEnumerator _furnitureMovementEnumerator;
+        private Vector3Int _selectedElementPosition;
         private int _desiredPositionIndex;
+        private int _desiredMovementIndex;
         private int _desiredPortalGroupIndex;
         private int _desiredSurfaceIndex;
         private int _handPositionIndex = -1;
@@ -74,14 +78,7 @@ namespace PuzzleCat.TutorialAnimations
             if (authorizedAction[_handPositionIndex] != Action.ElementMove)
                 return false;
 
-            if (!horribleBool)
-                return true;
-            
-            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
-                GameManager.Instance.MainCamera, -5, 100f, true, 2))
-                return false;
-
-            return hit.point.z < 0;
+            return true;
         }
 
         public override bool CanMoveElement()
@@ -96,7 +93,7 @@ namespace PuzzleCat.TutorialAnimations
                 GameManager.Instance.MainCamera, invisibleLayerMask, 100f, true, 2))
                 return false;
 
-            return Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point) == desiredTouchPosition[_desiredPositionIndex];
+            return Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point) == _selectedElementPosition + desiredTouchMovement[_desiredMovementIndex];
         }
 
         public override bool CanMovePlayer()
@@ -170,7 +167,8 @@ namespace PuzzleCat.TutorialAnimations
 
             NextPosition();
             handAnimation.OnHalfComplete = MoveFurniture;
-            _desiredPositionIndex++;
+            _selectedElementPosition += desiredTouchMovement[_desiredMovementIndex];
+            _desiredMovementIndex++;
             _elementMovementsLeft--;
             
             if (authorizedAction[_handPositionIndex] != Action.ElementMove)
@@ -186,6 +184,11 @@ namespace PuzzleCat.TutorialAnimations
         {
             if (_tutorialEnded)
                 return;
+
+            Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+
+            _selectedElementPosition = hit.transform.GetComponent<MovableElement>().WorldGridPosition;
             
             handAnimation.StopAnimation();
             handTransform.DOComplete();
