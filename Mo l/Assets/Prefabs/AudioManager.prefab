@@ -86,7 +86,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - audioType: 0
     name: Click
-    clip: {fileID: 8300000, guid: d5777c7d3461e4e4d80877548b85b837, type: 3}
+    clip: {fileID: 8300000, guid: b903fff9d8a395e47ad2ad4c3384f9dc, type: 3}
     volume: 0.5
     pitch: 1
     loop: 0
