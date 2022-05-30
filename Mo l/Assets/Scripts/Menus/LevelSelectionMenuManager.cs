@@ -56,14 +56,14 @@ namespace PuzzleCat.Menus
 
         public void ChangeLevelSelectionPanel(int direction)
         {
+            _currentLevelSelectionIndex += direction;
+            
             foreach (RectTransform selectionTransform in levelSelectionTransforms)
             {
-                selectionTransform.DOComplete();
-                selectionTransform.DOAnchorPosX(selectionTransform.anchoredPosition.x - Screen.width * direction, 0.5f);
+                //selectionTransform.DOKill();
+                selectionTransform.DOAnchorPosX(-Screen.width * _currentLevelSelectionIndex, 0.5f);
                 AudioManager.Instance.Play("Ok");
             }
-
-            _currentLevelSelectionIndex += direction;
 
             rightSelectionArrow.interactable = _currentLevelSelectionIndex != levelSelectionTransforms.Length - 1;
             leftSelectionArrow.interactable = _currentLevelSelectionIndex != 0;
