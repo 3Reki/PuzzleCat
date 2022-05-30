@@ -69,9 +69,10 @@ namespace PuzzleCat.Controller
                 
             if (inputManager.FirstTouchPosition == _lastTouchPosition) 
                 return;
-            
+
             cameraTransform.position -=
-                cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) / Screen.dpi * movementSpeed;
+                cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) / Screen.dpi * 
+                (camera.orthographicSize * .1f * movementSpeed);
             _lastTouchPosition = inputManager.FirstTouchPosition;
 
             if ((cameraTransform.position - _centerPosition).magnitude > _initialSize * 1.15f)
