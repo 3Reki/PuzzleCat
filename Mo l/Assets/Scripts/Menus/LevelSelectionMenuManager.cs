@@ -37,9 +37,7 @@ namespace PuzzleCat.Menus
             }
 
             GameData.Instance.unlockedLevelsCount = levelButtons.Length;
-            GameData.Instance.gameFinished = true;
             AudioManager.Instance.Play("Ok");
-            SceneManager.LoadScene(0);
         }
 
         public void ResetSave()

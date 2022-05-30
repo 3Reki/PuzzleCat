@@ -16,10 +16,10 @@ namespace PuzzleCat.Menus
         {
             return _inputs[_currentIndex] switch
             {
-                Direction.Up => position => position.y > Screen.height * 0.95f,
-                Direction.Right => position => position.x > Screen.width * 0.95f,
-                Direction.Down => position => position.y < Screen.height * 0.05f,
-                Direction.Left => position => position.x < Screen.width * 0.05f,
+                Direction.Up => position => position.y > Screen.height * 0.9f,
+                Direction.Right => position => position.x > Screen.width * 0.9f,
+                Direction.Down => position => position.y < Screen.height * 0.1f,
+                Direction.Left => position => position.x < Screen.width * 0.1f,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -41,6 +41,8 @@ namespace PuzzleCat.Menus
             if (Input.GetTouch(0).phase != TouchPhase.Began)
                 return;
 
+            Debug.Log(Screen.height);
+            Debug.Log(Input.GetTouch(0).position);
             if (!CurrentInput()(Input.GetTouch(0).position))
             {
                 _currentIndex = 0;
