@@ -285,22 +285,25 @@ namespace PuzzleCat.LevelElements
             }
 
             bool onPortal = IsOnPortal();
-            
+
+            Surface beforePortal = _surfaceBeforePortal != Surface.None ? _surfaceBeforePortal : CurrentSurface;
+            Debug.Log("ye " + CurrentSurface);
             foreach (MovableElement movable in linkedMovables)
             {
-                movable.PrepareMovement(CurrentSurface, onPortal,
+                movable.PrepareMovement(beforePortal, onPortal,
                     movable.CurrentRoom.FindPortal(movable.RoomGridPosition, (-movable._direction).ToSurface()),
                     movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction, movable.CurrentSurface));
             }
 
+            Debug.Log(_surfaceBeforePortal);
             onMovement?.Invoke();
 
             return true;
         }
 
-        private void PrepareMovement(Surface currentSurface, bool onPortal, Portal portal, Portal sameSurfacePortal)
+        private void PrepareMovement(Surface beforePortalSurface, bool onPortal, Portal portal, Portal sameSurfacePortal)
         {
-            if (portal != null && portal.Active && !portal.CatPortal)
+            if (portal != null)
             {
                 portal.Interact(this);
 
@@ -324,7 +327,7 @@ namespace PuzzleCat.LevelElements
                 {
                     linkedMovable._inPortalDirection = -portal.ImpactedSurface.GetNormal();
                     linkedMovable._outPortalDirection = portal.ArrivalSurface.GetNormal();
-                    linkedMovable._surfaceBeforePortal = currentSurface;
+                    linkedMovable._surfaceBeforePortal = beforePortalSurface;
                 }
 
                 return;
