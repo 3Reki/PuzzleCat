@@ -41,7 +41,7 @@ namespace PuzzleCat.LevelElements
 				return false;
 			}
 			
-			if (!_linkedPortal.CurrentRoom.CanMoveOnCell(movable, ArrivalRoomPosition(), ImpactedSurface))
+			if (!_linkedPortal.CurrentRoom.CanMoveOnCell(movable, ArrivalRoomPosition(), ImpactedSurface)) // TODO : fix (_linkedPortal.ImpactedSurface)
 			{
 				print("Can't move");
 				return false;
@@ -67,6 +67,15 @@ namespace PuzzleCat.LevelElements
 			CurrentRoom.RemoveRoomElement(movable);
 			linkedRoom.AddRoomElement(movable);
 			movable.SetRoom(linkedRoom);
+		}
+
+		public bool CanMovableInteract(MovableElement movable)
+		{
+			if (!Active || CatPortal || !_linkedPortal.Active) // todo test place
+				return false;
+
+			return movable.AnyLinkedElementAt(ArrivalRoomPosition()) ||
+			       _linkedPortal.CurrentRoom.CanMoveOnCell(movable, ArrivalRoomPosition(), Surface.All);
 		}
 
 		public bool IsConnectedTo(Portal portal)

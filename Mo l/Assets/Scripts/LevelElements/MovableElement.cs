@@ -128,6 +128,19 @@ namespace PuzzleCat.LevelElements
             return false;
         }
         
+        public bool AnyLinkedElementAt(Vector3Int position)
+        {
+            foreach (MovableElement linkedElement in linkedMovables)
+            {
+                if (linkedElement.RoomGridPosition == position)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
 
         private static (MovableElement, MovableElement) FindFarthestElements(List<MovableElement> movableElements)
         {
@@ -241,10 +254,11 @@ namespace PuzzleCat.LevelElements
 
                 if (portal != null && portal.Active && !portal.CatPortal)
                 {
-                    if (currentPortal != null && !portal.IsConnectedTo(currentPortal))
-                    {
+                    if (!portal.CanMovableInteract(movable)) 
                         return false;
-                    }
+                    if (currentPortal != null && !portal.IsConnectedTo(currentPortal))
+                        return false;
+                    
                     currentPortal = portal;
                     continue;
                 }
@@ -376,19 +390,6 @@ namespace PuzzleCat.LevelElements
             {
                 movable._inPortal = false;
             }
-        }
-
-        private bool AnyLinkedElementAt(Vector3Int position)
-        {
-            foreach (MovableElement linkedElement in linkedMovables)
-            {
-                if (linkedElement.RoomGridPosition == position)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         public delegate void OnMovement();
