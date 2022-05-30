@@ -60,8 +60,7 @@ namespace PuzzleCat.Menus
             
             foreach (RectTransform selectionTransform in levelSelectionTransforms)
             {
-                //selectionTransform.DOKill();
-                selectionTransform.DOAnchorPosX(-Screen.width * _currentLevelSelectionIndex, 0.5f);
+                selectionTransform.DOAnchorPosX(-((RectTransform) levelSelectionCanvas.transform).sizeDelta.x * _currentLevelSelectionIndex, 0.5f);
                 AudioManager.Instance.Play("Ok");
             }
 
