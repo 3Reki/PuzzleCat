@@ -23,7 +23,7 @@ SpriteAtlas:
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: DefaultTexturePlatform
-      m_MaxTextureSize: 2048
+      m_MaxTextureSize: 4096
       m_ResizeAlgorithm: 0
       m_TextureFormat: -1
       m_TextureCompression: 1
@@ -44,38 +44,7 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: 4cac010e5c54d484e907af3e9f4d29d8, type: 3}
-    - {fileID: 2800000, guid: 25aeb1f2375ed1546a5cb370c0438635, type: 3}
-    - {fileID: 2800000, guid: 0604f66f24aa1c1409268e058f84b789, type: 3}
-    - {fileID: 2800000, guid: f51bb9a9aff07a04295fd9dfad443fad, type: 3}
-    - {fileID: 2800000, guid: ddaf856d74dda274e882db6763c8564b, type: 3}
-    - {fileID: 2800000, guid: 3cac250e0b7df8b418c653963558ad5d, type: 3}
-    - {fileID: 2800000, guid: ded2096f46bc6ec4da5d93ef35b320d2, type: 3}
-    - {fileID: 2800000, guid: ee7cdb95908902f46ab27621d7df676b, type: 3}
-    - {fileID: 2800000, guid: 564cf93e6357d0549bdfcb898af334ef, type: 3}
-    - {fileID: 2800000, guid: e3134592df4f9164b9d8463cbad3fe94, type: 3}
-    - {fileID: 2800000, guid: 480963ace01daf64a90f7dca2802a6a4, type: 3}
-    - {fileID: 2800000, guid: 50b38d6683c092f44bfe8885ad81084e, type: 3}
-    - {fileID: 2800000, guid: 3463d2416373fd84eb122f113ccd2d56, type: 3}
-    - {fileID: 2800000, guid: 79494f57d8f81b94eb3293e6efb13d28, type: 3}
-    - {fileID: 2800000, guid: f0b9ebcaf0d450749b83d6c579a1d3ff, type: 3}
-    - {fileID: 2800000, guid: 886ca110ef173dc4d814ea9e0c72c090, type: 3}
-    - {fileID: 2800000, guid: c103231ecb9f94240b15b88d7a87da57, type: 3}
-    - {fileID: 2800000, guid: d615d8d3b58f95a4292c0ccd5c79a839, type: 3}
-    - {fileID: 2800000, guid: 51e6709cfd7543041b95dbd7ee5006ba, type: 3}
-    - {fileID: 2800000, guid: c9ea4b920bf942c4fbc659d7f27aa289, type: 3}
-    - {fileID: 2800000, guid: e6d829fbfdde9d14ab622d6fa546ff9f, type: 3}
-    - {fileID: 2800000, guid: e276599d1b75f8f40a8a30eca4186ad4, type: 3}
-    - {fileID: 2800000, guid: 0670546e8d1517941b659987866deafd, type: 3}
-    - {fileID: 2800000, guid: a7194df6e74daa942a40442b09a8c119, type: 3}
-    - {fileID: 2800000, guid: 2cdbd3dc118952e4fb744e565d05946d, type: 3}
-    - {fileID: 2800000, guid: 12b635451bc76cf4f98d6c08fbb7dc74, type: 3}
-    - {fileID: 2800000, guid: 3adbf72ecdf1275439d8a1b9e1471810, type: 3}
-    - {fileID: 2800000, guid: 3bf12bed6f436a2479026f7daf84f796, type: 3}
-    - {fileID: 2800000, guid: dd2c95a086765974d8d4c64dd748d12a, type: 3}
-    - {fileID: 2800000, guid: 7de6b520be7bd854ca93364d37bb56b4, type: 3}
-    - {fileID: 2800000, guid: db5c18227a4c24b41ae76079452707cc, type: 3}
-    - {fileID: 2800000, guid: 50969a1a3c591104eba3fba0e1e11266, type: 3}
+    - {fileID: 102900000, guid: 7a43c7eb3711561489d5a7e1015947f8, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -85,6 +54,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7de6b520be7bd854ca93364d37bb56b4, type: 3}
   - {fileID: 21300000, guid: dd2c95a086765974d8d4c64dd748d12a, type: 3}
   - {fileID: 21300000, guid: 3463d2416373fd84eb122f113ccd2d56, type: 3}
+  - {fileID: 21300000, guid: e81ddd02d4219034db0e4455a708c408, type: 3}
   - {fileID: 21300000, guid: db5c18227a4c24b41ae76079452707cc, type: 3}
   - {fileID: 21300000, guid: e3134592df4f9164b9d8463cbad3fe94, type: 3}
   - {fileID: 21300000, guid: c9ea4b920bf942c4fbc659d7f27aa289, type: 3}
@@ -95,9 +65,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 50b38d6683c092f44bfe8885ad81084e, type: 3}
   - {fileID: 21300000, guid: a7194df6e74daa942a40442b09a8c119, type: 3}
   - {fileID: 21300000, guid: 79494f57d8f81b94eb3293e6efb13d28, type: 3}
+  - {fileID: 21300000, guid: f9436ef8f6022754197e9b5d2b777add, type: 3}
   - {fileID: 21300000, guid: f51bb9a9aff07a04295fd9dfad443fad, type: 3}
   - {fileID: 21300000, guid: 50969a1a3c591104eba3fba0e1e11266, type: 3}
   - {fileID: 21300000, guid: f0b9ebcaf0d450749b83d6c579a1d3ff, type: 3}
+  - {fileID: 21300000, guid: 4becf00b66737b140b9d651d43832e6b, type: 3}
   - {fileID: 21300000, guid: e6d829fbfdde9d14ab622d6fa546ff9f, type: 3}
   - {fileID: 21300000, guid: 51e6709cfd7543041b95dbd7ee5006ba, type: 3}
   - {fileID: 21300000, guid: 480963ace01daf64a90f7dca2802a6a4, type: 3}
@@ -118,6 +90,7 @@ SpriteAtlas:
   - potion-levels_0010_Layer-3
   - potion-levels_0009_Layer-4
   - Potion-level-gris_0006_Levels-1
+  - fond level 1
   - potion-levels_0011_Layer-2
   - Potion-level-gris_0003_Levels-1
   - potion-levels_0000_Layer-15
@@ -128,9 +101,11 @@ SpriteAtlas:
   - Potion-level-gris_0005_Levels-1
   - potion-levels_0004_Layer-9
   - Potion-level-gris_0007_Levels-1
+  - fond level 3
   - ombre
   - potion-levels_0012_Layer-1
   - Potion-level-gris_0008_Levels-1
+  - fond level 2
   - potion-levels_0001_Layer-13
   - Potion-level-gris_0012_Levels-1
   - Potion-level-gris_0004_Levels-1
