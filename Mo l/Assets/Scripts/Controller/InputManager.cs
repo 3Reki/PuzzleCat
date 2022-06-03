@@ -10,6 +10,7 @@ namespace PuzzleCat.Controller
         public TouchPhase FirstTouchPhase { get; private set; }
         public Vector2 SecondTouchPosition { get; private set; }
         public TouchPhase SecondTouchPhase { get; private set; }
+        public Vector2 FirstTouchDeltaPosition;
 
         public bool CameraTouchesFinished => FirstTouchPhase is TouchPhase.Ended or TouchPhase.Canceled || 
                                            SecondTouchPhase is TouchPhase.Ended or TouchPhase.Canceled;
@@ -32,22 +33,26 @@ namespace PuzzleCat.Controller
             {
                 FirstTouchPhase = TouchPhase.Began;
                 _lastMousePosition = Input.mousePosition;
+                FirstTouchDeltaPosition = Vector2.zero;
             } 
             else if (Input.GetKey(KeyCode.Mouse0))
             {
                 if (_lastMousePosition != (Vector2) Input.mousePosition)
                 {
                     FirstTouchPhase = TouchPhase.Moved;
+                    FirstTouchDeltaPosition = (Vector2) Input.mousePosition - _lastMousePosition;
                     _lastMousePosition = Input.mousePosition;
                 }
                 else
                 {
                     FirstTouchPhase = TouchPhase.Stationary;
+                    FirstTouchDeltaPosition = Vector2.zero;
                 }
             }
             else if (Input.GetKeyUp(KeyCode.Mouse0))
             {
                 FirstTouchPhase = TouchPhase.Ended;
+                FirstTouchDeltaPosition = (Vector2) Input.mousePosition - _lastMousePosition;
             }
             else
             {
@@ -82,6 +87,7 @@ namespace PuzzleCat.Controller
             _firstTouch = Input.GetTouch(0);
             FirstTouchPosition = _firstTouch.position;
             FirstTouchPhase = _firstTouch.phase;
+            FirstTouchDeltaPosition = _firstTouch.deltaPosition;
 
             if (TouchCount <= 1) return;
             

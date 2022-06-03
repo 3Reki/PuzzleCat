@@ -15,7 +15,6 @@ namespace PuzzleCat.Controller
         [SerializeField] private float zoomSpeed = 5;
         [SerializeField] private float movementSpeed = 5;
 
-        private Vector2 _lastTouchPosition;
         private float _maxZoom;
         private float _minZoom;
         private float _previousTouchesDistance;
@@ -63,17 +62,15 @@ namespace PuzzleCat.Controller
         {
             if (_inLerp)
             {
-                _lastTouchPosition = inputManager.FirstTouchPosition;
                 return;
             }
                 
-            if (inputManager.FirstTouchPosition == _lastTouchPosition) 
+            if (inputManager.FirstTouchDeltaPosition == Vector2.zero) 
                 return;
 
             cameraTransform.position -=
-                cameraTransform.TransformDirection(inputManager.FirstTouchPosition - _lastTouchPosition) / Screen.dpi * 
+                cameraTransform.TransformDirection(inputManager.FirstTouchDeltaPosition) / Screen.dpi * 
                 (camera.orthographicSize * .1f * movementSpeed);
-            _lastTouchPosition = inputManager.FirstTouchPosition;
 
             if ((cameraTransform.position - _centerPosition).magnitude > _initialSize * 1.15f)
             {
@@ -81,27 +78,13 @@ namespace PuzzleCat.Controller
                 cameraTransform.DOMove(_centerPosition, _initialSize / 10).onComplete = () => _inLerp = false;
             }
         }
-        
-        private void OnGameStateChanged(GameManager.GameState state)
-        {
-            if (state == GameManager.GameState.CameraMovement)
-            {
-                _lastTouchPosition = inputManager.FirstTouchPosition;
-            }
-        }
-        
+
         private void Awake()
         {
-            GameManager.OnGameStateChanged += OnGameStateChanged;
             _initialSize = camera.orthographicSize;
             _maxZoom = _initialSize * maxZoomPercentage * 0.01f;
             _minZoom = _initialSize * minZoomPercentage * 0.01f;
             _centerPosition = cameraTransform.position;
-        }
-
-        private void OnDestroy()
-        {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
     }
 }
