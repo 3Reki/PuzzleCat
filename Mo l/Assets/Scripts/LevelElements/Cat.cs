@@ -17,7 +17,6 @@ namespace PuzzleCat.LevelElements
         [SerializeField] private CatAnimation catAnimation;
         [SerializeField] private Surface currentSurface = Surface.Floor;
 
-        private bool _isMoving;
         private bool _isGrounded = true;
         private bool _canMove = true;
         private Vector3 _warpDestination;
@@ -25,7 +24,7 @@ namespace PuzzleCat.LevelElements
         private NavMeshPath _path;
         private Vector3 _agentDestination;
 
-        private Vector3 _offset
+        private Vector3 offset
         {
             get
             {
@@ -69,7 +68,7 @@ namespace PuzzleCat.LevelElements
             if (!_canMove)
                 return false;
 
-            _agentDestination = worldGridDestination + _offset;
+            _agentDestination = worldGridDestination + offset;
             _path = new NavMeshPath();
 
             if (!playerAgent.CalculatePath(_agentDestination, _path) || _path.status != NavMeshPathStatus.PathComplete)
@@ -93,7 +92,7 @@ namespace PuzzleCat.LevelElements
 
         public override void MoveTo(Vector3Int destination)
         {
-            MoveTo(destination + _offset, 0);
+            MoveTo(destination + offset, 0);
         }
 
         public void MoveTo(Vector3 destination, float aimedDistance)
@@ -113,7 +112,7 @@ namespace PuzzleCat.LevelElements
 
             playerAgent.SetPath(_path);
             playerAgent.Move(position.normalized * Time.deltaTime);
-            _isMoving = true;
+            enabled = true;
         }
 
         public void TeleportTo(Vector3Int coordinates, Surface newSurface, Vector3Int exitDirection)
@@ -191,13 +190,11 @@ namespace PuzzleCat.LevelElements
                 return;
             }
 
-            if (!_isMoving) return;
-
             playerAgent.velocity = Vector3.zero;
             _lookAtDirection = myTransform.InverseTransformDirection(playerAgent.destination - myTransform.position);
             _lookAtDirection.y = 0;
             _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
-            _isMoving = false;
+            enabled = false;
 
             if (onArrival != null)
             {
