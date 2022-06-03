@@ -42,6 +42,7 @@ namespace PuzzleCat
             
             Instance = this;
             DontDestroyOnLoad(this);
+            Application.targetFrameRate = Screen.currentResolution.refreshRate;
 
 #if !UNITY_EDITOR
             unlockedLevelsCount = PlayerPrefs.GetInt("Unlocked Levels Count", 1);

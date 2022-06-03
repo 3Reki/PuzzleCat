@@ -46,6 +46,7 @@ namespace PuzzleCat.Utils
 			
 			Ray ray = camera.ScreenPointToRay(screenPoint);
 
+			Physics.Simulate(0.01f);
 			if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
 			{
 				if (drawRay)

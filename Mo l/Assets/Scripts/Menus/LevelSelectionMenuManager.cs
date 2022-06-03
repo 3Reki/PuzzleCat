@@ -83,7 +83,6 @@ namespace PuzzleCat.Menus
 
         private void Awake()
         {
-            Application.targetFrameRate = Screen.currentResolution.refreshRate;
 #if UNITY_EDITOR
             new GameObject("Game Data").AddComponent<GameData>();
             PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AudioManager.prefab"));
