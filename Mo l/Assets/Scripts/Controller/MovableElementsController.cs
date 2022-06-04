@@ -17,7 +17,6 @@ namespace PuzzleCat.Controller
         private Func<bool> _forwardMovementFunction = () => true;
         private Func<bool> _backwardMovementFunction = () => true;
         private MovableElement _selectedMovableElement;
-        private Vector3Int _initialObjectPosition;
         private Vector3Int _currentObjectPosition;
         private Vector3Int _currentObjectDirection;
         private RaycastHit _hit;
@@ -117,8 +116,7 @@ namespace PuzzleCat.Controller
             }
 
             _selectedMovableElement = selectedGameObject.GetComponent<MovableElement>();
-            _initialObjectPosition = _selectedMovableElement.WorldGridPosition;
-            _currentObjectPosition = _initialObjectPosition;
+            _currentObjectPosition = _selectedMovableElement.WorldGridPosition;
             invisibleQuad.SetActive(true);
             invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
             invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());

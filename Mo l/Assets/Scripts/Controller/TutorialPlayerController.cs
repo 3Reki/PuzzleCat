@@ -7,7 +7,6 @@ namespace PuzzleCat.Controller
     {
         [SerializeField] private Tutorial tutorial;
 
-        private RaycastHit _hit;
         private bool _triedSelectingFurniture;
 
         protected override void HandleTouchStationary()

@@ -23,7 +23,7 @@ namespace PuzzleCat
             firstTime = true;
         }
         
-        public void SaveGameData()
+        private void SaveGameData()
         {
             PlayerPrefs.SetInt("Unlocked Levels Count", unlockedLevelsCount);
             PlayerPrefs.SetInt("SFX On", Convert.ToInt32(sfxOn));
@@ -31,7 +31,7 @@ namespace PuzzleCat
             PlayerPrefs.SetInt("First time", Convert.ToInt32(firstTime));
             PlayerPrefs.Save();
         }
-        
+
         private void Awake()
         {
             if (Instance != null)

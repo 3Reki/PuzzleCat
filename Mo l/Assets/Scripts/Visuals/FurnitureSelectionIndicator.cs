@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PuzzleCat
+namespace PuzzleCat.Visuals
 {
     public class FurnitureSelectionIndicator : MonoBehaviour
     {

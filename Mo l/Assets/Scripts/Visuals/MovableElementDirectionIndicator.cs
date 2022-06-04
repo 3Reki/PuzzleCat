@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using PuzzleCat.Utils;
 using UnityEngine;
@@ -25,16 +24,6 @@ namespace PuzzleCat.Visuals
             forwardAxisIndicator.transform.rotation *= Quaternion.Euler(180, 0, 0);
         }
 
-        public void SetSideIndicatorsActive(bool state)
-        {
-            sideAxisIndicator.SetActive(state);
-        }
-
-        public void SetForwardIndicatorsActive(bool state)
-        {
-            forwardAxisIndicator.SetActive(state);
-        }
-        
         public void SetAllIndicatorsActive(bool state)
         {
             SetSideIndicatorsActive(state);
@@ -67,6 +56,16 @@ namespace PuzzleCat.Visuals
             indicatorMaterial.DOComplete();
             indicatorMaterial.color = defaultColor;
             _colorChanged = false;
+        }
+        
+        private void SetSideIndicatorsActive(bool state)
+        {
+            sideAxisIndicator.SetActive(state);
+        }
+
+        private void SetForwardIndicatorsActive(bool state)
+        {
+            forwardAxisIndicator.SetActive(state);
         }
 
         private void OnDestroy()

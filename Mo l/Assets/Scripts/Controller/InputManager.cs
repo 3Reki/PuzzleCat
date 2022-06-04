@@ -17,9 +17,6 @@ namespace PuzzleCat.Controller
 
         public bool CameraTouchesMoved => FirstTouchPhase == TouchPhase.Moved || SecondTouchPhase == TouchPhase.Moved;
 
-        private Touch _firstTouch;
-        private Touch _secondTouch;
-
 #if UNITY_EDITOR
         public float MouseScroll { get; private set; }
         public bool IsScrolling => MouseScroll != 0;
@@ -84,17 +81,17 @@ namespace PuzzleCat.Controller
                 return;
             }
             
-            _firstTouch = Input.GetTouch(0);
-            FirstTouchPosition = _firstTouch.position;
-            FirstTouchPhase = _firstTouch.phase;
-            FirstTouchDeltaPosition = _firstTouch.deltaPosition;
+            Touch firstTouch = Input.GetTouch(0);
+            FirstTouchPosition = firstTouch.position;
+            FirstTouchPhase = firstTouch.phase;
+            FirstTouchDeltaPosition = firstTouch.deltaPosition;
 
             if (TouchCount <= 1) return;
             
             TwoTouchesDone = true;
-            _secondTouch = Input.GetTouch(1);
-            SecondTouchPosition = _secondTouch.position;
-            SecondTouchPhase = _secondTouch.phase;
+            Touch secondTouch = Input.GetTouch(1);
+            SecondTouchPosition = secondTouch.position;
+            SecondTouchPhase = secondTouch.phase;
 
         }
     }

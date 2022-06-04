@@ -5,10 +5,6 @@ using PuzzleCat.Sound;
 using UnityEngine;
 using UnityEngine.AI;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace PuzzleCat
 {
     public class GameManager : MonoBehaviour
@@ -68,7 +64,7 @@ namespace PuzzleCat
             
 #if UNITY_EDITOR
             new GameObject("Game Data").AddComponent<GameData>();
-            PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AudioManager.prefab"));
+            UnityEditor.PrefabUtility.InstantiatePrefab(UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AudioManager.prefab"));
 #endif
         }
 

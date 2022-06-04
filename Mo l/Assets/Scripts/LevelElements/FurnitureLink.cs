@@ -10,7 +10,6 @@ namespace PuzzleCat.LevelElements
         [SerializeField] private NavMeshLink NavMeshLink;
 
         private static readonly List<FurnitureLink> _furnitureLinks = new();
-        private RoomElement _roomElement;
 
         private Surface _surface;
 
@@ -35,16 +34,16 @@ namespace PuzzleCat.LevelElements
                 GetRoomCoordinates(NavMeshLink.endPoint), GetRoomCoordinates(NavMeshLink.startPoint)
             })
             {
-                _roomElement = CurrentRoom.GetElementAt(point);
+                RoomElement roomElement = CurrentRoom.GetElementAt(point);
 
-                if (_roomElement != null && _roomElement.ImpactedSurface == Surface.All && !Cat.IsCat(_roomElement))
+                if (roomElement != null && roomElement.ImpactedSurface == Surface.All && !Cat.IsCat(roomElement))
                 {
                     return false;
                 }
 
-                _roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal(), Surface.All); 
+                roomElement = CurrentRoom.GetElementAt(point - _surface.GetNormal(), Surface.All); 
 
-                if (_roomElement == null)
+                if (roomElement == null)
                 {
                     if (CurrentRoom.AreCoordinatesValid(point - _surface.GetNormal()))
                     {
@@ -52,7 +51,7 @@ namespace PuzzleCat.LevelElements
                     }
                         
                 }
-                else if (_roomElement.ImpactedSurface != Surface.All) // TODO check if useful or not
+                else if (roomElement.ImpactedSurface != Surface.All) // TODO check if useful or not
                 {
                     return false;
                 }

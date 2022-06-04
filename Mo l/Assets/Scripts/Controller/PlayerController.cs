@@ -1,3 +1,4 @@
+using PuzzleCat.Visuals;
 using UnityEngine;
 
 namespace PuzzleCat.Controller

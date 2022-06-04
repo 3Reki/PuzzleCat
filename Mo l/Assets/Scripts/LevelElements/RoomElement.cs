@@ -42,7 +42,7 @@ namespace PuzzleCat.LevelElements
 			Debug.LogWarning("No interaction implemented");
 		}
 
-		protected virtual Vector3 GetWorldPosition(Vector3Int gridCoordinates)
+		protected static Vector3 GetWorldPosition(Vector3Int gridCoordinates)
 		{
 			return new Vector3(gridCoordinates.x + 0.5f, gridCoordinates.y + 0.5f, gridCoordinates.z + 0.5f);
 		}
