@@ -63,7 +63,7 @@ namespace PuzzleCat.LevelElements
         private void OnEnable()
         {
             if (_furnitureLinks.Count == 0)
-                MovableElement.onMovement += UpdateLinksInstances;
+                MovableElement.OnMovement += UpdateLinksInstances;
 
             _furnitureLinks.Add(this);
             NavMeshLink.enabled = IsValidLink();
@@ -74,7 +74,7 @@ namespace PuzzleCat.LevelElements
             _furnitureLinks.Remove(this);
 
             if (_furnitureLinks.Count == 0)
-                MovableElement.onMovement -= UpdateLinksInstances;
+                MovableElement.OnMovement -= UpdateLinksInstances;
         }
 
         private void Awake()

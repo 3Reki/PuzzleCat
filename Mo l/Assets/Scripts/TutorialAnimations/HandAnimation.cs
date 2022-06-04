@@ -4,8 +4,6 @@ namespace PuzzleCat.TutorialAnimations
 {
     public class HandAnimation : MonoBehaviour
     {
-        public delegate void HandAnimationCallback();
-
         public HandAnimationCallback OnHalfComplete;
         public HandAnimationCallback OnStart;
         
@@ -43,5 +41,7 @@ namespace PuzzleCat.TutorialAnimations
         {
             OnStart?.Invoke();
         }
+        
+        public delegate void HandAnimationCallback();
     }
 }

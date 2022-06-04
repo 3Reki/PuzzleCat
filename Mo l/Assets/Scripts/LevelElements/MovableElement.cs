@@ -9,7 +9,7 @@ namespace PuzzleCat.LevelElements
 {
     public class MovableElement : RoomElement
     {
-        public static OnMovement onMovement;
+        public static MovableElementCallback OnMovement;
         public static MovableElementDirectionIndicator DirectionIndicator;
         public Surface CurrentSurface;
         public bool InPortal { get; private set; }
@@ -298,7 +298,7 @@ namespace PuzzleCat.LevelElements
                     movable.CurrentRoom.FindPortal(movable.RoomGridPosition + movable._direction, movable.CurrentSurface));
             }
 
-            onMovement?.Invoke();
+            OnMovement?.Invoke();
 
             return true;
         }
@@ -397,6 +397,6 @@ namespace PuzzleCat.LevelElements
             }
         }
 
-        public delegate void OnMovement();
+        public delegate void MovableElementCallback();
     }
 }

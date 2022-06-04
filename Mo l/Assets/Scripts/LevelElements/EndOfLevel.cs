@@ -28,7 +28,7 @@ namespace PuzzleCat.LevelElements
                 return;
             }
             cat.MoveTo(transform.position, 1);
-            cat.onArrival = () => FinishLevel(cat);
+            cat.OnArrival = () => FinishLevel(cat);
         }
 
         private static void FinishLevel(Cat cat)

@@ -8,9 +8,7 @@ namespace PuzzleCat.LevelElements
 {
     public class Cat : RoomElement
     {
-        public delegate void OnArrival();
-
-        public OnArrival onArrival;
+        public CatCallback OnArrival;
 
         [SerializeField] private NavMeshAgent playerAgent;
         [SerializeField] private Transform myTransform;
@@ -76,7 +74,7 @@ namespace PuzzleCat.LevelElements
             }
 
             Vector3Int destination = CurrentRoom.WorldToRoomCoordinates(worldGridDestination);
-            onArrival = () => { };
+            OnArrival = () => { };
 
             if (CurrentRoom.CanMoveOnCell(this, destination, myTransform.up.ToSurface()))
             {
@@ -199,10 +197,10 @@ namespace PuzzleCat.LevelElements
             catAnimation.UpdateSpeed(0, 0);
             enabled = false;
 
-            if (onArrival != null)
+            if (OnArrival != null)
             {
-                onArrival();
-                onArrival = null;
+                OnArrival();
+                OnArrival = null;
             }
         }
 
@@ -217,5 +215,7 @@ namespace PuzzleCat.LevelElements
             HandleJump();
             HandleMovementChecking();
         }
+        
+        public delegate void CatCallback();
     }
 }

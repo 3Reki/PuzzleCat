@@ -57,7 +57,7 @@ namespace PuzzleCat.LevelElements
 			if (CatPortal)
 			{
 				((Cat) movable).MoveTo(myTransform.position, 1);
-				((Cat) movable).onArrival = () => ((Cat) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
+				((Cat) movable).OnArrival = () => ((Cat) movable).TeleportTo(ArrivalWorldPosition(), _linkedPortal.ImpactedSurface, _linkedPortal.arrivalPositionOffset);
 			}
 			else
 			{
