@@ -127,7 +127,7 @@ MonoBehaviour:
   - audioType: 0
     name: MoveFurniture
     clip: {fileID: 8300000, guid: ad40940c14c3f8f4f88d6ead8e1f9c7c, type: 3}
-    volume: 1
+    volume: 0.5
     pitch: 1
     loop: 0
   - audioType: 0

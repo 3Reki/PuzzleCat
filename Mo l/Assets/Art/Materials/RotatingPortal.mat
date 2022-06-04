@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Test
+  m_Name: RotatingPortal
   m_Shader: {fileID: -6465566751694194690, guid: 4d01bdd273d091140b2df585f46b1605,
     type: 3}
   m_ShaderKeywords: 

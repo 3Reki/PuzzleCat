@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3633115500285068743}
   - component: {fileID: 1553631944110371085}
   - component: {fileID: 5930655724038096096}
-  - component: {fileID: 6788395159201883495}
+  - component: {fileID: 8677686889973202642}
   m_Layer: 0
   m_Name: SM_Plant_Begonia
   m_TagString: Untagged
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 1
---- !u!65 &6788395159201883495
-BoxCollider:
+--- !u!135 &8677686889973202642
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -110,5 +110,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0.5}
+  m_Radius: 0.44
+  m_Center: {x: 0, y: 0.0021409988, z: 0.47}

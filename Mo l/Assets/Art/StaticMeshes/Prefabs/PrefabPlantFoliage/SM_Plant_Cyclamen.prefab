@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3962687473603220296}
   - component: {fileID: 1232504203437565826}
   - component: {fileID: 8021663172642937214}
-  - component: {fileID: 7461514916524480741}
+  - component: {fileID: 4616652776630112866}
   m_Layer: 0
   m_Name: SM_Plant_Cyclamen
   m_TagString: Untagged
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpactedSurface: 4
   IsObstacle: 1
---- !u!65 &7461514916524480741
-BoxCollider:
+--- !u!135 &4616652776630112866
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -110,5 +110,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0.5}
+  m_Radius: 0.31493226
+  m_Center: {x: 0.012003779, y: 0.001924336, z: 0.30967426}
