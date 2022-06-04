@@ -47,8 +47,6 @@ namespace PuzzleCat.Menus
         {
             startTextTransform.DOAnchorPosY(0.02f * Screen.height, 1.2f).SetEase(Ease.InOutSine)
                 .SetLoops(-1, LoopType.Yoyo);
-            AudioManager.Instance.StopPlaying("LevelMusic");
-            AudioManager.Instance.StopPlaying("LevelWin");
             AudioManager.Instance.Play("MenuMusic");
 
             if (GameData.Instance.gameFinished)

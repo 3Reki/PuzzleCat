@@ -1,14 +1,12 @@
-using System;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace PuzzleCat.Sound
 {
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance;
-        public AudioMixerGroup musicMixerGroup;
-        public AudioMixerGroup sfxMixerGroup;
+        public AudioSource musicSource;
+        public AudioSource[] sfxSources;
         public Sound[] sounds;
 
 
@@ -22,66 +20,96 @@ namespace PuzzleCat.Sound
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            foreach (Sound s in sounds)
-            {
-                s.source = gameObject.AddComponent<AudioSource>();
-                s.source.clip = s.clip;
-                s.source.volume = s.volume;
-                s.source.pitch = s.pitch;
-                s.source.loop = s.loop;
-
-                switch (s.audioType)
-                {
-                    case Sound.AudioTypes.Sfx:
-                        s.source.outputAudioMixerGroup = sfxMixerGroup;
-                        break;
-                    case Sound.AudioTypes.Music:
-                        s.source.outputAudioMixerGroup = musicMixerGroup;
-                        break;
-                }
-            }
         }
 
         public void Play(string soundName)
         {
-            Sound s = Array.Find(sounds, sound => sound.name == soundName);
-            if (s == null)
+            foreach (Sound sound in sounds)
             {
-                Debug.LogWarning("Sound: " + soundName + " not found!");
+                if (soundName != sound.name) continue;
+
+                AudioSource source = sound.audioType == Sound.AudioTypes.Sfx ? FindAvailableAudioSource() : musicSource;
+                source.clip = sound.clip;
+                source.volume = sound.volume;
+                source.pitch = sound.pitch;
+                source.loop = sound.loop;
+                source.Play();
+                return;
             }
-            s.source.Play();
+            
+            Debug.LogWarning("Sound: " + soundName + " not found!");
         }
         
         public void StopPlaying(string soundName)
         {
-            Sound s = Array.Find(sounds, item => item.name == soundName);
-            if (s == null)
+            foreach (Sound sound in sounds)
             {
-                Debug.LogWarning("Sound: " + name + " not found!");
+                if (soundName != sound.name) continue;
+
+                switch (sound.audioType)
+                {
+                    case Sound.AudioTypes.Sfx:
+                        StopSfxSource(sound.clip);
+                        break;
+                    case Sound.AudioTypes.Music:
+                        musicSource.Stop();
+                        break;
+                    default:
+                        throw new System.ArgumentOutOfRangeException();
+                }
                 return;
             }
+            
+            Debug.LogWarning("Sound: " + soundName + " not found!");
+        }
+        
+        public void SetSfxVolumeOn()
+        {
+            foreach (AudioSource source in sfxSources)
+            {
+                source.mute = false;
+            }
+        }
+        
+        public void SetSfxVolumeOff()
+        {
+            foreach (AudioSource source in sfxSources)
+            {
+                source.mute = true;
+            }
+        }
+        
+        public void SetMusicVolumeOn()
+        {
+            musicSource.mute = false;
+        }
+        
+        public void SetMusicVolumeOff()
+        {
+            musicSource.mute = true;
+        }
 
-            s.source.Stop();
+        private AudioSource FindAvailableAudioSource()
+        {
+            foreach (AudioSource source in sfxSources)
+            {
+                if (!source.isPlaying) 
+                    return source;
+            }
+            
+            sfxSources[0].Stop();
+            return sfxSources[0];
         }
         
-        public void SfxMixerVolumeOn()
+        private void StopSfxSource(AudioClip audioClip)
         {
-            sfxMixerGroup.audioMixer.SetFloat("Exposed Sfx Volume", 0f);
-        }
-        
-        public void SfxMixerVolumeOff()
-        {
-            sfxMixerGroup.audioMixer.SetFloat("Exposed Sfx Volume", -80f);
-        }
-        
-        public void MusicMixerVolumeOn()
-        {
-            musicMixerGroup.audioMixer.SetFloat("Exposed Music Volume", 0f);
-        }
-        
-        public void MusicMixerVolumeOff()
-        {
-            musicMixerGroup.audioMixer.SetFloat("Exposed Music Volume", -80f);
+            foreach (AudioSource source in sfxSources)
+            {
+                if (!source.isPlaying || source.clip != audioClip) continue;
+                
+                source.Stop();
+                return;
+            }
         }
     }
 }

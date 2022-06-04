@@ -78,11 +78,11 @@ namespace PuzzleCat.Menus
 
             if (sfxToggle.isOn)
             {
-                AudioManager.Instance.SfxMixerVolumeOn();
+                AudioManager.Instance.SetSfxVolumeOn();
             }   
             else
             {
-                AudioManager.Instance.SfxMixerVolumeOff();
+                AudioManager.Instance.SetSfxVolumeOff();
             }
         }
         
@@ -93,11 +93,11 @@ namespace PuzzleCat.Menus
 
             if (musicToggle.isOn)
             {
-                AudioManager.Instance.MusicMixerVolumeOn();
+                AudioManager.Instance.SetMusicVolumeOn();
             }
             else
             {
-                AudioManager.Instance.MusicMixerVolumeOff();
+                AudioManager.Instance.SetMusicVolumeOff();
             }
         }
 

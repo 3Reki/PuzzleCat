@@ -3,7 +3,7 @@ using UnityEngine;
 namespace PuzzleCat.Sound
 {
     [System.Serializable]
-    public class Sound
+    public struct Sound
     {
         public AudioTypes audioType;
         public string name;
@@ -13,8 +13,6 @@ namespace PuzzleCat.Sound
         [Range(0.1f, 3f)]
         public float pitch;
         public bool loop;
-        [HideInInspector]
-        public AudioSource source;
 
         public enum AudioTypes
         {

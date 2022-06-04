@@ -74,8 +74,6 @@ namespace PuzzleCat
 
         private void Start()
         {
-            AudioManager.Instance.StopPlaying("MenuMusic");
-            AudioManager.Instance.StopPlaying("LevelWin");
             AudioManager.Instance.Play("LevelMusic");
         }
 

@@ -41,8 +41,6 @@ namespace PuzzleCat.Menus
             if (Input.GetTouch(0).phase != TouchPhase.Began)
                 return;
 
-            Debug.Log(Screen.height);
-            Debug.Log(Input.GetTouch(0).position);
             if (!CurrentInput()(Input.GetTouch(0).position))
             {
                 _currentIndex = 0;
@@ -53,15 +51,9 @@ namespace PuzzleCat.Menus
             if (_currentIndex == _inputs.Length)
             {
                 secret.SetActive(true);
-                AudioManager.Instance.StopPlaying("MenuMusic");
                 AudioManager.Instance.Play("Important");
                 _currentIndex = 0;
             }
-        }
-
-        private void OnDestroy()
-        {
-            AudioManager.Instance.StopPlaying("Important");
         }
 
         private delegate bool KonamiCode(Vector2 position);
