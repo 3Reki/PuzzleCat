@@ -186,6 +186,9 @@ namespace PuzzleCat.LevelElements
         {
             if (playerAgent.remainingDistance > playerAgent.stoppingDistance)
             {
+                Vector3 velocity = playerAgent.velocity;
+                catAnimation.UpdateSpeed(velocity.magnitude, 
+                    myTransform.InverseTransformDirection(velocity).x);
                 return;
             }
 
@@ -193,6 +196,7 @@ namespace PuzzleCat.LevelElements
             _lookAtDirection = myTransform.InverseTransformDirection(playerAgent.destination - myTransform.position);
             _lookAtDirection.y = 0;
             _lookAtDirection = myTransform.TransformDirection(_lookAtDirection);
+            catAnimation.UpdateSpeed(0, 0);
             enabled = false;
 
             if (onArrival != null)
