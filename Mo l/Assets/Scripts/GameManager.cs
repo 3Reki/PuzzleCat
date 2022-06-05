@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using PuzzleCat.Controller;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Sound;
 using UnityEngine;
@@ -10,10 +11,18 @@ namespace PuzzleCat
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
-        public static event Action<GameState> OnGameStateChanged;
-
+        public static event Action<PlayerState> OnGameStateChanged;
+        
+        public DefaultState DefaultState;
+        public CatMovementState CatMovementState;
+        public MovableSelectionState MovableSelectionState;
+        public MovableMovementState MovableMovementState;
+        public CameraMovementState CameraMovementState;
+        public CameraZoomState CameraZoomState;
+        
+        
         public Camera MainCamera => mainCamera;
-        public GameState State { get; private set; }
+        public PlayerState State { get; private set; }
         public Cat Cat => cat;
 
         [SerializeField] private Cat cat;
@@ -23,7 +32,7 @@ namespace PuzzleCat
         private IEnumerator _updateNavEnumerator;
         private float _lastNavUpdateFrameCount;
 
-        public void UpdateGameState(GameState newState)
+        public void UpdateGameState(PlayerState newState)
         {
             State = newState;
             OnGameStateChanged?.Invoke(newState);
@@ -58,7 +67,7 @@ namespace PuzzleCat
         private void Awake()
         {
             Instance = this;
-            State = GameState.PlayerMovement;
+            State = PlayerState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.OnMovement += UpdateNavMeshes;
             
@@ -78,7 +87,7 @@ namespace PuzzleCat
             MovableElement.OnMovement -= UpdateNavMeshes;
         }
 
-        public enum GameState
+        public enum PlayerState
         {
             PortalMode,
             FurnitureMovement,

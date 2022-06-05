@@ -44,9 +44,9 @@ namespace PuzzleCat.Editor
                 DestroyImmediate(gameObject);
             }
 
-            var movementIndicatorSO = new SerializedObject(FindObjectOfType<CatController>());
-            movementIndicatorSO.FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
-            movementIndicatorSO.ApplyModifiedProperties();
+            // TODO var movementIndicatorSO = new SerializedObject(FindObjectOfType<CatController>());
+            // movementIndicatorSO.FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
+            // movementIndicatorSO.ApplyModifiedProperties();
         }
 
         private static void CreateAndBakeNavMeshes()
@@ -82,7 +82,7 @@ namespace PuzzleCat.Editor
             
             Transform controllers = manager.transform.GetChild(0);
             
-            serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
+            //serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
             serializedObjects[1].FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
 
             serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));

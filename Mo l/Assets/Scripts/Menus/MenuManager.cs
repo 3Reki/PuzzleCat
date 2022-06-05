@@ -29,7 +29,7 @@ namespace PuzzleCat.Menus
         [SerializeField] private Toggle sfxToggle;
         [SerializeField] private Toggle musicToggle;
 
-        private GameManager.GameState _unpausedGameState;
+        private GameManager.PlayerState _unpausedGameState;
         private float _menuInitialPositionY;
         private float _backgroundInitialAlpha;
         private bool _menuAlreadyClosed;
@@ -42,9 +42,9 @@ namespace PuzzleCat.Menus
 
         public void SwitchPortalMode()
         {
-            if (GameManager.Instance.State == GameManager.GameState.PortalMode)
+            if (GameManager.Instance.State == GameManager.PlayerState.PortalMode)
             {
-                GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerMovement);
+                GameManager.Instance.UpdateGameState(GameManager.PlayerState.PlayerMovement);
                 AudioManager.Instance.Play("PortalBookOut");
                 portalSelectionToggleGroup.SetAllTogglesOff();
                 portalPlacementController.ResetSelectedGroup();
@@ -58,7 +58,7 @@ namespace PuzzleCat.Menus
                 return;
             }
 
-            GameManager.Instance.UpdateGameState(GameManager.GameState.PortalMode);
+            GameManager.Instance.UpdateGameState(GameManager.PlayerState.PortalMode);
             portalMenuImage.rectTransform.DOComplete();
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
@@ -76,10 +76,10 @@ namespace PuzzleCat.Menus
 
         public void SwitchPauseMenuState()
         {
-            if (GameManager.Instance.State != GameManager.GameState.Menu)
+            if (GameManager.Instance.State != GameManager.PlayerState.Menu)
             {
                 _unpausedGameState = GameManager.Instance.State;
-                GameManager.Instance.UpdateGameState(GameManager.GameState.Menu);
+                GameManager.Instance.UpdateGameState(GameManager.PlayerState.Menu);
                 pauseCanvasGameObject.SetActive(true);
                 pauseMenuTransform.DOMoveY(Screen.height * 0.6f, .6f).SetEase(Ease.OutBack);
 
@@ -180,9 +180,9 @@ namespace PuzzleCat.Menus
             }
         }
 
-        private void OnGameStateChanged(GameManager.GameState state)
+        private void OnGameStateChanged(GameManager.PlayerState state)
         {
-            if (state == GameManager.GameState.End)
+            if (state == GameManager.PlayerState.End)
             {
                 ActivateLevelEndMenu();
             }

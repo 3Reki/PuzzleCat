@@ -10,10 +10,15 @@ GameObject:
   m_Component:
   - component: {fileID: 816794181756018615}
   - component: {fileID: 816794181756018608}
-  - component: {fileID: 816794181756018609}
   - component: {fileID: 816794181756018610}
   - component: {fileID: 816794181756018604}
   - component: {fileID: 816794181756018611}
+  - component: {fileID: 8458811602997752033}
+  - component: {fileID: 5859014968182225063}
+  - component: {fileID: 5826306597961147705}
+  - component: {fileID: 8728169193875883936}
+  - component: {fileID: 6755235881852946781}
+  - component: {fileID: 1977273420180962490}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -48,28 +53,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4290619485e5c6045a7d50fc64e8dfff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager: {fileID: 816794182855563764}
-  cameraController: {fileID: 816794181756018611}
-  movableElementsController: {fileID: 816794181756018610}
-  catController: {fileID: 816794181756018609}
-  portalPlacementController: {fileID: 816794181756018604}
-  furnitureSelectionIndicator: {fileID: 0}
-  holdTouchThreshold: 0.2
-  dragDistance: 2.5
---- !u!114 &816794181756018609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 816794181756018605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39f941fb708db5544b0dae21965d21d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputManager: {fileID: 816794182855563764}
-  movementIndicator: {fileID: 0}
 --- !u!114 &816794181756018610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +108,104 @@ MonoBehaviour:
   minZoomPercentage: 50
   zoomSpeed: 4
   movementSpeed: 4
+--- !u!114 &8458811602997752033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e32497dafc77f46a22c94f19b1abb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  selectableLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!114 &5859014968182225063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9c40cd8a861a24bb9ff75a77444b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  movementIndicator: {fileID: 0}
+--- !u!114 &5826306597961147705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd26f64b48d01b7488f0179512c89f9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  furnitureSelectionIndicator: {fileID: 0}
+--- !u!114 &8728169193875883936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de0d645b2180cc64da6fca963d8934ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  movableElementDirectionIndicator: {fileID: 0}
+  invisibleQuad: {fileID: 0}
+  selectableLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  invisibleLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &6755235881852946781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d984fb6239d4843b74a0d590ad443c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  cameraTransform: {fileID: 0}
+  camera: {fileID: 0}
+  movementSpeed: 4
+--- !u!114 &1977273420180962490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71824445792345479348ff67fbd5c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  camera: {fileID: 0}
+  maxZoomPercentage: 120
+  minZoomPercentage: 50
+  zoomSpeed: 4
 --- !u!1 &816794182855563767
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,6 +252,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e43061de3ec0e45a36e5f5a9e1b82f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DefaultState: {fileID: 8458811602997752033}
+  CatMovementState: {fileID: 5859014968182225063}
+  MovableSelectionState: {fileID: 5826306597961147705}
+  MovableMovementState: {fileID: 8728169193875883936}
+  CameraMovementState: {fileID: 6755235881852946781}
+  CameraZoomState: {fileID: 1977273420180962490}
   cat: {fileID: 0}
   mainCamera: {fileID: 0}
 --- !u!114 &816794182855563764

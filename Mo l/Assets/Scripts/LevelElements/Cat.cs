@@ -41,12 +41,11 @@ namespace PuzzleCat.LevelElements
             }
         }
 
-        public static bool IsCat(GameObject gameObject) => gameObject.GetComponent<Cat>() != null;
         public static bool IsCat(object otherObject) => otherObject.GetType() == typeof(Cat);
 
         public static void EndLevel()
         {
-            GameManager.Instance.UpdateGameState(GameManager.GameState.End);
+            GameManager.Instance.UpdateGameState(GameManager.PlayerState.End);
             AudioManager.Instance.Play("LevelWin");
         }
 

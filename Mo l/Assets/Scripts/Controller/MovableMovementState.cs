@@ -2,11 +2,12 @@ using System;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using PuzzleCat.Visuals;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
 {
-    public class MovableElementsController : MonoBehaviour
+    public class MovableMovementState : MonoBehaviour, IPlayerState
     {
         [SerializeField] private InputManager inputManager;
         [SerializeField] private MovableElementDirectionIndicator movableElementDirectionIndicator;
@@ -19,22 +20,66 @@ namespace PuzzleCat.Controller
         private MovableElement _selectedMovableElement;
         private Vector3Int _currentObjectPosition;
         private Vector3Int _currentObjectDirection;
-        private RaycastHit _hit;
-        
-        public bool CanEnterFurnitureMode()
+
+        public void Enter() // TODO refactor
         {
-            return Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit,
-                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2)
-                && !_hit.transform.GetComponent<MovableElement>().InPortal;
+            Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit,
+                GameManager.Instance.MainCamera, selectableLayerMask, 100f, true, 2);
+            
+            _selectedMovableElement = hit.transform.GetComponent<MovableElement>();
+            _selectedMovableElement.PositionIndicator();
+            _selectedMovableElement.Select();
+            _currentObjectPosition = _selectedMovableElement.WorldGridPosition;
+            invisibleQuad.SetActive(true);
+            invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
+            invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
+            movableElementDirectionIndicator.SetAllIndicatorsActive(true);
         }
-        
-        public bool HandleMovement()
+
+        public IPlayerState Handle()
         {
-            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out _hit, 
+            if (inputManager.TouchCount > 1)
+                return GameManager.Instance.CameraZoomState;
+
+            if (inputManager.FirstTouchPhase == TouchPhase.Ended)
+                return GameManager.Instance.DefaultState;
+            
+            if ((Time.frameCount + 1) % 6 == 0)
+                UpdateDirectionIndicator();
+
+            if (Time.frameCount % 3 == 0 && inputManager.FirstTouchPhase == TouchPhase.Moved)
+                HandleMovement();
+
+            return null;
+        }
+
+        public void Exit()
+        {
+            _selectedMovableElement.Deselect();
+            _selectedMovableElement = null;
+            movableElementDirectionIndicator.SetAllIndicatorsActive(false);
+            invisibleQuad.SetActive(false);
+        }
+
+        private void UpdateDirectionIndicator()
+        {
+            if (_selectedMovableElement.IsUnderCat())
+            {
+                movableElementDirectionIndicator.SetIncorrectColor();
+                return;
+            }
+            
+            movableElementDirectionIndicator.SetDefaultColor();
+        }
+
+
+        private bool HandleMovement()
+        {
+            if (!Utils.Utils.ScreenPointRaycast(inputManager.FirstTouchPosition, out RaycastHit hit, 
                 GameManager.Instance.MainCamera, invisibleLayerMask, 100f, true, 2)) 
                 return false;
             
-            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(_hit.normal, _hit.point);
+            Vector3Int gridPoint = Utils.Utils.WorldPointAsGridPoint(hit.normal, hit.point);
 
             HandleJunction(gridPoint);
 
@@ -77,71 +122,9 @@ namespace PuzzleCat.Controller
             }
         }
 
-        private void OnGameStateChanged(GameManager.PlayerState state)
-        {
-            if (state == GameManager.PlayerState.FurnitureMovement)
-            {
-                SetSelectedMovableObject(_hit.transform.gameObject);
-                _selectedMovableElement.Select();
-            }
-            else
-            {
-                if (_selectedMovableElement != null)
-                {
-                    _selectedMovableElement.Deselect();
-                }
-                SetSelectedMovableObject(null);
-            }
-        }
-        
-        private void SetSelectedMovableObject(GameObject selectedGameObject)
-        {
-            if (selectedGameObject == null)
-            {
-                if (_selectedMovableElement == null) return;
-                
-                movableElementDirectionIndicator.SetAllIndicatorsActive(false);
-                _selectedMovableElement = null;
-                invisibleQuad.SetActive(false);
-
-                return;
-            }
-
-            _selectedMovableElement = selectedGameObject.GetComponent<MovableElement>();
-            _currentObjectPosition = _selectedMovableElement.WorldGridPosition;
-            invisibleQuad.SetActive(true);
-            invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
-            invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
-            _selectedMovableElement.PositionIndicator();
-            movableElementDirectionIndicator.SetAllIndicatorsActive(true);
-        }
-
         private void Awake()
         {
-            GameManager.OnGameStateChanged += OnGameStateChanged;
             MovableElement.DirectionIndicator = movableElementDirectionIndicator;
-        }
-
-        private void Update()
-        {
-            if (Time.frameCount % 8 != 0)
-                return;
-
-            if (_selectedMovableElement == null)
-                return;
-            
-            if (_selectedMovableElement.IsUnderCat())
-            {
-                movableElementDirectionIndicator.SetIncorrectColor();
-                return;
-            }
-            
-            movableElementDirectionIndicator.SetDefaultColor();
-        }
-
-        private void OnDestroy()
-        {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
         }
     }
 }
