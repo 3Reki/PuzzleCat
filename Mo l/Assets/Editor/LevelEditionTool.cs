@@ -85,14 +85,14 @@ namespace PuzzleCat.Editor
             //serializedObjects.Add(new SerializedObject(controllers.GetComponent<CatController>()));
             serializedObjects[1].FindProperty("movementIndicator").objectReferenceValue = CreateCatIndicator();
 
-            serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));
+            //serializedObjects.Add(new SerializedObject(controllers.GetComponent<MovableElementsController>()));
             serializedObjects[2].FindProperty("invisibleQuad").objectReferenceValue = CreateInvisibleQuad();
             serializedObjects[2].FindProperty("movableElementDirectionIndicator").objectReferenceValue = CreateMovementIndicator();
             
-            serializedObjects.Add(new SerializedObject(controllers.GetComponent<PortalPlacementController>()));
+            //serializedObjects.Add(new SerializedObject(controllers.GetComponent<PortalPlacementController>()));
             serializedObjects[3].FindProperty("portalsParentTransform").SetAsTransformArray(GetPortalsParentList());
             
-            serializedObjects.Add(new SerializedObject(controllers.GetComponent<CameraController>()));
+            //serializedObjects.Add(new SerializedObject(controllers.GetComponent<CameraController>()));
             serializedObjects[4].FindProperty("cameraTransform").objectReferenceValue = Camera.main.transform;
             serializedObjects[4].FindProperty("camera").objectReferenceValue = Camera.main;
 
@@ -110,8 +110,8 @@ namespace PuzzleCat.Editor
             }
 
             var menuManagerSO = new SerializedObject(FindObjectOfType<MenuManager>());
-            menuManagerSO.FindProperty("portalPlacementController").objectReferenceValue = 
-                FindObjectOfType<PortalPlacementController>();
+            // menuManagerSO.FindProperty("portalPlacementController").objectReferenceValue = 
+            //     FindObjectOfType<PortalPlacementController>();
             menuManagerSO.ApplyModifiedProperties();
 
             Transform[] portalParents = GetPortalsParentList();
@@ -167,15 +167,15 @@ namespace PuzzleCat.Editor
             }
             PrefabUtility.RecordPrefabInstancePropertyModifications(menuManager);
 
-            PortalPlacementController portalPlacement = FindObjectOfType<PortalPlacementController>();
+            //PortalPlacementController portalPlacement = FindObjectOfType<PortalPlacementController>();
 
-            portalPlacement.PortalCountTexts = new TextMeshProUGUI[4];
-            for (int i = 0; i < 4; i++)
-            {
-                portalPlacement.PortalCountTexts[i] = GameObject.FindGameObjectWithTag("PortalTogglesParent").transform
-                    .GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
-            }
-            PrefabUtility.RecordPrefabInstancePropertyModifications(portalPlacement);
+            // portalPlacement.PortalCountTexts = new TextMeshProUGUI[4];
+            // for (int i = 0; i < 4; i++)
+            // {
+            //     portalPlacement.PortalCountTexts[i] = GameObject.FindGameObjectWithTag("PortalTogglesParent").transform
+            //         .GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+            // }
+            // PrefabUtility.RecordPrefabInstancePropertyModifications(portalPlacement);
 
             if (FindObjectOfType<EventSystem>() == null)
             {

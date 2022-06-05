@@ -45,7 +45,7 @@ namespace PuzzleCat.LevelElements
 
         public static void EndLevel()
         {
-            GameManager.Instance.UpdateGameState(GameManager.PlayerState.End);
+            GameManager.OnLevelEnd();
             AudioManager.Instance.Play("LevelWin");
         }
 

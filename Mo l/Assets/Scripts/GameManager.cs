@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using PuzzleCat.Controller;
 using PuzzleCat.LevelElements;
@@ -11,7 +10,7 @@ namespace PuzzleCat
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
-        public static event Action<PlayerState> OnGameStateChanged;
+        public static GameManagerCallback OnLevelEnd;
         
         public DefaultState DefaultState;
         public CatMovementState CatMovementState;
@@ -19,11 +18,11 @@ namespace PuzzleCat
         public MovableMovementState MovableMovementState;
         public CameraMovementState CameraMovementState;
         public CameraZoomState CameraZoomState;
-        
+        public PortalState portalState;
         
         public Camera MainCamera => mainCamera;
-        public PlayerState State { get; private set; }
         public Cat Cat => cat;
+        public bool MenuOpened;
 
         [SerializeField] private Cat cat;
         [SerializeField] private Camera mainCamera;
@@ -31,12 +30,6 @@ namespace PuzzleCat
         private NavMeshSurface[] _surfaces;
         private IEnumerator _updateNavEnumerator;
         private float _lastNavUpdateFrameCount;
-
-        public void UpdateGameState(PlayerState newState)
-        {
-            State = newState;
-            OnGameStateChanged?.Invoke(newState);
-        }
 
         private void UpdateNavMeshes()
         {
@@ -67,7 +60,6 @@ namespace PuzzleCat
         private void Awake()
         {
             Instance = this;
-            State = PlayerState.PlayerMovement;
             _surfaces = FindObjectsOfType<NavMeshSurface>();
             MovableElement.OnMovement += UpdateNavMeshes;
             
@@ -87,14 +79,6 @@ namespace PuzzleCat
             MovableElement.OnMovement -= UpdateNavMeshes;
         }
 
-        public enum PlayerState
-        {
-            PortalMode,
-            FurnitureMovement,
-            PlayerMovement,
-            CameraMovement,
-            Menu,
-            End
-        }
+        public delegate void GameManagerCallback();
     }
 }

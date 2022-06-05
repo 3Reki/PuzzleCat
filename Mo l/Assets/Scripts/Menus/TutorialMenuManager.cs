@@ -12,7 +12,7 @@ namespace PuzzleCat.Menus
             if (!tutorial.CanChangePortalMode())
                 return;
             
-            base.SwitchPortalMode();
+            //base.SwitchPortalMode();
             tutorial.OnPortalModeChanged();
         }
         

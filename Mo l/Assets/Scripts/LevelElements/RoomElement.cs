@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Utils;
 using UnityEngine;
 
@@ -45,6 +46,11 @@ namespace PuzzleCat.LevelElements
 		protected static Vector3 GetWorldPosition(Vector3Int gridCoordinates)
 		{
 			return new Vector3(gridCoordinates.x + 0.5f, gridCoordinates.y + 0.5f, gridCoordinates.z + 0.5f);
+		}
+
+		protected virtual void OnDrawGizmosSelected()
+		{
+			Gizmos.DrawWireCube(GetWorldPosition(WorldGridPosition), Vector3.one);
 		}
 	}
 }

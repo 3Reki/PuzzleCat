@@ -51,6 +51,18 @@ namespace PuzzleCat.Controller
             _previousTouchesDistance = currentTouchesDistance;
         }
         
+#if UNITY_EDITOR
+        public void HandleZoomInEditor()
+        {
+            if (!inputManager.IsScrolling)
+                return;
+
+            GameManager.Instance.MainCamera.orthographicSize = Mathf.Clamp(
+                GameManager.Instance.MainCamera.orthographicSize - inputManager.MouseScroll * zoomSpeed * 0.5f,
+                _minZoom, _maxZoom);
+        }
+#endif
+        
         private void Start()
         {
             var orthographicSize = GameManager.Instance.MainCamera.orthographicSize;

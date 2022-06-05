@@ -26,14 +26,17 @@ namespace PuzzleCat.Controller
 
         private void Update()
         {
-            Handle();
-
 #if UNITY_EDITOR
             if (UnityEngine.Device.SystemInfo.deviceType == DeviceType.Desktop)
             {
-                //cameraController.HandleZoomInEditor();
+                GameManager.Instance.CameraZoomState.HandleZoomInEditor();
             }
 #endif
+
+            if (GameManager.Instance.MenuOpened)
+                return;
+            
+            Handle();
         }
     }
 }

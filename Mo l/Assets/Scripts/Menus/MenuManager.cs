@@ -9,7 +9,7 @@ namespace PuzzleCat.Menus
 {
     public class MenuManager : MonoBehaviour
     {
-        [SerializeField] private PortalPlacementController portalPlacementController;
+        
         [SerializeField] private Image portalButtonImage;
         [SerializeField] private Image portalMenuImage;
         [SerializeField] private Image selectedPortalCheckmark;
@@ -29,36 +29,13 @@ namespace PuzzleCat.Menus
         [SerializeField] private Toggle sfxToggle;
         [SerializeField] private Toggle musicToggle;
 
-        private GameManager.PlayerState _unpausedGameState;
+        private InputManager _inputManager;
         private float _menuInitialPositionY;
         private float _backgroundInitialAlpha;
         private bool _menuAlreadyClosed;
 
-        public void ResetLevel()
+        public void OpenPortalBook()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            AudioManager.Instance.Play("Ok");
-        }
-
-        public void SwitchPortalMode()
-        {
-            if (GameManager.Instance.State == GameManager.PlayerState.PortalMode)
-            {
-                GameManager.Instance.UpdateGameState(GameManager.PlayerState.PlayerMovement);
-                AudioManager.Instance.Play("PortalBookOut");
-                portalSelectionToggleGroup.SetAllTogglesOff();
-                portalPlacementController.ResetSelectedGroup();
-                portalMenuImage.rectTransform.DOComplete();
-                portalMenuImage.rectTransform.DOAnchorPosX(0, .6f).onComplete = () =>
-                {
-                    portalMenuImage.enabled = false;
-                    portalButtonImage.sprite = portalBookClosed;
-                };
-
-                return;
-            }
-
-            GameManager.Instance.UpdateGameState(GameManager.PlayerState.PortalMode);
             portalMenuImage.rectTransform.DOComplete();
             portalButtonImage.sprite = portalBookOpen;
             portalMenuImage.enabled = true;
@@ -68,18 +45,41 @@ namespace PuzzleCat.Menus
                                                        (4 - portalToggles.Length), .4f);
         }
 
+        public void ClosePortalBook()
+        {
+            AudioManager.Instance.Play("PortalBookOut");
+            portalSelectionToggleGroup.SetAllTogglesOff();
+            portalMenuImage.rectTransform.DOComplete();
+            portalMenuImage.rectTransform.DOAnchorPosX(0, .6f).onComplete = () =>
+            {
+                portalMenuImage.enabled = false;
+                portalButtonImage.sprite = portalBookClosed;
+            };
+        }
+        
+        public void ResetLevel()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            AudioManager.Instance.Play("Ok");
+        }
+
+        public void SwitchPortalMode(bool state)
+        {
+            _inputManager.PortalMode = state;
+        }
+
         public void UpdateSelectedPortalGroup(int index)
         {
-            portalPlacementController.UpdateSelectedPortalGroup(index);
+            GameManager.Instance.portalState.UpdateSelectedPortalGroup(index);
+            //inputManager.SelectedPortalIndex = index;
             AudioManager.Instance.Play("Ok");
         }
 
         public void SwitchPauseMenuState()
         {
-            if (GameManager.Instance.State != GameManager.PlayerState.Menu)
+            if (!GameManager.Instance.MenuOpened)
             {
-                _unpausedGameState = GameManager.Instance.State;
-                GameManager.Instance.UpdateGameState(GameManager.PlayerState.Menu);
+                GameManager.Instance.MenuOpened = true;
                 pauseCanvasGameObject.SetActive(true);
                 pauseMenuTransform.DOMoveY(Screen.height * 0.6f, .6f).SetEase(Ease.OutBack);
 
@@ -97,7 +97,7 @@ namespace PuzzleCat.Menus
                 pauseMenuTransform.DOMoveY(Screen.height + _menuInitialPositionY, .6f).SetEase(Ease.InBack).onComplete =
                     () =>
                     {
-                        GameManager.Instance.UpdateGameState(_unpausedGameState);
+                        GameManager.Instance.MenuOpened = false;
                         pauseCanvasGameObject.SetActive(false);
                         _menuAlreadyClosed = false;
                     };
@@ -153,6 +153,7 @@ namespace PuzzleCat.Menus
 
         private void ActivateLevelEndMenu()
         {
+            GameManager.Instance.MenuOpened = true;
             endLevelCanvasGameObject.SetActive(true);
             endLevelBackground.DOFade(_backgroundInitialAlpha, .4f);
             endLevelFrame.DOScale(1, .4f).SetEase(Ease.OutBack);
@@ -180,16 +181,9 @@ namespace PuzzleCat.Menus
             }
         }
 
-        private void OnGameStateChanged(GameManager.PlayerState state)
-        {
-            if (state == GameManager.PlayerState.End)
-            {
-                ActivateLevelEndMenu();
-            }
-        }
-
         private void Awake()
         {
+            _inputManager = FindObjectOfType<InputManager>();
             _menuInitialPositionY = pauseMenuTransform.anchoredPosition.y;
 
             SetupPortalToggles();
@@ -209,7 +203,7 @@ namespace PuzzleCat.Menus
             endLevelBackground.color = new Color(endLevelBackground.color.r, endLevelBackground.color.g, endLevelBackground.color.b, 0);
             endLevelFrame.localScale = Vector3.zero;
 
-            GameManager.OnGameStateChanged += OnGameStateChanged;
+            GameManager.OnLevelEnd += ActivateLevelEndMenu;
         }
 
         private void Start()
@@ -220,7 +214,7 @@ namespace PuzzleCat.Menus
 
         private void OnDestroy()
         {
-            GameManager.OnGameStateChanged -= OnGameStateChanged;
+            GameManager.OnLevelEnd -= ActivateLevelEndMenu;
         }
     }
 }

@@ -9,16 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 816794181756018615}
-  - component: {fileID: 816794181756018608}
-  - component: {fileID: 816794181756018610}
-  - component: {fileID: 816794181756018604}
-  - component: {fileID: 816794181756018611}
+  - component: {fileID: 2120550777572223374}
   - component: {fileID: 8458811602997752033}
   - component: {fileID: 5859014968182225063}
   - component: {fileID: 5826306597961147705}
   - component: {fileID: 8728169193875883936}
   - component: {fileID: 6755235881852946781}
   - component: {fileID: 1977273420180962490}
+  - component: {fileID: 5512876221800066735}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -41,7 +39,7 @@ Transform:
   m_Father: {fileID: 816794182855563765}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &816794181756018608
+--- !u!114 &2120550777572223374
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,61 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4290619485e5c6045a7d50fc64e8dfff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &816794181756018610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 816794181756018605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e36894c0da177c408c380d44d534a83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputManager: {fileID: 816794182855563764}
-  movableElementDirectionIndicator: {fileID: 0}
-  invisibleQuad: {fileID: 0}
-  selectableLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  invisibleLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
---- !u!114 &816794181756018604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 816794181756018605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0da0449f5b727864e9f40ac4c91e8ed3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PortalCountTexts: []
-  inputManager: {fileID: 816794182855563764}
-  portalsParentTransform: []
---- !u!114 &816794181756018611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 816794181756018605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d4fa67b7fe4c8f48a7ef69ca3879b7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputManager: {fileID: 816794182855563764}
-  cameraTransform: {fileID: 0}
-  camera: {fileID: 0}
-  maxZoomPercentage: 120
-  minZoomPercentage: 50
-  zoomSpeed: 4
-  movementSpeed: 4
 --- !u!114 &8458811602997752033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,8 +129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 816794182855563764}
-  cameraTransform: {fileID: 0}
-  camera: {fileID: 0}
   movementSpeed: 4
 --- !u!114 &1977273420180962490
 MonoBehaviour:
@@ -202,10 +143,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 816794182855563764}
-  camera: {fileID: 0}
   maxZoomPercentage: 120
   minZoomPercentage: 50
   zoomSpeed: 4
+--- !u!114 &5512876221800066735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816794181756018605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 883f64d5f1db36146bda49bc5945792f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 816794182855563764}
+  portalCountTexts: []
+  portalsParentTransform: []
 --- !u!1 &816794182855563767
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,6 +213,8 @@ MonoBehaviour:
   MovableMovementState: {fileID: 8728169193875883936}
   CameraMovementState: {fileID: 6755235881852946781}
   CameraZoomState: {fileID: 1977273420180962490}
+  portalState: {fileID: 5512876221800066735}
+  MenuOpened: 0
   cat: {fileID: 0}
   mainCamera: {fileID: 0}
 --- !u!114 &816794182855563764
@@ -272,3 +229,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c079c47b4dea4447be004581c38d1df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PortalMode: 0
+  SelectedPortalIndex: -1

@@ -441,5 +441,11 @@ namespace PuzzleCat.LevelElements
 			Active = true;
 			Placed = true;
 		}
+
+		protected override void OnDrawGizmosSelected()
+		{
+			Gizmos.DrawLine(myTransform.position, defaultLinkedPortal.myTransform.position);
+			base.OnDrawGizmosSelected();
+		}
 	}
 }

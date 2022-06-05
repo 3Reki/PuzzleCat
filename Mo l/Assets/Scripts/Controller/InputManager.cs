@@ -4,8 +4,9 @@ namespace PuzzleCat.Controller
 {
     public class InputManager : MonoBehaviour
     {
+        public bool PortalMode;
+        public int SelectedPortalIndex = -1;
         public int TouchCount { get; private set; }
-        public bool TwoTouchesDone { get; private set; }
         public Vector2 FirstTouchPosition { get; private set; }
         public TouchPhase FirstTouchPhase { get; private set; }
         public Vector2 SecondTouchPosition { get; private set; }
@@ -70,14 +71,12 @@ namespace PuzzleCat.Controller
             if (UnityEngine.Device.SystemInfo.deviceType == DeviceType.Desktop)
             {
                 EditorInputs();
-                TwoTouchesDone = false;
                 return;
             }
 #endif
 
             if (TouchCount <= 0)
             {
-                TwoTouchesDone = false;
                 return;
             }
             
@@ -88,7 +87,6 @@ namespace PuzzleCat.Controller
 
             if (TouchCount <= 1) return;
             
-            TwoTouchesDone = true;
             Touch secondTouch = Input.GetTouch(1);
             SecondTouchPosition = secondTouch.position;
             SecondTouchPhase = secondTouch.phase;

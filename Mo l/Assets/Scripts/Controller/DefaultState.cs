@@ -14,6 +14,9 @@ namespace PuzzleCat.Controller
 
         public IPlayerState Handle()
         {
+            if (inputManager.PortalMode)
+                return GameManager.Instance.portalState;
+            
             if (inputManager.TouchCount > 1)
                 return GameManager.Instance.CameraZoomState;
 
