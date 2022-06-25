@@ -89,6 +89,20 @@ namespace PuzzleCat.Utils
 		{
 			return (layerMask.value & (1 << obj.layer)) > 0;
 		}
+		
+		public static GameObject FindGameObjectWithLayer(int layer) 
+		{
+			GameObject[] goArray = Object.FindObjectsOfType<GameObject>();
+			foreach (GameObject gameObject in goArray)
+			{
+				if (gameObject.layer == layer)
+				{
+					return gameObject;
+				}
+			}
+			
+			return null;
+		}
 
 		public static Vector3Int WorldPointAsGridPoint(Vector3 upDirection, Vector3 point)
 		{

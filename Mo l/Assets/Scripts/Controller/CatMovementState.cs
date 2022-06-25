@@ -1,3 +1,4 @@
+using System;
 using PuzzleCat.Visuals;
 using UnityEngine;
 
@@ -6,7 +7,8 @@ namespace PuzzleCat.Controller
     public class CatMovementState : MonoBehaviour, IPlayerState
     {
         [SerializeField] private InputManager inputManager;
-        [SerializeField] private PlayerMovementIndicator movementIndicator;
+        
+        private PlayerMovementIndicator _movementIndicator;
 
         public void Enter()
         {
@@ -39,9 +41,14 @@ namespace PuzzleCat.Controller
             if (hit.normal != GameManager.Instance.Cat.transform.up)
                 return false;
 
-            movementIndicator.Play(hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
+            _movementIndicator.Play(hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
             
             return GameManager.Instance.Cat.TryMovingTo(gridPoint);
+        }
+
+        private void Awake()
+        {
+            _movementIndicator = FindObjectOfType<PlayerMovementIndicator>();
         }
     }
 }

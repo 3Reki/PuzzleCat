@@ -2,7 +2,6 @@ using System;
 using PuzzleCat.LevelElements;
 using PuzzleCat.Utils;
 using PuzzleCat.Visuals;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PuzzleCat.Controller
@@ -10,11 +9,11 @@ namespace PuzzleCat.Controller
     public class MovableMovementState : MonoBehaviour, IPlayerState
     {
         [SerializeField] private InputManager inputManager;
-        [SerializeField] private MovableElementDirectionIndicator movableElementDirectionIndicator;
-        [SerializeField] private GameObject invisibleQuad;
         [SerializeField] private LayerMask selectableLayerMask;
         [SerializeField] private LayerMask invisibleLayerMask;
         
+        private MovableElementDirectionIndicator _movableElementDirectionIndicator;
+        private GameObject _invisibleQuad;
         private Func<bool> _forwardMovementFunction = () => true;
         private Func<bool> _backwardMovementFunction = () => true;
         private MovableElement _selectedMovableElement;
@@ -30,10 +29,10 @@ namespace PuzzleCat.Controller
             _selectedMovableElement.PositionIndicator();
             _selectedMovableElement.Select();
             _currentObjectPosition = _selectedMovableElement.WorldGridPosition;
-            invisibleQuad.SetActive(true);
-            invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
-            invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
-            movableElementDirectionIndicator.SetAllIndicatorsActive(true);
+            _invisibleQuad.SetActive(true);
+            _invisibleQuad.transform.position = _selectedMovableElement.WorldGridPosition;
+            _invisibleQuad.transform.rotation = Quaternion.LookRotation(-_selectedMovableElement.CurrentSurface.GetNormal());
+            _movableElementDirectionIndicator.SetAllIndicatorsActive(true);
         }
 
         public IPlayerState Handle()
@@ -57,19 +56,19 @@ namespace PuzzleCat.Controller
         {
             _selectedMovableElement.Deselect();
             _selectedMovableElement = null;
-            movableElementDirectionIndicator.SetAllIndicatorsActive(false);
-            invisibleQuad.SetActive(false);
+            _movableElementDirectionIndicator.SetAllIndicatorsActive(false);
+            _invisibleQuad.SetActive(false);
         }
 
         private void UpdateDirectionIndicator()
         {
             if (_selectedMovableElement.IsUnderCat())
             {
-                movableElementDirectionIndicator.SetIncorrectColor();
+                _movableElementDirectionIndicator.SetIncorrectColor();
                 return;
             }
             
-            movableElementDirectionIndicator.SetDefaultColor();
+            _movableElementDirectionIndicator.SetDefaultColor();
         }
 
 
@@ -108,15 +107,15 @@ namespace PuzzleCat.Controller
 
         private void HandleJunction(Vector3Int gridPoint)
         {
-            if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
+            if ((gridPoint - _currentObjectPosition).ApplyMask(_invisibleQuad.transform.up.ToVector3Int()) is >= 1 or <= -1)
             {
-                _currentObjectDirection = invisibleQuad.transform.up.ToVector3Int();
+                _currentObjectDirection = _invisibleQuad.transform.up.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveForward();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveBackward();
             }
-            else if ((gridPoint - _currentObjectPosition).ApplyMask(invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
+            else if ((gridPoint - _currentObjectPosition).ApplyMask(_invisibleQuad.transform.right.ToVector3Int()) is >= 1 or <= -1)
             {
-                _currentObjectDirection = invisibleQuad.transform.right.ToVector3Int();
+                _currentObjectDirection = _invisibleQuad.transform.right.ToVector3Int();
                 _forwardMovementFunction = () => _selectedMovableElement.MoveRight();
                 _backwardMovementFunction = () => _selectedMovableElement.MoveLeft();
             }
@@ -124,7 +123,10 @@ namespace PuzzleCat.Controller
 
         private void Awake()
         {
-            MovableElement.DirectionIndicator = movableElementDirectionIndicator;
+            _movableElementDirectionIndicator = FindObjectOfType<MovableElementDirectionIndicator>();
+            MovableElement.DirectionIndicator = _movableElementDirectionIndicator;
+            _invisibleQuad = Utils.Utils.FindGameObjectWithLayer(LayerMask.NameToLayer("Invisible"));
+            print(_invisibleQuad);
         }
     }
 }

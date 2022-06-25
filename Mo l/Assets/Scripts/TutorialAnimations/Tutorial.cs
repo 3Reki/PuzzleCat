@@ -1,9 +1,13 @@
+using PuzzleCat.TutorialAnimations.TutorialActions;
 using UnityEngine;
 
 namespace PuzzleCat.TutorialAnimations
 {
+
     public abstract class Tutorial : MonoBehaviour
     {
+        [SerializeField] private ITutorialAction action;
+        
         public virtual bool CanChangePortalMode() => false;
         public virtual bool CanSelectPortal(int index) => false;
         public virtual bool CanPlacePortal() => false;

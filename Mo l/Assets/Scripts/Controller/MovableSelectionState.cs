@@ -6,8 +6,8 @@ namespace PuzzleCat.Controller
 {
     public class MovableSelectionState : MonoBehaviour, IPlayerState
     {
-        [SerializeField] protected InputManager inputManager;
-        [SerializeField] private FurnitureSelectionIndicator furnitureSelectionIndicator;
+        [SerializeField] private InputManager inputManager;
+        private FurnitureSelectionIndicator _furnitureSelectionIndicator;
         
         private const float _durationBeforeSelection = 0.2f;
         private Vector2 _touchInitialPosition;
@@ -17,7 +17,7 @@ namespace PuzzleCat.Controller
         public void Enter()
         {
             _touchInitialPosition = inputManager.FirstTouchPosition;
-            furnitureSelectionIndicator.Play(_touchInitialPosition, _durationBeforeSelection);
+            _furnitureSelectionIndicator.Play(_touchInitialPosition, _durationBeforeSelection);
             _touchStartTime = Time.time;
         }
 
@@ -47,7 +47,12 @@ namespace PuzzleCat.Controller
 
         public void Exit()
         {
-            furnitureSelectionIndicator.Stop();
+            _furnitureSelectionIndicator.Stop();
+        }
+
+        private void Awake()
+        {
+            _furnitureSelectionIndicator = FindObjectOfType<FurnitureSelectionIndicator>();
         }
 
         private void Start()
